@@ -18,7 +18,7 @@
     </div>
   
     <button type="submit" [disabled]="loginForm.invalid">Login</button>
-  
+    <button type="button" (click)="onBack()" class="back-button">Voltar</button>
     <div *ngIf="errorMessage">
       <p>{{ errorMessage }}</p>
     </div>

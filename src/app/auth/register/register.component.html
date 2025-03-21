@@ -1,4 +1,10 @@
 <form (ngSubmit)="onRegister()" #registerForm="ngForm">
+  <label for="userType">Tipo de Usuário:</label>
+  <select id="userType" [(ngModel)]="userType" name="userType" required>
+    <option value="admin">Admin</option>
+    <option value="user">Usuário</option>
+  </select>
+
   <label for="username">Username:</label>
   <input type="text" id="username" [(ngModel)]="name" name="username" required />
 
@@ -9,4 +15,5 @@
   <input type="password" id="password" [(ngModel)]="password" name="password" required />
 
   <button type="submit" [disabled]="registerForm.invalid">Register</button>
+  <button type="button" (click)="onBack()" class="back-button">Voltar</button>
 </form>

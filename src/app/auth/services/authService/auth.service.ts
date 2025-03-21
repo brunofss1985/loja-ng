@@ -11,8 +11,8 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   // Registro de usuário
-  register(name: string, password: string, email: string): Observable<any> {
-  const registerData = { name, password, email }; // Certifique-se de que esses campos estão corretos
+  register(userType: string, name: string, password: string, email: string): Observable<any> {
+  const registerData = { userType, name, password, email }; // Certifique-se de que esses campos estão corretos
   return this.http.post(`${this.apiUrl}/register`, registerData);
   }
 

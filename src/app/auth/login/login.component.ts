@@ -43,4 +43,8 @@ export class LoginComponent {
        }
     });
   }
+
+  onBack(): void {
+    this.router.navigate(['']);
+  }
 }

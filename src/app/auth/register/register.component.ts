@@ -8,15 +8,16 @@ import { AuthService } from '../services/authService/auth.service';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+  userType: string = '';
   name: string = '';
   password: string = '';
   email: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   onRegister(): void {
-    console.log("teste",this.authService.register(this.name, this.password, this.email))
-    this.authService.register(this.name, this.password, this.email).subscribe(
+    console.log("teste", this.authService.register(this.userType, this.name, this.password, this.email))
+    this.authService.register(this.userType, this.name, this.password, this.email).subscribe(
       response => {
         console.log('Usuário registrado com sucesso:', response);
         this.router.navigate(['/login']); // Redireciona para login
@@ -25,5 +26,9 @@ export class RegisterComponent {
         console.error('Erro no registro', error);
       }
     );
+  }
+
+  onBack(): void {
+    this.router.navigate(['']);
   }
 }

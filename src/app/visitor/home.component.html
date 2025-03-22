@@ -1,6 +1,24 @@
-<p>home works!</p>
+<header class="header">
+    <!-- Logo -->
+    <div class="header-logo">
+        <h1>LOJA</h1>
+    </div>
 
-<div>
-    <button [routerLink]="'/register'" type="button">Cadastro</button>
-    <button [routerLink]="'/login'" type="button">Login</button>
-</div>
+    <!-- Barra de Pesquisa -->
+    <div class="search-container">
+        <input type="text" placeholder="O que você está procurando?" class="search-input">
+    </div>
+
+    <!-- Botões de Ação (Cadastro e Login) -->
+    <div class="action-buttons">
+        <!-- Botão Cadastro -->
+        <button [routerLink]="'/register'" type="button" class="btn btn-primary">
+            <i class="bi bi-person-plus"></i> Cadastro
+        </button>
+
+        <!-- Botão Login -->
+        <button [routerLink]="'/login'" type="button" class="btn btn-primary">
+            <i class="bi bi-box-arrow-in-right"></i> Login
+        </button>
+    </div>
+</header>

@@ -8,14 +8,9 @@ import { Router } from '@angular/router';
 })
 export class HomeAdminComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor() { }
 
   ngOnInit(): void {
-  }
-
-  exit(){
-    localStorage.clear()
-    this.router.navigate(['']);
   }
 
 }

@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './visitor/home.component';
 import { HomeAdminComponent } from './admin/home-admin/home-admin.component';
 import { HomeUserComponent } from './user/home-user/home-user.component';
+import { SidebarModule } from './shared/sidebar/sidebar.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { HomeUserComponent } from './user/home-user/home-user.component';
     RouterModule,
     BrowserModule,
     AppRoutingModule,
+    SidebarModule,
     RouterModule.forRoot([])
   ],
   providers: [],

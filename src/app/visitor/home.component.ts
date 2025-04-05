@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+
+export interface Mensagem {
+  nome: string;
+  idade: number;
+  proff: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -6,5 +12,4 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-
 }

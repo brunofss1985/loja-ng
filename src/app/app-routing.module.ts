@@ -6,6 +6,7 @@ import { HomeComponent } from './visitor/home.component';
 import { HomeAdminComponent } from './admin/home-admin/home-admin.component';
 import { AuthGuard } from './auth/auth-guard/auth-guard';
 import { HomeUserComponent } from './user/home-user/home-user.component';
+import { MapComponent } from './visitor/map/map.component';
 
 const routes: Routes = [
 
@@ -31,6 +32,11 @@ const routes: Routes = [
     path: 'home-user',
     component: HomeUserComponent,
     canActivate: [AuthGuard]
+  } ,
+  {
+    path: 'map',
+    component: MapComponent,
+    
   }
 
 

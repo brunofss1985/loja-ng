@@ -13,6 +13,8 @@ import { HomeComponent } from './visitor/home.component';
 import { HomeAdminComponent } from './admin/home-admin/home-admin.component';
 import { HomeUserComponent } from './user/home-user/home-user.component';
 import { SidebarModule } from './shared/sidebar/sidebar.module';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { MapComponent } from './visitor/map/map.component';
 
 @NgModule({
   declarations: [
@@ -22,9 +24,11 @@ import { SidebarModule } from './shared/sidebar/sidebar.module';
     AppComponent,
     HomeAdminComponent,
     HomeUserComponent,
+    MapComponent
     
   ],
   imports: [
+    GoogleMapsModule,
     HttpClientModule,
     ReactiveFormsModule,
     CommonModule,
@@ -35,7 +39,8 @@ import { SidebarModule } from './shared/sidebar/sidebar.module';
     SidebarModule,
     RouterModule.forRoot([])
   ],
-  providers: [],
+  providers: [ 
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

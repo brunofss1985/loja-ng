@@ -29,12 +29,12 @@ export class LoginComponent {
     this.loginService.login(email, password).subscribe({
       next: () => {
         this.toastService.success("Login feito com sucesso");
-        this.router.navigate(['/home-admin']); // redireciona após login
+        this.router.navigate(['/home-admin']);
       },
       error: () => this.toastService.error("Erro no login")
     });
   }
-  
+
 
   navigate() {
     this.router.navigate([""])

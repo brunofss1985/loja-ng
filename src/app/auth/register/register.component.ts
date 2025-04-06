@@ -21,7 +21,6 @@ export class RegisterComponent {
     });
   }
 
-
   submit() {
     const { name, email, password } = this.signupForm.value;
     this.loginService.register(name, email, password).subscribe({
@@ -32,7 +31,6 @@ export class RegisterComponent {
       error: () => this.toastService.error("Erro no registro")
     });
   }
-  
 
   navigate(): void {
     this.router.navigate(['login']);

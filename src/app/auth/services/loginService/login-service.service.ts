@@ -12,7 +12,6 @@ export class LoginService {
 
   private loginUrl = `${environment.apiUrl}/auth/login`;
   private registerUrl = `${environment.apiUrl}/auth/register`;
-  
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 

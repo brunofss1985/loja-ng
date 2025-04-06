@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component} from '@angular/core';
 
 export interface Mensagem {
   nome: string;
@@ -8,8 +8,8 @@ export interface Mensagem {
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './home-visitor.component.html',
+  styleUrls: ['./home-visitor.component.scss']
 })
 export class HomeComponent {
 }

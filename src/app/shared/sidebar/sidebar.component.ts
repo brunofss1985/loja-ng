@@ -1,13 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-interface MenuItem {
-  url: string;
-  name: string;
-  icon: string;
-  action?: () => void;
-}
-
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -16,16 +9,15 @@ interface MenuItem {
 
 export class SidebarComponent implements OnInit {
 
-  constructor(private route: Router) {}
+  constructor(private route: Router) { }
 
-    isOpen = false;
+  isOpen = false;
 
-
-  exit(){
+  exit() {
     localStorage.clear()
     this.route.navigate(['']);
   }
-  
+
   ngOnInit(): void {
   }
 

@@ -25,6 +25,7 @@ export class RegisterComponent {
 
   constructor(private loginService: LoginService, private router: Router, private toastService: ToastrService) {
     this.signupForm = new FormGroup({
+      userType: new FormControl('', [Validators.required]),
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -46,9 +47,9 @@ export class RegisterComponent {
       return;
     }
   
-    const { name, email, password } = this.signupForm.value;
+    const { name, email, password, userType } = this.signupForm.value;
   
-    this.loginService.register(name, email, password).subscribe({
+    this.loginService.register(name, email, password, userType).subscribe({
       next: () => {
         this.toastService.success("Registrado com sucesso!");
         this.router.navigate(['/login']);

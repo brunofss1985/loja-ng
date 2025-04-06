@@ -23,7 +23,7 @@ export class LoginService {
     );
   }
 
-  register(name: string, email: string, password: string): Observable<any> {
-    return this.http.post(this.registerUrl, { name, email, password });
+  register(name: string, email: string, password: string, userType: 'USER' | 'ADMIN'): Observable<any> {
+    return this.http.post(this.registerUrl, { name, email, password, userType });
   }
 }

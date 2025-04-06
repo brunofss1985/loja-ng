@@ -1,4 +1,11 @@
 <form [formGroup]="signupForm" (ngSubmit)="submit()">
+  <label for="userType">Tipo de Usuário:</label>
+  <select id="userType" formControlName="userType" required>
+    <option selected disabled value="">Escolha uma opção</option>
+    <option value="ADMIN">Administrador</option>
+    <option value="USER">Usuário</option>
+  </select>
+
   <label for="name">Username:</label>
   <input type="text" id="name" formControlName="name" />
 

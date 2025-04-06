@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './visitor/home.component';
 import { HomeAdminComponent } from './admin/home-admin/home-admin.component';
 import { HomeUserComponent } from './user/home-user/home-user.component';
@@ -17,6 +17,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { MapComponent } from './visitor/map/map.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TokenInterceptor } from './auth/interceptors/token.interceptor';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ToastrModule.forRoot(),
   ],
   providers: [ 
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
 ],
   bootstrap: [AppComponent]
 })

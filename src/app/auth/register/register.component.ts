@@ -4,14 +4,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/loginService/login-service.service';
 import { ToastrService } from 'ngx-toastr';
 
-
-interface SignupForm {
-  name: FormControl,
-  email: FormControl,
-  password: FormControl,
-  passwordConfirm: FormControl,
-
-}
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -22,25 +14,25 @@ export class RegisterComponent {
 
   constructor(private loginService: LoginService, private router: Router, private toastService: ToastrService) {
     this.signupForm = new FormGroup({
-      name: new FormControl('', [Validators.required, Validators.email]),
+      name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      passwordConfirm: new FormControl('', [Validators.required, Validators.email])
+      passwordConfirm: new FormControl('', [Validators.required])
     });
   }
 
 
-  submit(): void {
-    this.loginService.login(
-      this.signupForm.value.name,
-      this.signupForm.value.email,
-      // this.signupForm.value.password,
-      // this.signupForm.value.passwordConfirm
-    ).subscribe({
-      next: () => this.toastService.success("Login feito com Sucesso"),
-      error: () => this.toastService.error("erro no login")
-    })
+  submit() {
+    const { name, email, password } = this.signupForm.value;
+    this.loginService.register(name, email, password).subscribe({
+      next: () => {
+        this.toastService.success("Registrado com sucesso!");
+        this.router.navigate(['/login']);
+      },
+      error: () => this.toastService.error("Erro no registro")
+    });
   }
+  
 
   navigate(): void {
     this.router.navigate(['login']);

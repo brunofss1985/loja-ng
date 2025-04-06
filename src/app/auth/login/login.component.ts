@@ -4,11 +4,6 @@ import { Router } from '@angular/router';
 import { LoginService } from '../services/loginService/login-service.service';
 import { ToastrService } from 'ngx-toastr';
 
-interface LoginForm {
-  email: string,
-  password: string
-}
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -30,11 +25,16 @@ export class LoginComponent {
   }
 
   submit() {
-    this.loginService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
-      next: () => this.toastService.success("Login feito com Sucesso"),
-      error: () =>this.toastService.error("erro no login")
-    })
+    const { email, password } = this.loginForm.value;
+    this.loginService.login(email, password).subscribe({
+      next: () => {
+        this.toastService.success("Login feito com sucesso");
+        this.router.navigate(['/home-admin']); // redireciona após login
+      },
+      error: () => this.toastService.error("Erro no login")
+    });
   }
+  
 
   navigate() {
     this.router.navigate([""])

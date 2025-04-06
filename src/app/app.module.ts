@@ -15,6 +15,8 @@ import { HomeUserComponent } from './user/home-user/home-user.component';
 import { SidebarModule } from './shared/sidebar/sidebar.module';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MapComponent } from './visitor/map/map.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { MapComponent } from './visitor/map/map.component';
     BrowserModule,
     AppRoutingModule,
     SidebarModule,
-    RouterModule.forRoot([])
+    BrowserAnimationsModule,
+    RouterModule.forRoot([]),
+    ToastrModule.forRoot(),
   ],
   providers: [ 
 ],

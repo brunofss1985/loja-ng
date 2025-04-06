@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { UserService } from 'src/app/auth/services/userService/user-service.service';
+import { LoginService } from 'src/app/auth/services/loginService/login-service.service';
 
 @Component({
   selector: 'app-home-admin',
@@ -11,18 +10,18 @@ export class HomeAdminComponent implements OnInit {
 
   users: any[] = [];
 
-  constructor(private userService: UserService) { }
+  constructor(private loginService: LoginService) { }
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe({
-      next: (data) => {
-        this.users = data;
-      },
-      error: (error) => {
-        console.error('Erro ao buscar usuários:', error);
-      }
-    });
+    //   this.loginService.getUsers().subscribe({
+    //     next: (data) => {
+    //       this.users = data;
+    //     },
+    //     error: (error) => {
+    //       console.error('Erro ao buscar usuários:', error);
+    //     }
+    //   });
   }
-  }
+}
 
 

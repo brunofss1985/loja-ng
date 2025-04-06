@@ -1,4 +1,4 @@
-<form [formGroup]="loginForm" (ngSubmit)="login()">
+<form [formGroup]="loginForm" (ngSubmit)="submit()">
     <div>
       <label for="email">Email</label>
       <input type="email" id="email" formControlName="email" placeholder="Enter your email" />
@@ -18,7 +18,7 @@
     </div>
   
     <button type="submit" [disabled]="loginForm.invalid">Login</button>
-    <button type="button" (click)="onBack()" class="back-button">Voltar</button>
+    <button type="button" (click)="navigate()" class="back-button">Voltar</button>
     <div *ngIf="errorMessage">
       <p>{{ errorMessage }}</p>
     </div>

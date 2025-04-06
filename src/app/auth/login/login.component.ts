@@ -1,7 +1,13 @@
 import { Component } from '@angular/core';
-import { FormBuilder,  FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/authService/auth.service';
+import { LoginService } from '../services/loginService/login-service.service';
+import { ToastrService } from 'ngx-toastr';
+
+interface LoginForm {
+  email: string,
+  password: string
+}
 
 @Component({
   selector: 'app-login',
@@ -9,42 +15,28 @@ import { AuthService } from '../services/authService/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   errorMessage: string = '';
 
   constructor(
-    private authService: AuthService,
-    private fb: FormBuilder,
-    private router: Router
+    private loginService: LoginService,
+    private router: Router,
+    private toastService: ToastrService
   ) {
-    // Inicializando o formulário com e-mail e senha
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]], // Validações para e-mail
-      password: ['', [Validators.required, Validators.minLength(6)]] // Validações para senha
+    this.loginForm = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)])
     });
   }
 
-  // Método para realizar o login
-  login() {
-    if (this.loginForm.invalid) {
-      return;
-    }
-
-    const { email, password } = this.loginForm.value;
-
-    //Exemplo de lógica de autenticação (serviço comentado para ser implementado posteriormente)
-    this.authService.login(email, password).subscribe({
-      next: (response) => {
-        this.authService.saveToken(response.token);
-          this.router.navigate(['/home-admin']); // Redireciona para a página inicial após o login
-       },
-       error: (err) => {
-         this.errorMessage = 'Credenciais inválidas'; // Exibe mensagem de erro caso as credenciais estejam erradas
-       }
-    });
+  submit() {
+    this.loginService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
+      next: () => this.toastService.success("Login feito com Sucesso"),
+      error: () =>this.toastService.error("erro no login")
+    })
   }
 
-  onBack(): void {
-    this.router.navigate(['']);
+  navigate() {
+    this.router.navigate([""])
   }
 }

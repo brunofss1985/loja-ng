@@ -4,6 +4,17 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../services/loginService/login-service.service';
 import { ToastrService } from 'ngx-toastr';
 
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+
+function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+  const formGroup = control as FormGroup;
+  const password = formGroup.get('password')?.value;
+  const passwordConfirm = formGroup.get('passwordConfirm')?.value;
+
+  return password === passwordConfirm ? null : { passwordMismatch: true };
+}
+
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -18,11 +29,25 @@ export class RegisterComponent {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       passwordConfirm: new FormControl('', [Validators.required])
-    });
+    },{ validators: passwordMatchValidator });;
   }
 
+
+  
+
   submit() {
+    if (this.signupForm.invalid) {
+      this.toastService.error('Preencha corretamente todos os campos.');
+      return;
+    }
+  
+    if (this.signupForm.hasError('passwordMismatch')) {
+      this.toastService.error('As senhas não coincidem.');
+      return;
+    }
+  
     const { name, email, password } = this.signupForm.value;
+  
     this.loginService.register(name, email, password).subscribe({
       next: () => {
         this.toastService.success("Registrado com sucesso!");
@@ -31,6 +56,7 @@ export class RegisterComponent {
       error: () => this.toastService.error("Erro no registro")
     });
   }
+  
 
   navigate(): void {
     this.router.navigate(['login']);

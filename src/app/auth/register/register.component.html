@@ -10,7 +10,8 @@
 
   <label for="passwordConfirm">Confirm Password:</label>
   <input type="password" id="passwordConfirm" formControlName="passwordConfirm" />
-
+  <small *ngIf="signupForm.hasError('passwordMismatch') && signupForm.touched" >As senhas não coincidem.</small>
+    
   <button type="submit" [disabled]="signupForm.invalid">Register</button>
   <button type="button" (click)="navigate()" class="back-button">Voltar</button>
 </form>

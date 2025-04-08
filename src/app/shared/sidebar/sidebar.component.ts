@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/auth/services/authService/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,7 +10,9 @@ import { Router } from '@angular/router';
 
 export class SidebarComponent implements OnInit {
 
-  constructor(private route: Router) { }
+  userType!: string| null
+
+  constructor(private route: Router, private authServ: AuthService) { }
 
   isOpen = false;
 
@@ -19,6 +22,10 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
+
+    const userType = this.authServ.getUserType();
+    this.userType = userType
+    }
+  
 
 }

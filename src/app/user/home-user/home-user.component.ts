@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/auth/services/authService/auth.service';
 
 @Component({
   selector: 'app-home-user',
@@ -8,10 +9,13 @@ import { Router } from '@angular/router';
 })
 export class HomeUserComponent implements OnInit {
 
-  constructor(private router: Router) { }
-
+ 
+  
+  constructor(private router: Router) {}
+  
   ngOnInit(): void {
-  }
+    }
+  
 
   exit(){
     localStorage.clear()

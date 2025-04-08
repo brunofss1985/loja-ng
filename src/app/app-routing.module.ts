@@ -7,6 +7,7 @@ import { HomeAdminComponent } from './admin/admin/home-admin/home-admin.componen
 import { AuthGuard } from './auth/auth-guard/auth-guard';
 import { HomeUserComponent } from './user/home-user/home-user.component';
 import { MapComponent } from './visitor/map/map.component';
+import { AdminGuard } from './auth/auth-guard/admin-guard';
 
 const routes: Routes = [
 
@@ -25,7 +26,7 @@ const routes: Routes = [
   {
     path: 'home-admin',
     component: HomeAdminComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AdminGuard]
   }
   ,
   {

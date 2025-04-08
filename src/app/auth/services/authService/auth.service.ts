@@ -21,4 +21,20 @@ export class AuthService {
   clearToken(): void {
     localStorage.removeItem(this.TOKEN_KEY);
   }
+
+  getUserType(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const payload = token.split('.')[1];
+    try {
+      const decodedPayload = JSON.parse(atob(payload));
+      return decodedPayload.userType || null;
+    } catch (e) {
+      console.error('Erro ao decodificar token:', e);
+      return null;
+    }
+  }
+
+
 }

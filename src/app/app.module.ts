@@ -57,7 +57,6 @@ import { RegisterComponent } from './visitor/pages/register/register.component';
     RouterModule,
     BrowserModule,
     AppRoutingModule,
-    SidebarModule,
     BrowserAnimationsModule,
     RouterModule.forRoot([]),
     ToastrModule.forRoot(),

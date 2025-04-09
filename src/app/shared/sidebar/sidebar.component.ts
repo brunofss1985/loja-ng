@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/authService/auth.service';
 
@@ -10,11 +10,23 @@ import { AuthService } from 'src/app/auth/services/authService/auth.service';
 
 export class SidebarComponent implements OnInit {
 
-  userType!: string| null
+  @Output() toggleSidebar = new EventEmitter<boolean>();
+
+  userType!: string | null
 
   constructor(private route: Router, private authServ: AuthService) { }
 
   isOpen = false;
+
+  onMouseEnter() {
+    this.isOpen = true;
+    this.toggleSidebar.emit(true); // dispara pro componente pai
+  }
+
+  onMouseLeave() {
+    this.isOpen = false;
+    this.toggleSidebar.emit(false); // dispara pro componente pai
+  }
 
   exit() {
     localStorage.clear()
@@ -25,7 +37,6 @@ export class SidebarComponent implements OnInit {
 
     const userType = this.authServ.getUserType();
     this.userType = userType
-    }
-  
 
+  }
 }

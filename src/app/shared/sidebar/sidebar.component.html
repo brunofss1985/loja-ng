@@ -1,8 +1,9 @@
-<div class="sidebar" (mouseenter)="isOpen = true" (mouseleave)="isOpen = false">
+<div class="sidebar" (mouseenter)="onMouseEnter()"  (mouseleave)="onMouseLeave()">
   <img class="logo" src="../../../assets/logo.png" alt="logo">
   <ul *ngIf="isOpen == true">
     <li *ngIf="userType == 'ADMIN'"><i class="fas fa-home"> </i>Cadastro</li>
-    <li><i class="fas fa-box"> </i>Perfil</li>
+    <a *ngIf="userType == 'ADMIN'" href="/user/perfil"> <li><i class="fas fa-box"> </i>Perfil</li></a>
+    <a *ngIf="userType == 'USER'" href="/user/perfil"> <li><i class="fas fa-box"> </i>Perfil</li></a>
     <li><i class="fas fa-box"> </i>Estoque</li>
     <li><i class="fas fa-shopping-cart"> </i>Compras</li>
     <li><i class="fas fa-clipboard-list"> </i>Produtos</li>

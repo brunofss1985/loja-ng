@@ -1,0 +1,14 @@
+.main-container {
+    display: flex;
+  }
+  
+  .content {
+    flex-grow: 1;
+    transition: padding-left 0.3s ease;
+    padding-left: 40px; // recolhido
+  }
+  
+  .main-container.expanded .content {
+    padding-left: 190px; // expandido
+  }
+  

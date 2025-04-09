@@ -1,4 +1,6 @@
-<app-sidebar></app-sidebar>
-<div class="main-content">
+<div class="main-container" [class.expanded]="isSidebarOpen">
+  <app-sidebar (toggleSidebar)="isSidebarOpen = $event"></app-sidebar>
+  <div class="content">
     <router-outlet></router-outlet>
   </div>
+</div>

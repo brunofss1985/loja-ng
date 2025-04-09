@@ -10,6 +10,8 @@ export class UserComponent implements OnInit {
 
   constructor(private router: Router) { }
 
+  isSidebarOpen = false;
+
   ngOnInit(): void {
   }
   exit() {

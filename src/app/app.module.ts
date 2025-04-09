@@ -45,7 +45,7 @@ import { PerfilAdminComponent } from './admin/pages/perfil-admin/perfil-admin.co
     OrcamentosComponent,
     CaixaComponent,
     AcessoNegadoComponent,
-    PaginaNaoEncontradaComponent
+    PaginaNaoEncontradaComponent,
     
   ],
   imports: [

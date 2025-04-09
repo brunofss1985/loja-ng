@@ -10,13 +10,14 @@ import { AuthGuard } from '../auth/auth-guard/auth-guard';
 import { AdminGuard } from '../auth/auth-guard/admin-guard';
 import { PerfilAdminComponent } from './pages/perfil-admin/perfil-admin.component';
 import { RegisterComponent } from '../visitor/pages/register/register.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 
 const routes: Routes = [
   {
     path: '', component: AdminComponent, canActivate: [AuthGuard, AdminGuard],
     children: [
       { path: '', redirectTo: 'perfil', pathMatch: 'full' },
-      { path: 'register', component: RegisterComponent },
+      { path: 'usuarios', component: UsuariosComponent },
       { path: 'perfil', component: PerfilAdminComponent },
       { path: 'caixa', component: CaixaComponent },
       { path: 'compras', component: ComprasComponent },

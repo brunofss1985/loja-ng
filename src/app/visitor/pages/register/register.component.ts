@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LoginService } from '../services/loginService/login-service.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { AbstractControl, ValidationErrors } from '@angular/forms';
+import { LoginService } from 'src/app/auth/services/loginService/login-service.service';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const formGroup = control as FormGroup;
@@ -52,7 +52,7 @@ export class RegisterComponent {
     this.loginService.register(name, email, password, userType).subscribe({
       next: () => {
         this.toastService.success("Registrado com sucesso!");
-        this.router.navigate(['/login']);
+        this.router.navigate(['visitor/login']);
       },
       error: () => this.toastService.error("Erro no registro")
     });

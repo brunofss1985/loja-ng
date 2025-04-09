@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoginService } from '../services/loginService/login-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { LoginService } from 'src/app/auth/services/loginService/login-service.service';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +31,7 @@ export class LoginComponent {
     loginObservable.subscribe({
       next: (res) => {
         this.toastService.success("Login feito com sucesso");
-        this.router.navigate(['/home-user']);
+        this.router.navigate(['user/perfil']);
       },
       error: (err) => {
         console.error('Erro:', err);

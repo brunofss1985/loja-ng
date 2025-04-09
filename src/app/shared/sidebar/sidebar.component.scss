@@ -36,6 +36,7 @@ ul {
   list-style: none;
   padding: 20px 0;
   width: 100%;
+  margin: 0;
 }
 
 .ul i {
@@ -63,4 +64,23 @@ li:hover {
 
 li i {
   min-width: 20px;
+}
+
+/* ✅ Responsividade leve para telas pequenas */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 50px;
+  }
+
+  .sidebar:hover {
+    width: 160px;
+  }
+
+  .logo {
+    width: 100%;
+  }
+
+  .logo-slim {
+    margin: 0 auto;
+  }
 }

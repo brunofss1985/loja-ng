@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminComponent implements OnInit {
 
-  constructor() { }
+  isSidebarOpen = false;
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  exit() {
+    localStorage.clear()
+    this.router.navigate(['']);
   }
 
 }

@@ -5,6 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { LoginService } from 'src/app/auth/services/loginService/login-service.service';
+import { AuthService } from 'src/app/auth/services/authService/auth.service';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const formGroup = control as FormGroup;
@@ -23,14 +24,24 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 export class RegisterComponent {
   signupForm!: FormGroup
 
-  constructor(private loginService: LoginService, private router: Router, private toastService: ToastrService) {
+  userAuth!: boolean;
+
+  constructor(
+    private loginService: LoginService,
+    private router: Router,
+    private toastService: ToastrService,
+    private authservice: AuthService
+  ) {
+
+    this.userAuth = this.authservice.isAuthenticated()
+
     this.signupForm = new FormGroup({
       userType: new FormControl('', [Validators.required]),
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       passwordConfirm: new FormControl('', [Validators.required])
-    },{ validators: passwordMatchValidator });;
+    }, { validators: passwordMatchValidator });;
   }
 
   submit() {
@@ -38,14 +49,14 @@ export class RegisterComponent {
       this.toastService.error('Preencha corretamente todos os campos.');
       return;
     }
-  
+
     if (this.signupForm.hasError('passwordMismatch')) {
       this.toastService.error('As senhas não coincidem.');
       return;
     }
-  
+
     const { name, email, password, userType } = this.signupForm.value;
-  
+
     this.loginService.register(name, email, password, userType).subscribe({
       next: () => {
         this.toastService.success("Registrado com sucesso!");
@@ -54,7 +65,7 @@ export class RegisterComponent {
       error: () => this.toastService.error("Erro no registro")
     });
   }
-  
+
 
   navigate(): void {
     this.router.navigate(['visitor']);

@@ -1,0 +1,15 @@
+.main-container {
+    display: flex;
+  }
+  
+  .content {
+    margin-left: 190px;
+    transition: margin-left 0.3s;
+    padding: 20px;
+    width: 100%;
+  }
+  
+  .content.shrink {
+    margin-left: 40px;
+  }
+  

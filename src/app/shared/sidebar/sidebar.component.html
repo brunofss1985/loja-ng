@@ -2,6 +2,7 @@
   <img class="logo" src="../../../assets/logo.png" alt="logo">
   <ul *ngIf="isOpen == true">
     <li *ngIf="userType == 'ADMIN'"><i class="fas fa-home"> </i>Cadastro</li>
+    <li><i class="fas fa-box"> </i>Perfil</li>
     <li><i class="fas fa-box"> </i>Estoque</li>
     <li><i class="fas fa-shopping-cart"> </i>Compras</li>
     <li><i class="fas fa-clipboard-list"> </i>Produtos</li>
@@ -11,6 +12,7 @@
   <div class="ul" *ngIf="isOpen == false">
     <img class="logo-slim" src="../../../assets/logo.png" alt="logo">
     <i *ngIf="userType == 'ADMIN'" class="fas fa-home"> </i>
+    <i class="fas fa-box"> </i>
     <i class="fas fa-box"> </i>
     <i class="fas fa-shopping-cart"> </i>
     <i class="fas fa-clipboard-list"> </i>

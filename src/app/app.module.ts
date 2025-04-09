@@ -12,7 +12,7 @@ import { HomeAdminComponent } from './admin/home-admin/home-admin.component';
 import { HomeUserComponent } from './user/home-user/home-user.component';
 import { SidebarModule } from './shared/sidebar/sidebar.module';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { MapComponent } from './visitor/pages/map/map.component';
+import { MapComponent } from './shared/map/map.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TokenInterceptor } from './auth/interceptors/token.interceptor';

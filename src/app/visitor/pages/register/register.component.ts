@@ -33,9 +33,6 @@ export class RegisterComponent {
     },{ validators: passwordMatchValidator });;
   }
 
-
-  
-
   submit() {
     if (this.signupForm.invalid) {
       this.toastService.error('Preencha corretamente todos os campos.');
@@ -60,6 +57,6 @@ export class RegisterComponent {
   
 
   navigate(): void {
-    this.router.navigate(['login']);
+    this.router.navigate(['visitor']);
   }
 }

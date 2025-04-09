@@ -4,14 +4,13 @@ import { CommonModule } from '@angular/common';
 import { VisitorRoutingModule } from './visitor-routing.module';
 import { VisitorComponent } from './visitor.component';
 
-
 @NgModule({
   declarations: [
-    VisitorComponent
+    VisitorComponent,
   ],
   imports: [
     CommonModule,
-    VisitorRoutingModule
+    VisitorRoutingModule,
   ]
 })
 export class VisitorModule { }

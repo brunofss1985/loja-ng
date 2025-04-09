@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/auth/services/authService/auth.service';
 import { LoginService } from 'src/app/auth/services/loginService/login-service.service';
 
 @Component({
@@ -20,7 +21,8 @@ export class LoginComponent {
   constructor(
     private loginService: LoginService,
     private router: Router,
-    private toastService: ToastrService
+    private toastService: ToastrService,
+    private authService: AuthService
   ) {}
 
   submit() {
@@ -31,7 +33,15 @@ export class LoginComponent {
     loginObservable.subscribe({
       next: (res) => {
         this.toastService.success("Login feito com sucesso");
-        this.router.navigate(['user/perfil']);
+        const userType = this.authService.getUserType();
+  
+        if (userType === 'ADMIN') {
+          this.router.navigate(['/admin']);
+        } else if (userType === 'USER') {
+          this.router.navigate(['/user']);
+        } else {
+          this.router.navigate(['/']);
+        }
       },
       error: (err) => {
         console.error('Erro:', err);
@@ -39,7 +49,6 @@ export class LoginComponent {
       }
     });
   }
-  
 
   navigate() {
     this.router.navigate([""]);

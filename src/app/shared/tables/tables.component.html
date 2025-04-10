@@ -12,7 +12,7 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="data.length > 0; else tabelaVazia">
         <tr *ngFor="let row of data">
           <td *ngFor="let header of headers">
             {{ row[header] }}
@@ -22,3 +22,9 @@
     </table>
   </div>
 </div>
+
+<ng-template #tabelaVazia>
+  <tr>
+    <td colspan="100%">Nenhum dado disponível.</td>
+  </tr>
+</ng-template>

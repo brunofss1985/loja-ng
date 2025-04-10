@@ -10,12 +10,13 @@ export class UsuariosComponent implements OnInit {
   constructor() { }
 
   headers = ['ID', 'Nome', 'Email', 'Tipo de Usuário'];
-dados = [
-  { ID: 1, Nome: 'Mark', Email: 'Otto' },
-  { ID: 2, Nome: 'Jacob', Email: 'Thornton', endereço: 'rua iperó' },
-  { ID: 2, Nome: 'Jacob', Email: 'Thornton' },
-  { ID: 2, Nome: 'Jacob', Último: 'Thornton' },
-]
+  dados = [
+    { ID: 1, 'Nome': 'Mark', 'Email': 'Otto@gmail.com', 'Tipo de Usuário': 'ADMIN' },
+    { ID: 2, 'Nome': 'Jacob', 'Email': 'Thornton@gmail.com' , 'Tipo de Usuário': 'USER'},
+    { ID: 3, 'Nome': 'Jacob', 'Email': 'Thornton@gmail.com' , 'Tipo de Usuário': 'ADMIN'},
+    { ID: 4, 'Nome': 'Jacob', 'Email': 'Thornton@gmail.com' , 'Tipo de Usuário': 'USER'},
+  ];
+
 
   ngOnInit(): void {
   }

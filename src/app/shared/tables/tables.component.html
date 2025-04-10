@@ -15,8 +15,8 @@
       <tbody *ngIf="data.length > 0; else tabelaVazia">
         <tr *ngFor="let row of data">
           <td *ngFor="let header of headers">
-            {{ row[header] }}
-          </td>
+              {{ header === 'id' ? (row[header] | slice:-4) : row[header] }}
+            </td>
         </tr>
       </tbody>
     </table>

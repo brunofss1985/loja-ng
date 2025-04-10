@@ -1,3 +1,72 @@
-.card{
+h5 {
+    margin-left: 1.6rem;
+    padding: 1rem 0.5rem;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .card {
     margin-left: 25px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+.card-header {
+    font-weight: bold;
+    align-items: center;
+    display: flex;
+    justify-content: start;
+    font-size: 1em;
+    height: 3em;
+    background-color: #007BFF;
+    color: white;
+    padding: 1rem;
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
+  }
+
+  .card-body {
+    padding-top: 1.5rem;
+    padding-bottom: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+  }
+
+  thead {
+    background-color: rgb(83, 163, 255);
+    color: white;
+    text-align: left;
+    border-radius: 8px;
+  }
+
+  thead th:first-child {
+    border-top-left-radius: 8px;
+  }
+  
+  thead th:last-child {
+    border-top-right-radius: 8px;
+  }
+
+  th, td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #ccc;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+  }
+
+  th {
+    padding: 4px 10px;
+    height: 1em;
+    font-weight: bold !important;
+  }

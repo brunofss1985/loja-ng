@@ -8,7 +8,7 @@ import { Produtos, ProdutosService } from 'src/app/auth/services/produtosService
 })
 export class ProdutosComponent implements OnInit {
   tableName: string = 'Tabela de Produtos Cadastrados';
-  headers: string[] = ['id', 'nome', 'marca', 'tipo', 'categoria', 'descricao'];
+  headers: string[] = ['id', 'nome', 'marca', 'tipo', 'categoria', 'descricão'];
   isAdmin: boolean = false;
 
   produtos: any[] = [];
@@ -36,7 +36,7 @@ export class ProdutosComponent implements OnInit {
           marca: prod.marca ?? '',
           tipo: prod.tipo ?? '',
           categoria: prod.categoria ?? '',
-          descricao: prod.descricao ?? ''
+          'descricão': prod.descricao ?? ''
         }));
       },
       error: (err) => console.error('❌ Erro ao carregar produtos:', err)

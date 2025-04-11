@@ -17,6 +17,7 @@
           <td *ngFor="let header of headers">
               {{ header === 'id' ? (row[header] | slice:-4) : row[header] }}
             </td>
+            <!-- <app-delete-button></app-delete-button> -->
         </tr>
       </tbody>
     </table>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { UserRoutingModule } from './user-routing.module';
 import { UserComponent } from './user.component';
-import { SidebarModule } from '../shared/sidebar/sidebar.module';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -13,7 +13,7 @@ import { SidebarModule } from '../shared/sidebar/sidebar.module';
   imports: [
     CommonModule,
     UserRoutingModule,
-    SidebarModule
+    SharedModule
   ]
 })
 export class UserModule { }

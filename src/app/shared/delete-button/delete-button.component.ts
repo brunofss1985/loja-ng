@@ -4,7 +4,7 @@ import { DeleteService } from 'src/app/auth/services/deleteService/delete.servic
 @Component({
   selector: 'app-delete-button',
   templateUrl: './delete-button.component.html',
-  styleUrls: ['./delete-button.component.css']
+  styleUrls: ['./delete-button.component.scss']
 })
 export class DeleteButtonComponent {
   @Input() itemId!: number;

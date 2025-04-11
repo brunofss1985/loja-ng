@@ -20,7 +20,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'fas fa-home', label: 'Usuários', route: '/admin/usuarios' },
     { icon: 'fas fa-box', label: 'Estoque', route: '/admin/estoque' },
     { icon: 'fas fa-shopping-cart', label: 'Compras', route: '/admin/compras' },
-    { icon: 'fas fa-clipboard-list', label: 'Produtos', route: '/admin/produtos-em-falta' },
+    { icon: 'fas fa-clipboard-list', label: 'Produtos', route: '/admin/produtos' },
     { icon: 'fas fa-home', label: 'caixa', route: '/admin/caixa' }
   ];
 

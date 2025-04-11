@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-header">
-    Usuários Cadastrados
+    {{tableName}}
   </div>
   <div class="card-body">
     <table>
@@ -15,9 +15,8 @@
       <tbody *ngIf="data.length > 0; else tabelaVazia">
         <tr *ngFor="let row of data">
           <td *ngFor="let header of headers">
-              {{ header === 'id' ? (row[header] | slice:-4) : row[header] }}
-            </td>
-            <!-- <app-delete-button></app-delete-button> -->
+            {{ header === 'id' && row[header] ? row[header].slice(-4) : (row[header] ?? '') }}
+          </td>
         </tr>
       </tbody>
     </table>

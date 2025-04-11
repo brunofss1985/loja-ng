@@ -9,6 +9,7 @@ import { User, UserService } from 'src/app/auth/services/userService/user-servic
 })
 export class UsuariosComponent implements OnInit {
 
+  tableName!: string;
   headers: string[] = [];
   users: User[] = [];
   isAdmin: boolean = false;
@@ -44,7 +45,6 @@ export class UsuariosComponent implements OnInit {
       error: (err) => console.error('Erro ao carregar usuários:', err)
     });
   }
-  
 
   deleteUser(id: string): void {
     if (confirm('Deseja realmente deletar este usuário?')) {

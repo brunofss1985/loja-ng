@@ -9,8 +9,8 @@ import { ProdutosEmFaltaComponent } from './pages/produtos-em-falta/produtos-em-
 import { AuthGuard } from '../auth/auth-guard/auth-guard';
 import { AdminGuard } from '../auth/auth-guard/admin-guard';
 import { PerfilAdminComponent } from './pages/perfil-admin/perfil-admin.component';
-import { RegisterComponent } from '../visitor/pages/register/register.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { ProdutosComponent } from './pages/produtos/produtos.component';
 
 const routes: Routes = [
   {
@@ -24,6 +24,7 @@ const routes: Routes = [
       { path: 'estoque', component: EstoqueComponent },
       { path: 'orcamentos', component: OrcamentosComponent },
       { path: 'produtos-em-falta', component: ProdutosEmFaltaComponent },
+      { path: 'produtos', component: ProdutosComponent },
     ]
   },
 ];

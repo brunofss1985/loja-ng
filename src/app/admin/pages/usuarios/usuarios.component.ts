@@ -39,7 +39,7 @@ export class UsuariosComponent implements OnInit {
         }));
   
         if (data.length > 0) {
-          this.headers = ['name', 'email', 'userType'];
+          this.headers = ['id', 'name', 'email', 'userType'];
         }
       },
       error: (err) => console.error('Erro ao carregar usuários:', err)

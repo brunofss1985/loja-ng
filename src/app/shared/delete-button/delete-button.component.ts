@@ -7,25 +7,25 @@ import { DeleteService } from 'src/app/auth/services/deleteService/delete.servic
   styleUrls: ['./delete-button.component.scss']
 })
 export class DeleteButtonComponent {
-  @Input() itemId!: number;
-  @Input() itemType: 'user' | 'product' = 'user'; // ou use enum depois, se preferir
+  // @Input() itemId!: number;
+  // @Input() itemType: 'user' | 'product' = 'user';
 
   constructor(private deleteService: DeleteService) {}
 
   delete() {
-    if (!this.itemId) return;
+    // if (!this.itemId) return;
 
-    const confirmed = confirm('Tem certeza que deseja excluir?');
-    if (!confirmed) return;
+    // const confirmed = confirm('Tem certeza que deseja excluir?');
+    // if (!confirmed) return;
 
-    if (this.itemType === 'user') {
-      this.deleteService.deleteUser(this.itemId).subscribe(() => {
-        alert('Usuário excluído com sucesso!');
-      });
-    } else if (this.itemType === 'product') {
-      this.deleteService.deleteProduct(this.itemId).subscribe(() => {
-        alert('Produto excluído com sucesso!');
-      });
-    }
+    // if (this.itemType === 'user') {
+    //   this.deleteService.deleteUser(this.itemId).subscribe(() => {
+    //     alert('Usuário excluído com sucesso!');
+    //   });
+    // } else if (this.itemType === 'product') {
+    //   this.deleteService.deleteProduct(this.itemId).subscribe(() => {
+    //     alert('Produto excluído com sucesso!');
+    //   });
+    // }
   }
 }

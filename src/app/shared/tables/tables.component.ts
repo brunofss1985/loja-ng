@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-tables',
@@ -18,9 +18,26 @@ export class TablesComponent implements OnInit {
   @Input() data: any[] = [];
   @Input() tableName!: string;
 
+  @Input() botaoCadastroAparecer: boolean = false;
+  @Input() botaoCadastro!: string;
+
+  @Input() mostrarBotoesAcao: boolean = false;
+  @Input() botoesAcao!: string;
+
+  @Output() botaoCadastroClick = new EventEmitter<void>();
+  @Output() botaoDeleteClick = new EventEmitter<void>();
+
   constructor() { }
 
   ngOnInit(): void {
   }
+
+  onBotaoClick(): void {
+    this.botaoCadastroClick.emit(); // Emite o evento para o componente pai
+  }
+
+onBotaoDeleteClick(){
+  this.botaoDeleteClick.emit();
+}
 
 }

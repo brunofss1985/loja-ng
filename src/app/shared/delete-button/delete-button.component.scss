@@ -1,0 +1,27 @@
+button {
+    font-size: 13px;
+    background-color: #dc3545; /* Cor danger padrão */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0px 4px;
+    margin-right: 2px;
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.5);
+    transition: all 0.1s ease-in-out;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #b02a37; /* Cor danger mais escura no hover */
+  }
+  
+  button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgb(255, 255, 255);
+  }
+  
+    button:focus {
+    outline: none;
+    box-shadow: none;
+  }
+  

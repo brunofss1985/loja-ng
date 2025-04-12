@@ -1,15 +1,22 @@
 <div class="card">
   <div class="card-header">
-    {{tableName}}
+    <div>
+      {{tableName}}
+    </div>
+    <div *ngIf="botaoCadastroAparecer">
+      <button (click)="onBotaoClick()">{{botaoCadastro}}</button>
+    </div>
   </div>
+
+
   <div class="card-body">
     <table>
       <thead>
         <tr>
-          <th *ngFor="let header of headers"
-            [ngClass]="{'first': header === headers[0], 'last': header === headers[headers.length - 1]}">
+          <th *ngFor="let header of headers">
             {{ header }}
           </th>
+          <th *ngIf="mostrarBotoesAcao">Ações</th>
         </tr>
       </thead>
       <tbody *ngIf="data.length > 0; else tabelaVazia">
@@ -17,14 +24,22 @@
           <td *ngFor="let header of headers">
             {{ header === 'id' && row[header] ? row[header].slice(-4) : (row[header] ?? '') }}
           </td>
+          <td *ngIf="mostrarBotoesAcao">
+            <app-delete-button (click)="onBotaoDeleteClick()"></app-delete-button>
+            <button>editar</button>
+          </td>
         </tr>
       </tbody>
     </table>
-  </div>
-</div>
 
-<ng-template #tabelaVazia>
-  <tr>
-    <td colspan="100%">Nenhum dado disponível.</td>
-  </tr>
-</ng-template>
+    <ng-template #tabelaVazia>
+      <p>Nenhum dado encontrado.</p>
+    </ng-template>
+  </div>
+
+
+  <ng-template #tabelaVazia>
+    <tr>
+      <td colspan="100%">Nenhum dado disponível.</td>
+    </tr>
+  </ng-template>

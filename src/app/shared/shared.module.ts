@@ -7,6 +7,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { TablesComponent } from './tables/tables.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { RouterModule } from '@angular/router';
+import { DefaultLoginComponent } from './default-login/default-login.component';
 
 
 
@@ -16,7 +17,8 @@ import { RouterModule } from '@angular/router';
     AcessoNegadoComponent,
     PaginaNaoEncontradaComponent,
     SidebarComponent,
-    TablesComponent
+    TablesComponent,
+    DefaultLoginComponent
 
   ],
   imports: [

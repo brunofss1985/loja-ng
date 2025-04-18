@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Produtos, ProdutosService } from 'src/app/auth/services/produtosService/produtos.service';
+import { SharedModule } from "../../../../shared/shared.module";
 
 @Component({
   selector: 'app-produtos',
   templateUrl: './produtos.component.html',
-  styleUrls: ['./produtos.component.scss']
+  styleUrls: ['./produtos.component.scss'],
 })
 export class ProdutosComponent implements OnInit {
   tableName: string = 'Tabela de Produtos Cadastrados';

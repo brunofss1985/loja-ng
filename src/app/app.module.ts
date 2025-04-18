@@ -7,24 +7,23 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { HomeComponent } from './visitor/pages/home-visitor/home-visitor.component';
-import { HomeUserComponent } from './user/pages/home-user/home-user.component';
 import { GoogleMapsModule } from '@angular/google-maps';
-// import { MapComponent } from './shared/map/map.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TokenInterceptor } from './auth/interceptors/token.interceptor';
-import { ProdutosComponent } from './visitor/pages/produtos/produtos.component';
-import { ProdutoDetalheComponent } from './visitor/pages/produto-detalhe/produto-detalhe.component';
-import { EstoqueComponent } from './admin/pages/estoque/estoque.component';
-import { ComprasComponent } from './admin/pages/compras/compras.component';
-import { ProdutosEmFaltaComponent } from './admin/pages/produtos-em-falta/produtos-em-falta.component';
-import { OrcamentosComponent } from './admin/pages/orcamentos/orcamentos.component';
-import { CaixaComponent } from './admin/pages/caixa/caixa.component';
-import { LoginComponent } from './visitor/pages/login/login.component';
-import { RegisterComponent } from './visitor/pages/register/register.component';
-import { PerfilAdminComponent } from './admin/pages/perfil-admin/perfil-admin.component';
+import { EstoqueComponent } from './pages/private/admin/estoque/estoque.component';
+import { ProdutosEmFaltaComponent } from './pages/private/admin/produtos-em-falta/produtos-em-falta.component';
+import { OrcamentosComponent } from './pages/private/admin/orcamentos/orcamentos.component';
+import { PerfilAdminComponent } from './pages/private/admin/perfil-admin/perfil-admin.component';
 import { SharedModule } from './shared/shared.module';
+import { CaixaComponent } from './pages/private/admin/caixa/caixa.component';
+import { ComprasComponent } from './pages/private/admin/compras/compras.component';
+import { HomeUserComponent } from './pages/private/user/home-user/home-user.component';
+import { HomeComponent } from './pages/public/visitor/home/home.component';
+import { LoginComponent } from './pages/public/visitor/login/login.component';
+import { ProdutoDetalheComponent } from './pages/public/visitor/produto-detalhe/produto-detalhe.component';
+import { RegisterComponent } from './pages/public/visitor/register/register.component';
+import { ProdutosComponent } from './pages/public/visitor/produtos/produtos.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +33,6 @@ import { SharedModule } from './shared/shared.module';
     AppComponent,
     PerfilAdminComponent,
     HomeUserComponent,
-    ProdutosComponent,
     ProdutoDetalheComponent,
     EstoqueComponent,
     ComprasComponent,

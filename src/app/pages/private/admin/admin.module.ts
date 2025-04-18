@@ -2,17 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AdminRoutingModule } from './admin-routing.module';
-import { AdminComponent } from './admin.component';
-import { UsuariosComponent } from './pages/usuarios/usuarios.component';
-import { SharedModule } from '../shared/shared.module';
-import { ProdutosComponent } from './pages/produtos/produtos.component';
+import { SharedModule } from '../../../shared/shared.module';
 import { FormsModule } from '@angular/forms';
+import { AdminComponent } from './admin.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
 
 @NgModule({
   declarations: [
     AdminComponent,
     UsuariosComponent,
-    ProdutosComponent,
   ],
   imports: [
     FormsModule,

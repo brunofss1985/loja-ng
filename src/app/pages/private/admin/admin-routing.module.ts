@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from '../../../auth/auth-guard/auth-guard';
+import { AdminGuard } from '../../../auth/auth-guard/admin-guard';
 import { AdminComponent } from './admin.component';
-import { CaixaComponent } from './pages/caixa/caixa.component';
-import { ComprasComponent } from './pages/compras/compras.component';
-import { EstoqueComponent } from './pages/estoque/estoque.component';
-import { OrcamentosComponent } from './pages/orcamentos/orcamentos.component';
-import { ProdutosEmFaltaComponent } from './pages/produtos-em-falta/produtos-em-falta.component';
-import { AuthGuard } from '../auth/auth-guard/auth-guard';
-import { AdminGuard } from '../auth/auth-guard/admin-guard';
-import { PerfilAdminComponent } from './pages/perfil-admin/perfil-admin.component';
-import { UsuariosComponent } from './pages/usuarios/usuarios.component';
-import { ProdutosComponent } from './pages/produtos/produtos.component';
+import { CaixaComponent } from './caixa/caixa.component';
+import { ComprasComponent } from './compras/compras.component';
+import { EstoqueComponent } from './estoque/estoque.component';
+import { OrcamentosComponent } from './orcamentos/orcamentos.component';
+import { PerfilAdminComponent } from './perfil-admin/perfil-admin.component';
+import { ProdutosEmFaltaComponent } from './produtos-em-falta/produtos-em-falta.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { ProdutosComponent } from '../../public/visitor/produtos/produtos.component';
 
 const routes: Routes = [
   {

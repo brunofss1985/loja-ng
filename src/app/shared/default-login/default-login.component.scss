@@ -1,0 +1,29 @@
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6rem;
+    height: 47.5vw;
+
+    
+    section {
+        height: 80%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .section-main {
+        background-color: bisque;
+        flex-direction: column;
+        grid-row: 1;
+
+        h1 {
+            margin: 4rem ;
+        }
+    }
+
+    .section-form {
+        grid-row: 0.3;
+    }
+}

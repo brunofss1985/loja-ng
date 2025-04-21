@@ -8,6 +8,8 @@ import { TablesComponent } from './tables/tables.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { RouterModule } from '@angular/router';
 import { DefaultLoginComponent } from './default-login/default-login.component';
+import { InputTextComponent } from './input-text/input-text.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -18,20 +20,25 @@ import { DefaultLoginComponent } from './default-login/default-login.component';
     PaginaNaoEncontradaComponent,
     SidebarComponent,
     TablesComponent,
-    DefaultLoginComponent
-
+    DefaultLoginComponent,
+    InputTextComponent
   ],
+
   imports: [
     CommonModule,
     GoogleMapsModule,
-    RouterModule
+    RouterModule,
+    ReactiveFormsModule
   ],
+
   exports: [
     DeleteButtonComponent,
     AcessoNegadoComponent,
     PaginaNaoEncontradaComponent,
     SidebarComponent,
-    TablesComponent
+    TablesComponent,
+    DefaultLoginComponent,
+    InputTextComponent
   ]
 })
 export class SharedModule { }

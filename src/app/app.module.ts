@@ -23,7 +23,6 @@ import { HomeComponent } from './pages/public/visitor/home/home.component';
 import { LoginComponent } from './pages/public/visitor/login/login.component';
 import { ProdutoDetalheComponent } from './pages/public/visitor/produto-detalhe/produto-detalhe.component';
 import { RegisterComponent } from './pages/public/visitor/register/register.component';
-import { ProdutosComponent } from './pages/public/visitor/produtos/produtos.component';
 
 @NgModule({
   declarations: [

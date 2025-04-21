@@ -17,24 +17,24 @@ export class LoginComponent {
   });
 
   errorMessage: string = '';
-
+  
   constructor(
     private loginService: LoginService,
     private router: Router,
     private toastService: ToastrService,
     private authService: AuthService
   ) {}
-
+  
   submit() {
     const { email, password } = this.loginForm.value;
-  
+    
     const loginObservable = this.loginService.login(email, password);
-  
+    
     loginObservable.subscribe({
       next: (res) => {
         this.toastService.success("Login feito com sucesso");
         const userType = this.authService.getUserType();
-  
+        
         if (userType === 'ADMIN') {
           this.router.navigate(['/admin']);
         } else if (userType === 'USER') {
@@ -49,7 +49,7 @@ export class LoginComponent {
       }
     });
   }
-
+  
   navigate() {
     this.router.navigate([""]);
   }

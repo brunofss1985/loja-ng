@@ -1,48 +1,48 @@
+<app-default-login [tittleMain]="'Faça Seu Login'" [imageMain]="'assets/logo.png'" [textMain]="'ddddddddd'">
 
-<app-default-login 
-[tittleMain]="'Titte Main'"
-[imageMain]="'../assets/logo.png'"
->
+  <form [formGroup]="loginForm" (ngSubmit)="submit()">
+    <app-input-text [showInput]="true" [showInputLabel]="true" [showInputTextPlaceholder]="true"
+      [inputTextPlaceholder]="'E-mail do Usuário'" [labelName]="'E-mail'" idInput="email" [nameInput]="'email'"
+      formControlName="email"></app-input-text>
 
-<form [formGroup]="loginForm" (ngSubmit)="submit()">
-<app-input-text
-  [showInput]="true"
-  [showInputLabel]="true"
-  [showInputTextPlaceholder]="true"
-  [inputTextPlaceholder]="'Enter your email'" 
-  [labelName]="'E-mail'"
-  idInput="email"
-  [nameInput]="'email'"
-  formControlName="email"
-  ></app-input-text>
+    <div class="invalid-text" *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
+      <small *ngIf="loginForm.controls['email'].errors?.['required']">Email is required.</small>
+      <small *ngIf="loginForm.controls['email'].errors?.['email']">Invalid email format.</small>
+    </div>
 
-<div class="invalid-text" *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
-  <small *ngIf="loginForm.controls['email'].errors?.['required']">Email is required.</small>
-  <small *ngIf="loginForm.controls['email'].errors?.['email']">Invalid email format.</small>
-</div>
+    <app-input-text [inputType]="['password']" [showInput]="true" [showInputLabel]="true"
+      [showInputTextPlaceholder]="true" [inputTextPlaceholder]="'Senha do Usuário'" [labelName]="'Senha'" idInput="senha"
+      [nameInput]="'senha'" formControlName="password"></app-input-text>
 
-<app-input-text
-[inputType]="['password']"
-[showInput]="true"
-[showInputLabel]="true"
-[showInputTextPlaceholder]="true"
-[inputTextPlaceholder]="'senha'" 
-[labelName]="'Senha'"
-idInput="senha"
-[nameInput]="'senha'"
-formControlName="password"
-></app-input-text>
+    <div class="invalid-text" *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
+      <small *ngIf="loginForm.controls['password'].errors?.['required']">Password is required.</small>
+      <small *ngIf="loginForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters
+        long.</small>
+    </div>
 
-<div class="invalid-text" *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
-  <small *ngIf="loginForm.controls['password'].errors?.['required']">Password is required.</small>
-  <small *ngIf="loginForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters long.</small>
-</div>
+    <button type="submit" [disabled]="loginForm.invalid">Login</button>
+    <a class="forgot" href="">Esqueci minha senha</a>
+    <button type="button" (click)="navigate()" class="back-button">Voltar</button>
 
-  <button type="submit" [disabled]="loginForm.invalid">Login</button>
-  <button type="button" (click)="navigate()" class="back-button">Voltar</button>
 
- <div *ngIf="errorMessage">
-  <p>{{ errorMessage }}</p>
-</div> 
-</form>
+    <span class="hr">
+      <hr>
+      <p>or</p>
+      <hr>
+    </span>
+
+    <div class="icons">
+      <img src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo" />
+      <img src="https://img.icons8.com/3d-fluency/94/instagram-new.png" alt="instagram-new" />
+      <img src="https://img.icons8.com/fluency/48/mac-os.png" alt="mac-os" />
+    </div>
+
+    <div class="register">
+      <p>Não tem conta? Cadastre-se</p> <a href="/visitor/register">Aqui!</a>
+    </div>
+
+    <div *ngIf="errorMessage">
+      <p>{{ errorMessage }}</p>
+    </div>
+  </form>
 </app-default-login>

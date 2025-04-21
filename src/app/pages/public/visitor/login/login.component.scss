@@ -12,17 +12,11 @@ body {
     background-color: white;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow:  0 4px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
     display: flex;
     flex-direction: column;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 1rem;
   }
 
   button {
@@ -55,7 +49,62 @@ body {
     color: red;
     font-size: 0.6rem;
   }
+
+  .forgot {
+    margin-top: 5px;
+    font-size: 11px;
+  }
   
+  .hr {
+    padding-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  hr {
+    margin: auto;
+    width: 90%;
+    color: #ccc;
+  }
+
+  .hr p {
+    margin: 0 10px;
+    color: #ccc;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+
+.icons {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 20px;
+
+}
+
+.icons img {
+  height: 38px;
+  width: 38px;
+}
+
+.register {
+  display: flex;
+  justify-content: center;
+  margin: 30px auto 0 auto ;
+}
+
+.register p {
+  font-size: 12px;
+  margin: 0;
+}
+
+.register a {
+  font-size: 12px;
+  margin-left: 5px;
+  color: #007bff;
+}
+
   .error-message {
     background-color: #f8d7da;
     color: #721c24;

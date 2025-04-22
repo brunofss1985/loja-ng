@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ModalService } from 'src/app/auth/services/modalService/modal.service';
 
 @Component({
   selector: 'app-tables',
@@ -27,7 +28,7 @@ export class TablesComponent implements OnInit {
   @Output() botaoCadastroClick = new EventEmitter<void>();
   @Output() botaoDeleteClick = new EventEmitter<void>();
 
-  constructor() { }
+  constructor(private modalService: ModalService) {}
 
   ngOnInit(): void {
   }
@@ -38,6 +39,10 @@ export class TablesComponent implements OnInit {
 
   onBotaoDeleteClick() {
     this.botaoDeleteClick.emit();
+  }
+
+  abrirModal() {
+    this.modalService.open();
   }
 
 }

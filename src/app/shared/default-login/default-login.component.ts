@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/auth/services/authService/auth.service';
 
 @Component({
   selector: 'app-default-login',
@@ -7,7 +8,13 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class DefaultLoginComponent implements OnInit {
 
-  constructor() { }
+  showMain!: boolean;
+
+  constructor(public auth: AuthService) {
+
+   this.showMain = this.auth.isAuthenticated()
+   console.log(this.showMain)
+   }
 
   // @Input() showInpuText: boolean = true;
   @Input() labelName: string = '';
@@ -18,6 +25,8 @@ export class DefaultLoginComponent implements OnInit {
   
   @Input() OneInputLabelName: string = '';
   @Input() placeHolderName: string = '';
+
+
 
   
   ngOnInit(): void {

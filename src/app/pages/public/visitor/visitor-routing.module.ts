@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { VisitorComponent } from './visitor.component';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent } from '../../../shared/register/register.component';
 import { RegisterGuard } from 'src/app/auth/auth-guard/register-guard';
 
 const routes: Routes = [

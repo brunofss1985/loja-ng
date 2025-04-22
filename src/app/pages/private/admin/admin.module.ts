@@ -3,20 +3,22 @@ import { CommonModule } from '@angular/common';
 
 import { AdminRoutingModule } from './admin-routing.module';
 import { SharedModule } from '../../../shared/shared.module';
-import { FormsModule } from '@angular/forms';
 import { AdminComponent } from './admin.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
+import { RegisterComponent } from '../../../shared/register/register.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
+    RegisterComponent,
     AdminComponent,
     UsuariosComponent,
   ],
   imports: [
-    FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     AdminRoutingModule,
-    SharedModule
+    SharedModule,
 ]
 })
 export class AdminModule { }

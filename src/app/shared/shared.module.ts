@@ -9,13 +9,15 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { RouterModule } from '@angular/router';
 import { DefaultLoginComponent } from './default-login/default-login.component';
 import { InputTextComponent } from './input-text/input-text.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import {  FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalComponent } from './modal/modal.component';
+import { RegisterComponent } from './register/register.component';
 
 
 
 @NgModule({
   declarations: [
+    // RegisterComponent,
     DeleteButtonComponent,
     AcessoNegadoComponent,
     PaginaNaoEncontradaComponent,
@@ -27,6 +29,7 @@ import { ModalComponent } from './modal/modal.component';
   ],
 
   imports: [
+    FormsModule,
     CommonModule,
     GoogleMapsModule,
     RouterModule,
@@ -34,6 +37,7 @@ import { ModalComponent } from './modal/modal.component';
   ],
 
   exports: [
+    // RegisterComponent,
     DeleteButtonComponent,
     AcessoNegadoComponent,
     PaginaNaoEncontradaComponent,

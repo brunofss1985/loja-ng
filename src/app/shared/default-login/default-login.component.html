@@ -3,7 +3,7 @@
             <ng-content></ng-content>
     </section>
 
-    <section class="section-main">
+    <section *ngIf="!showMain" class="section-main">
         <img src="{{imageMain}}" alt="Logo">
     </section>
 </main>

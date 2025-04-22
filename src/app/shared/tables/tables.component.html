@@ -4,10 +4,9 @@
       {{tableName}}
     </div>
     <div *ngIf="botaoCadastroAparecer">
-      <button (click)="onBotaoClick()">{{botaoCadastro}}</button>
+      <button (click)="abrirModal()">{{botaoCadastro}}</button>
     </div>
   </div>
-
 
   <div class="card-body">
     <table>
@@ -36,7 +35,6 @@
       <p>Nenhum dado encontrado.</p>
     </ng-template>
   </div>
-
 
   <ng-template #tabelaVazia>
     <tr>

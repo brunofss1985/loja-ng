@@ -70,4 +70,8 @@ export class RegisterComponent {
   goLogin(): void {
     this.router.navigate(['visitor/login']);
   }
+
+  navigate() {
+    this.router.navigate([""]);
+  }
 }

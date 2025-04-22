@@ -22,7 +22,7 @@ export class InputTextComponent implements OnInit, ControlValueAccessor {
   @Input() forInputLabel: string = '';
   @Input() labelName: string = '';
 
-  @Input() inputType: string[] = ['text', 'number', 'password', 'date'];
+  @Input() inputType: string[] = ['text', 'number', 'password', 'date', 'select'];
   @Input() inputTextPlaceholder: string = '';
   @Input() nameInput: string = '';
   @Input() idInput: string = '';

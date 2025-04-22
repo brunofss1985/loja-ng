@@ -12,7 +12,7 @@ form {
   background-color: white;
   padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
   display: flex;
@@ -25,15 +25,36 @@ h2 {
   margin-bottom: 1rem;
 }
 
-input, select {
-  padding: 0.75rem;
-  margin: 0.5rem 0;
+select{
+  color: #aaa;
+  padding: 0.3rem 0.75rem;
+  margin-bottom: 0.3rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 0.90rem;
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.3s ease;
+}
+
+option {
+  color: black;
+
+}
+
+.escolha {
+  font-weight: bolder;
+}
+
+input::placeholder {
+padding: 0 8px;
+font-size: 14px;
+color: #aaa;
+}
+
+input:focus {
+  outline: none;
+  border-color: #007bff;
 }
 
 input:focus, select:focus {
@@ -49,7 +70,7 @@ label {
 }
 
 button {
-  padding: 0.75rem;
+  padding: 0.3rem;
   margin-top: 1rem;
   background-color: #007bff;
   color: white;
@@ -97,4 +118,21 @@ select::-ms-expand {
 
 select:hover {
   border-color: #0056b3;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  margin: 30px auto 0 auto ;
+}
+
+.login p {
+  font-size: 12px;
+  margin: 0;
+}
+
+.login a {
+  font-size: 12px;
+  margin-left: 5px;
+  color: #007bff;
 }

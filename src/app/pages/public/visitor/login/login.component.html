@@ -1,23 +1,21 @@
-<app-default-login [tittleMain]="'Faça Seu Login'" [imageMain]="'assets/logo.png'" [textMain]="'ddddddddd'">
+<app-default-login [imageMain]="'assets/logo.png'" [textMain]="'ddddddddd'">
 
   <form [formGroup]="loginForm" (ngSubmit)="submit()">
+    <h1>Fazer login</h1>
     <app-input-text [showInput]="true" [showInputLabel]="true" [showInputTextPlaceholder]="true"
       [inputTextPlaceholder]="'E-mail do Usuário'" [labelName]="'E-mail'" idInput="email" [nameInput]="'email'"
       formControlName="email"></app-input-text>
-
     <div class="invalid-text" *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
-      <small *ngIf="loginForm.controls['email'].errors?.['required']">Email is required.</small>
-      <small *ngIf="loginForm.controls['email'].errors?.['email']">Invalid email format.</small>
+      <small *ngIf="loginForm.controls['email'].errors?.['required']">O e-mail é obrigatório.</small>
+      <small *ngIf="loginForm.controls['email'].errors?.['email']">Fomarto do e-mail inválido..</small>
     </div>
 
     <app-input-text [inputType]="['password']" [showInput]="true" [showInputLabel]="true"
       [showInputTextPlaceholder]="true" [inputTextPlaceholder]="'Senha do Usuário'" [labelName]="'Senha'" idInput="senha"
       [nameInput]="'senha'" formControlName="password"></app-input-text>
-
     <div class="invalid-text" *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
-      <small *ngIf="loginForm.controls['password'].errors?.['required']">Password is required.</small>
-      <small *ngIf="loginForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters
-        long.</small>
+      <small *ngIf="loginForm.controls['password'].errors?.['required']">O e-mail é obrigatório.</small>
+      <small *ngIf="loginForm.controls['password'].errors?.['minlength']">Deve ter pelo menos 6 caracteres.</small>
     </div>
 
     <button type="submit" [disabled]="loginForm.invalid">Login</button>

@@ -19,6 +19,12 @@ form {
   flex-direction: column;
 }
 
+h1 {
+  margin: 0 0 2rem 0;
+  color: #007bff;
+  font-weight: bold;
+}
+
 h2 {
   text-align: center;
   color: #333;
@@ -90,10 +96,14 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.invalid-text {
+  display: flex;
+  padding-bottom: 10px;
+}
+
 small {
   color: red;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
+  font-size: 0.6rem;
 }
 
 .error-message {

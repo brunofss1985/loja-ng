@@ -1,8 +1,8 @@
 
 
 <app-default-login [tittleMain]="'Cadastre-se!'" [imageMain]="'assets/logo.png'" [textMain]="'ddddddddd'">
-
   <form [formGroup]="signupForm" (ngSubmit)="submit()">
+    <h1>Criar conta</h1>
     <label for="userType">Tipo de Usuário:</label>
     <select id="userType" formControlName="userType" required>
       <option selected disabled value="">Escolha uma opção</option>

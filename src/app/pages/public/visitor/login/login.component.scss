@@ -17,6 +17,12 @@ body {
     max-width: 400px;
     display: flex;
     flex-direction: column;
+
+    h1 {
+      margin: 0 0 2rem 0;
+      color: #007bff;
+      font-weight: bold;
+  }
   }
 
   button {

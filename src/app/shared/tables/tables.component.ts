@@ -36,8 +36,8 @@ export class TablesComponent implements OnInit {
     this.botaoCadastroClick.emit(); // Emite o evento para o componente pai
   }
 
-onBotaoDeleteClick(){
-  this.botaoDeleteClick.emit();
-}
+  onBotaoDeleteClick() {
+    this.botaoDeleteClick.emit();
+  }
 
 }

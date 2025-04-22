@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { DefaultLoginComponent } from './default-login/default-login.component';
 import { InputTextComponent } from './input-text/input-text.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ModalComponent } from './modal/modal.component';
 
 
 
@@ -21,7 +22,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     SidebarComponent,
     TablesComponent,
     DefaultLoginComponent,
-    InputTextComponent
+    InputTextComponent,
+    ModalComponent
   ],
 
   imports: [
@@ -38,7 +40,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     SidebarComponent,
     TablesComponent,
     DefaultLoginComponent,
-    InputTextComponent
+    InputTextComponent,
+    ModalComponent
   ]
 })
 export class SharedModule { }

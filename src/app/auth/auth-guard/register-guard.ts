@@ -5,13 +5,13 @@ import { AuthService } from '../services/authService/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AdminGuard implements CanActivate {
+export class RegisterGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
     const userType = this.authService.getUserType();
 
-    if (userType === 'ADMIN') {
+    if (userType === 'ADMIN' || userType === null) {
       return true;
     } else {
       this.router.navigate(['/acesso-negado']);

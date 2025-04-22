@@ -15,7 +15,6 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
   return password === passwordConfirm ? null : { passwordMismatch: true };
 }
 
-
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -25,6 +24,7 @@ export class RegisterComponent {
   signupForm!: FormGroup
 
   userAuth!: boolean;
+  userType!: string | null;
 
   constructor(
     private loginService: LoginService,
@@ -34,6 +34,7 @@ export class RegisterComponent {
   ) {
 
     this.userAuth = this.authservice.isAuthenticated()
+    this.userType = this.authservice.getUserType()
 
     this.signupForm = new FormGroup({
       userType: new FormControl('', [Validators.required]),
@@ -65,7 +66,6 @@ export class RegisterComponent {
       error: () => this.toastService.error("Erro no registro")
     });
   }
-
 
   goLogin(): void {
     this.router.navigate(['visitor/login']);

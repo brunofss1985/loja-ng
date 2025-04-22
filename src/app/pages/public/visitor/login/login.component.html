@@ -14,7 +14,7 @@
       [showInputTextPlaceholder]="true" [inputTextPlaceholder]="'Senha do Usuário'" [labelName]="'Senha'" idInput="senha"
       [nameInput]="'senha'" formControlName="password"></app-input-text>
     <div class="invalid-text" *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
-      <small *ngIf="loginForm.controls['password'].errors?.['required']">O e-mail é obrigatório.</small>
+      <small *ngIf="loginForm.controls['password'].errors?.['required']">A senha é obrigatória.</small>
       <small *ngIf="loginForm.controls['password'].errors?.['minlength']">Deve ter pelo menos 6 caracteres.</small>
     </div>
 

@@ -37,7 +37,7 @@ import { RegisterComponent } from './register/register.component';
   ],
 
   exports: [
-    // RegisterComponent,
+    // // RegisterComponent,
     DeleteButtonComponent,
     AcessoNegadoComponent,
     PaginaNaoEncontradaComponent,

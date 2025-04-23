@@ -1,45 +1,69 @@
+.modal-header {
+  background-color:var(--cor-primaria);
+  border-radius: 15px 15px 0 0 ;
+
+  h5 {
+    font-weight: bold;
+   color: var(--cor-base);
+  }
+
+  .btn-close{
+    border: none;
+    background-color:var(--cor-primaria);
+    color: var(--cor-base);
+    width: 15px;
+  }
+}
+
 .modal-backdrop-custom {
-  display:  flex;
-  align-items: center;  // Alinha o modal verticalmente no centro
-  justify-content: center;  // Alinha o modal horizontalmente no centro
-  position: fixed;  // Posiciona fixo na tela
+  display: flex;
+  align-items: center; // Centraliza verticalmente
+  justify-content: center; // Centraliza horizontalmente
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 50%;
-  max-width: 50rem;
-  background-color: rgba(0, 0, 0, 0.5);  // Fundo escuro atrás do modal
-  z-index: 1050;  // Garante que o modal fique sobre os outros elementos da página
+  height: 100%; // ALTERADO para ocupar a tela inteira
+  background-color: rgba(0, 0, 0, 0.5); // Descomentei o fundo escuro, se quiser
+  z-index: 1050;
 }
 
 .modal-dialog-centered {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0;  // Remove qualquer margem para garantir o centramento
+  width: 100%;
+  margin: 0;
 }
 
 .modal-content {
-  max-width: 800px;  // Aumentei o tamanho máximo para 800px
-  width: 100%;  // Faz com que o modal ocupe 100% da largura até o limite máximo
-  border-radius: 8px;  // Pode adicionar bordas arredondadas se preferir
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  // Adiciona uma sombra leve ao modal
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 550px;
+  max-height: 800px;
+  max-width: 800px;
+  width: 100%;
+  border-radius: 15px;
+  // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  // background: #fff; // Garante que o fundo do modal seja visível
 }
+
 
 @media (min-width: 576px) {
   .modal-content {
-    max-width: 90%;  // Modal menor em telas pequenas
+    max-width: 90%;
   }
 }
 
 @media (min-width: 768px) {
   .modal-content {
-    max-width: 80%;  // Modal maior em telas médias
+    max-width: 80%;
   }
 }
 
 @media (min-width: 1200px) {
   .modal-content {
-    max-width: 70%;  // Modal ainda maior em telas muito grandes
+    max-width: 70%;
   }
 }

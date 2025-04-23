@@ -2,11 +2,26 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Título do Modal</h5>
-          <button type="button" class="btn-close" (click)="close()" aria-label="Close"></button>
+          <h5 class="modal-title">Cadastrar usuário</h5>
+          <button type="button" class="btn-close" (click)="close()" aria-label="Close">x</button>
         </div>
         <div class="modal-body">
-          <p>Conteúdo do modal</p>
+          <app-input-text
+          [inputTextPlaceholder]="'Usuário'"
+          [labelName]="'Usuário'"
+          ></app-input-text>
+          <app-input-text
+          [inputTextPlaceholder]="'Email'"
+          [labelName]="'Email'"
+          ></app-input-text>
+          <app-input-text
+          [inputTextPlaceholder]="'Senha'"
+          [labelName]="'Senha'"
+          ></app-input-text>
+          <app-input-text
+          [inputTextPlaceholder]="'Corfirmar Senha'"
+          [labelName]="'Corfirmar Senha'"
+          ></app-input-text>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" (click)="close()">Fechar</button>

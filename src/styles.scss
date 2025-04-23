@@ -1,5 +1,12 @@
 @import 'ngx-toastr/toastr';
 
+:root {
+    --cor-primaria: #007BFF;
+    --cor-secundaria: #53a3ff;
+    --cor-hover: #1f66b2;
+    --cor-base: #ffffff;
+}
+
 * {
     margin: 0;
     padding: 0;

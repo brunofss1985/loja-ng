@@ -13,6 +13,7 @@ export class ModalComponent implements OnInit {
   @Input() isOpen = false;
   @Input() tittleModal = '';
   @Input() showRegisterForm = false;
+  @Input() size: 'small' | 'medium' | 'large' = 'medium';
 
   close() {
     this.isOpen = false;

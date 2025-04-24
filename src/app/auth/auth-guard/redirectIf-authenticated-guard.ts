@@ -5,15 +5,14 @@ import { AuthService } from '../services/authService/auth.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) { }
+export class RedirectIfAuthenticatedGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
     if (this.authService.isAuthenticated()) {
-      return true;
-    } else {
-      this.router.navigate(['/visitor/login']);
+      this.router.navigate(['admin/perfil']); // redireciona se estiver logado
       return false;
     }
+    return true; // permite acesso se não estiver logado
   }
 }

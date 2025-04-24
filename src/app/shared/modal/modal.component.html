@@ -1,12 +1,16 @@
 <div *ngIf="isOpen" class="modal-backdrop-custom">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{tittleModal}}</h5>
-        <button type="button" class="btn-close" (click)="close()" aria-label="Close">x</button>
+  <div class="custom-modal-dialog"  [ngClass]="size">
+    <div class="custom-modal-content">
+      <div class="custom-modal-header">
+        <h5 class="modal-title">{{ tittleModal }}</h5>
+        <button type="button" class="btn-close" (click)="close()" aria-label="Close"></button>
       </div>
-      <ng-content></ng-content>
-      <div class="modal-footer">
+
+      <div class="custom-modal-body">
+        <ng-content></ng-content>
+      </div>
+
+      <div class="custom-modal-footer">
         <button class="btn btn-secondary" (click)="close()">Fechar</button>
         <button class="btn btn-primary">Salvar</button>
       </div>

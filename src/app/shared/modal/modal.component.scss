@@ -1,68 +1,93 @@
-.modal-header {
-  background-color:var(--cor-primaria);
-  border-radius: 15px 15px 0 0 ;
-
-  h5 {
-    font-weight: bold;
-   color: var(--cor-base);
-  }
-
-  .btn-close{
-    border: none;
-    background-color:var(--cor-primaria);
-    color: var(--cor-base);
-    width: 15px;
-  }
-}
-
 .modal-backdrop-custom {
   display: flex;
-  align-items: center; // Centraliza verticalmente
-  justify-content: center; // Centraliza horizontalmente
+  align-items: center;
+  justify-content: center;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%; // ALTERADO para ocupar a tela inteira
-  background-color: rgba(0, 0, 0, 0.5); // Descomentei o fundo escuro, se quiser
+  inset: 0; // top, right, bottom, left = 0
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1050;
 }
 
-.modal-dialog-centered {
+.custom-modal-dialog {
+  width: 100%;
+  max-width: 2000px;
+  margin: auto;
+  padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  margin: 0;
+  
+  &.small {
+  width: 800px !important;
+  }
+
+  &.medium {
+   width: 1200px !important;
+  }
+
+  &.large {
+   width: 1800px !important;
+  }
 }
 
-.modal-content {
+.custom-modal-content {
+  background: white;
+  border-radius: 15px;
+  width: 50%;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: auto; 
-  max-height: 90vh;
-  max-height: 800px;
-  max-width: 800px;
-  width: 100%;
-  border-radius: 15px;
+  overflow: hidden;
+
 }
 
+.custom-modal-header {
+  background-color: var(--cor-primaria);
+  border-radius: 15px 15px 0 0;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-@media (min-width: 576px) {
-  .modal-content {
+  h5 {
+    font-weight: bold;
+    color: var(--cor-base);
+    margin-left: 1rem;
+  }
+
+  .btn-close {
+    color: var(--cor-base);
+    border: none;
+    background-color: var(--cor-primaria);
+    font-size: 0.5rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+}
+
+.custom-modal-body {
+  // padding: 1rem;
+  overflow-y: auto;
+}
+
+.custom-modal-footer {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  border-radius: 0 0 15px 15px;
+}
+
+@media (max-width: 768px) {
+  .custom-modal-dialog {
     max-width: 90%;
   }
-}
 
-@media (min-width: 768px) {
-  .modal-content {
-    max-width: 80%;
-  }
-}
-
-@media (min-width: 1200px) {
-  .modal-content {
-    max-width: 70%;
+  .custom-modal-content {
+    max-height: 85vh;
   }
 }

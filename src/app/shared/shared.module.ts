@@ -17,7 +17,7 @@ import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
-    // RegisterComponent,
+    RegisterComponent,
     DeleteButtonComponent,
     AcessoNegadoComponent,
     PaginaNaoEncontradaComponent,
@@ -37,7 +37,7 @@ import { RegisterComponent } from './register/register.component';
   ],
 
   exports: [
-    // // RegisterComponent,
+    RegisterComponent,
     DeleteButtonComponent,
     AcessoNegadoComponent,
     PaginaNaoEncontradaComponent,

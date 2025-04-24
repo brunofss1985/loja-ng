@@ -23,7 +23,6 @@ export class ModalComponent implements OnInit {
       this.isOpen = true;
     });
   }
-
     // Fechar o modal com a tecla ESC
     @HostListener('document:keydown.escape', ['$event'])
     onEscapeKey(event: KeyboardEvent) {

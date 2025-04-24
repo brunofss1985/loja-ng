@@ -1,9 +1,9 @@
 <main>
     <section class="section-form">
-            <ng-content></ng-content>
+            <router-outlet></router-outlet>
     </section>
 
     <section *ngIf="!showMain" class="section-main">
-        <img src="{{imageMain}}" alt="Logo">
+        <img src="../../../assets/logo.png" alt="Logo">
     </section>
 </main>

@@ -1,6 +1,5 @@
-<app-default-login [tittleMain]="'Cadastre-se!'" [imageMain]="'assets/logo.png'" [textMain]="'ddddddddd'">
   <form [formGroup]="signupForm" (ngSubmit)="submit()">
-    <h1>Criar conta</h1>
+    <h1 *ngIf="!userAuth">Criar conta</h1>
     <label for="userType">Tipo de Usuário:</label>
     <select id="userType" formControlName="userType" required>
       <option selected disabled value="">Escolha uma opção</option>
@@ -46,7 +45,6 @@
     <button *ngIf="!userAuth" type="button" (click)="navigate()" class="back-button">Voltar</button>
 
     <div *ngIf="!userAuth"  class="login">
-      <p>Já tem conta? Faça</p> <a href="visitor/login">Login</a>
+      <p>Já tem conta? Faça</p> <a [routerLink]="['/visitor/default-login/login']">Login</a>  
     </div>
   </form>
-</app-default-login>

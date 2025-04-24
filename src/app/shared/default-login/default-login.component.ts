@@ -20,7 +20,6 @@ export class DefaultLoginComponent implements OnInit {
   @Input() labelName: string = '';
 
   @Input() tittleMain: string = '';
-  @Input() imageMain: string = '';
   @Input() textMain: string = '';
   
   @Input() OneInputLabelName: string = '';

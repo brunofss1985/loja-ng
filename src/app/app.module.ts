@@ -22,12 +22,10 @@ import { HomeUserComponent } from './pages/private/user/home-user/home-user.comp
 import { HomeComponent } from './pages/public/visitor/home/home.component';
 import { LoginComponent } from './pages/public/visitor/login/login.component';
 import { ProdutoDetalheComponent } from './pages/public/visitor/produto-detalhe/produto-detalhe.component';
-import { RegisterComponent } from './shared/register/register.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
-    // RegisterComponent,
     LoginComponent,
     AppComponent,
     PerfilAdminComponent,

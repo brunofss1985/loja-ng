@@ -5,7 +5,6 @@ import { VisitorRoutingModule } from './visitor-routing.module';
 import { VisitorComponent } from './visitor.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ProdutosComponent } from './produtos/produtos.component';
-import { RegisterComponent } from '../../../shared/register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({

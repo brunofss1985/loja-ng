@@ -54,10 +54,4 @@ export class UsuariosComponent implements OnInit {
       });
     }
   }
-
-  modalAberto = false;
-
-  abrirCadastro() {
-    this.modalAberto = true;
-  }
 }

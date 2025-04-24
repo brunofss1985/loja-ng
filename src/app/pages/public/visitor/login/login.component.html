@@ -1,4 +1,3 @@
-<app-default-login [imageMain]="'assets/logo.png'" [textMain]="'ddddddddd'">
 
   <form [formGroup]="loginForm" (ngSubmit)="submit()">
     <h1>Fazer login</h1>
@@ -36,11 +35,10 @@
     </div>
 
     <div class="register">
-      <p>Não tem conta? Cadastre-se</p> <a href="/visitor/register">Aqui!</a>
+      <p>Não tem conta? Cadastre-se</p> <a [routerLink]="['/visitor/default-login/register']">Aqui!</a>
     </div>
 
     <div *ngIf="errorMessage">
       <p>{{ errorMessage }}</p>
     </div>
   </form>
-</app-default-login>

@@ -1,5 +1,6 @@
 import { EventEmitter, Output } from '@angular/core';
 import { Component, Input } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { DeleteService } from 'src/app/auth/services/deleteService/delete.service';
 
 @Component({
@@ -11,33 +12,38 @@ export class DeleteButtonComponent {
   @Input() itemId!: number;
   @Input() itemType: 'user' | 'product' = 'user';
 
-  constructor(private deleteService: DeleteService) { }
+  constructor(private deleteService: DeleteService, private toastr: ToastrService) { }
 
 
   @Output() deleted = new EventEmitter<void>();
 
   delete() {
+    const confirmar = confirm('Tem certeza que deseja deletar este item?');
+    if (!confirmar) return;
+
     if (this.itemType === 'user') {
       this.deleteService.deleteUser(this.itemId).subscribe({
         next: () => {
+          this.toastr.success(`Usuário ${this.itemId} deletado com sucesso`);
           this.deleted.emit();
-          console.log(`Usuário ${this.itemId} deletado com sucesso`);
-          // Aqui você pode emitir um evento para atualizar a tabela
         },
         error: (error) => {
+          this.toastr.error('Erro ao deletar usuário');
           console.error('Erro ao deletar usuário:', error);
         }
       });
     } else if (this.itemType === 'product') {
       this.deleteService.deleteProduct(this.itemId).subscribe({
         next: () => {
-          console.log(`Produto ${this.itemId} deletado com sucesso`);
-          // Atualizar tabela aqui também, se for o caso
+          this.toastr.success(`Produto ${this.itemId} deletado com sucesso`);
+          this.deleted.emit();
         },
         error: (error) => {
+          this.toastr.error('Erro ao deletar produto');
           console.error('Erro ao deletar produto:', error);
         }
       });
     }
   }
 }
+  

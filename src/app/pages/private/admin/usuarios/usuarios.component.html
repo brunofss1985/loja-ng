@@ -9,7 +9,12 @@
 </app-tables>
 
 <app-modal
+[(isOpen)]="modalAberto"
 [tittleModal]="'Cadastrar Usuário'"
-[size]="'small'">
-<app-register></app-register>
+[size]="'small'"
+(saveClick)="save()"
+>
+<app-register
+ (registerSuccess)="onUserRegistered()"
+></app-register>
 </app-modal>

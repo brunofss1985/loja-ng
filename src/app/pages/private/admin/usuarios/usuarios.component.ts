@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/auth/services/authService/auth.service';
 import { User, UserService } from 'src/app/auth/services/userService/user-service.service';
+import { RegisterComponent } from 'src/app/shared/register/register.component';
 
 @Component({
   selector: 'app-usuarios',
@@ -9,6 +10,9 @@ import { User, UserService } from 'src/app/auth/services/userService/user-servic
 })
 export class UsuariosComponent implements OnInit {
 
+  @ViewChild(RegisterComponent) registerComponent!: RegisterComponent;
+  
+  modalAberto!: boolean;
   tableName!: string;
   headers: string[] = [];
   users: User[] = [];
@@ -32,14 +36,14 @@ export class UsuariosComponent implements OnInit {
     this.userService.getAllUsers().subscribe({
       next: (data) => {
         this.users = data.map(user => ({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          userType: user.userType
+          'id': user.id,
+          'Nome': user.name,
+          'Email': user.email,
+          'Tipo de Usuário': user.userType
         }));
   
         if (data.length > 0) {
-          this.headers = ['id', 'name', 'email', 'userType'];
+          this.headers = ['id', 'Nome', 'Email', 'Tipo de Usuário'];
         }
       },
       error: (err) => console.error('Erro ao carregar usuários:', err)
@@ -52,6 +56,17 @@ export class UsuariosComponent implements OnInit {
         next: () => this.loadUsers(),
         error: (err) => console.error('Erro ao deletar usuário:', err)
       });
+    }
+  }
+
+  onUserRegistered() {
+    this.loadUsers(); // Atualiza a tabela
+    this.modalAberto = false; // Fecha o modal
+  }
+
+  save(): void {
+    if (this.registerComponent) {
+      this.registerComponent.submit();
     }
   }
 }

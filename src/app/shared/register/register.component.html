@@ -41,7 +41,7 @@
         caracteres.</small>
     </div>
 
-    <button type="submit" [disabled]="signupForm.invalid">Cadastrar</button>
+    <button *ngIf="!userAuth" type="submit" [disabled]="signupForm.invalid">Cadastrar</button>
     <button *ngIf="!userAuth" type="button" (click)="navigate()" class="back-button">Voltar</button>
 
     <div *ngIf="!userAuth"  class="login">

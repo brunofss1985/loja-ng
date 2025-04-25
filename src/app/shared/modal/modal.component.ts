@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ModalService } from 'src/app/auth/services/modalService/modal.service';
 
 @Component({
@@ -10,14 +10,14 @@ export class ModalComponent implements OnInit {
 
   constructor(private modalService: ModalService) {}
 
+  @Output() saveClick = new EventEmitter<void>();
+
+  @Output() isOpenChange = new EventEmitter<boolean>();
+
   @Input() isOpen = false;
   @Input() tittleModal = '';
   @Input() showRegisterForm = false;
   @Input() size: 'small' | 'medium' | 'large' = 'medium';
-
-  close() {
-    this.isOpen = false;
-  }
 
   ngOnInit(): void {
     this.modalService.openModal$.subscribe(() => {
@@ -28,5 +28,14 @@ export class ModalComponent implements OnInit {
     @HostListener('document:keydown.escape', ['$event'])
     onEscapeKey(event: KeyboardEvent) {
       this.close();
+    }
+
+    save() {
+      this.saveClick.emit();
+    }
+
+    close() {
+      this.isOpen = false;
+      this.isOpenChange.emit(false);
     }
 }

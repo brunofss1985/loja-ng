@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -21,6 +21,9 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+
+  @Output() registerSuccess = new EventEmitter<void>();
+
   signupForm!: FormGroup
 
   userAuth!: boolean;
@@ -61,14 +64,14 @@ export class RegisterComponent {
     this.loginService.register(name, email, password, userType).subscribe({
       next: () => {
         this.toastService.success("Registrado com sucesso!");
-        this.router.navigate(['visitor/login']);
+        this.registerSuccess.emit();
+        if(this.userAuth) {
+          this.router.navigate(['admin/usuarios']);
+        } else
+        this.router.navigate(['visitor/default-login/login']);
       },
       error: () => this.toastService.error("Erro no registro")
     });
-  }
-
-  goLogin(): void {
-    this.router.navigate(['visitor/login']);
   }
 
   navigate() {

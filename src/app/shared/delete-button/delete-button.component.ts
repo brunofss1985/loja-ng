@@ -1,3 +1,4 @@
+import { EventEmitter, Output } from '@angular/core';
 import { Component, Input } from '@angular/core';
 import { DeleteService } from 'src/app/auth/services/deleteService/delete.service';
 
@@ -7,25 +8,36 @@ import { DeleteService } from 'src/app/auth/services/deleteService/delete.servic
   styleUrls: ['./delete-button.component.scss']
 })
 export class DeleteButtonComponent {
-  // @Input() itemId!: number;
-  // @Input() itemType: 'user' | 'product' = 'user';
+  @Input() itemId!: number;
+  @Input() itemType: 'user' | 'product' = 'user';
 
-  constructor(private deleteService: DeleteService) {}
+  constructor(private deleteService: DeleteService) { }
+
+
+  @Output() deleted = new EventEmitter<void>();
 
   delete() {
-    // if (!this.itemId) return;
-
-    // const confirmed = confirm('Tem certeza que deseja excluir?');
-    // if (!confirmed) return;
-
-    // if (this.itemType === 'user') {
-    //   this.deleteService.deleteUser(this.itemId).subscribe(() => {
-    //     alert('Usuário excluído com sucesso!');
-    //   });
-    // } else if (this.itemType === 'product') {
-    //   this.deleteService.deleteProduct(this.itemId).subscribe(() => {
-    //     alert('Produto excluído com sucesso!');
-    //   });
-    // }
+    if (this.itemType === 'user') {
+      this.deleteService.deleteUser(this.itemId).subscribe({
+        next: () => {
+          this.deleted.emit();
+          console.log(`Usuário ${this.itemId} deletado com sucesso`);
+          // Aqui você pode emitir um evento para atualizar a tabela
+        },
+        error: (error) => {
+          console.error('Erro ao deletar usuário:', error);
+        }
+      });
+    } else if (this.itemType === 'product') {
+      this.deleteService.deleteProduct(this.itemId).subscribe({
+        next: () => {
+          console.log(`Produto ${this.itemId} deletado com sucesso`);
+          // Atualizar tabela aqui também, se for o caso
+        },
+        error: (error) => {
+          console.error('Erro ao deletar produto:', error);
+        }
+      });
+    }
   }
 }

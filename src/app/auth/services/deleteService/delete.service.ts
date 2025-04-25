@@ -9,7 +9,7 @@ export class DeleteService {
   constructor(private http: HttpClient) {}
 
   deleteUser(id: number): Observable<any> {
-    return this.http.delete(`/api/users/${id}`);
+    return this.http.delete(`/api/user/${id}`);
   }
 
   deleteProduct(id: number): Observable<any> {

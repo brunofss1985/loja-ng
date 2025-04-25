@@ -24,7 +24,7 @@
             {{ header === 'id' && row[header] ? row[header].slice(-4) : (row[header] ?? '') }}
           </td>
           <td *ngIf="mostrarBotoesAcao">
-            <app-delete-button (click)="onBotaoDeleteClick()"></app-delete-button>
+            <app-delete-button  [itemId]="row['id']" [itemType]="'user'"  (deleted)="onDeleted()"></app-delete-button>
             <button id="button-edit"><img width="20" height="20" src="https://img.icons8.com/ios/50/create-new.png" alt="create-new"/></button>
           </td>
         </tr>

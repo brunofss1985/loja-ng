@@ -27,6 +27,8 @@ export class TablesComponent implements OnInit {
 
   @Output() botaoCadastroClick = new EventEmitter<void>();
   @Output() botaoDeleteClick = new EventEmitter<void>();
+  @Output() deleted = new EventEmitter<void>();
+
 
   constructor(private modalService: ModalService) {}
 
@@ -45,4 +47,7 @@ export class TablesComponent implements OnInit {
     this.modalService.open();
   }
 
+  onDeleted() {
+    this.deleted.emit(); // Dispara o evento para o componente pai
+  }
 }

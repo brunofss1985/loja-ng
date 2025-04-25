@@ -1,19 +1,19 @@
 button {
-    font-size: 13px;
-    background-color: #dc3545; /* Cor danger padrão */
-    color: white;
+  background-color: var(--cor-base);
+    // background-color: #dc3545; /* Cor danger padrão */
+    color: rgb(255, 0, 0);
     border: none;
-    border-radius: 6px;
+    border-radius: 25px;
     padding: 0px 4px;
     margin-right: 2px;
-    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.5);
+    // box-shadow: 0 1px 3px rgba(255, 255, 255, 0.5);
     transition: all 0.1s ease-in-out;
     cursor: pointer;
   }
   
-  button:hover {
-    background-color: #b02a37; /* Cor danger mais escura no hover */
-  }
+  // button:hover {
+  //   background-color: #b02a37; /* Cor danger mais escura no hover */
+  // }
   
   button:active {
     transform: translateY(2px);

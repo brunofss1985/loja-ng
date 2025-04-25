@@ -40,6 +40,19 @@ button {
   cursor: pointer;
 }
 
+#button-edit {
+  
+    border-radius: 25px;
+    padding: 0px ;
+    background-color: var(--cor-base);
+    margin: 0 15px 0 15px;
+    border: none;
+    transition: all 0.1s ease-in-out;
+    cursor: pointer;
+  
+}
+
+
 button:hover {
   background-color: #1f66b2; /* azul mais escuro no hover */
 }

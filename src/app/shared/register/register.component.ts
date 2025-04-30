@@ -65,6 +65,8 @@ export class RegisterComponent {
       next: () => {
         this.toastService.success("Registrado com sucesso!");
         this.registerSuccess.emit();
+        this.signupForm.reset();
+
         if(this.userAuth) {
           this.router.navigate(['admin/usuarios']);
         } else

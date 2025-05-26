@@ -1,0 +1,15 @@
+.layout-container {
+  display: flex;
+  height: 100vh;
+}
+
+.layout-content {
+  flex-grow: 1;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  margin-left: 40px; // sidebar recolhido
+
+  &.collapsed {
+    margin-left: 170px; // sidebar expandido
+  }
+}

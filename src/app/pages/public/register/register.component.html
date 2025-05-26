@@ -1,0 +1,50 @@
+  <form [formGroup]="signupForm" (ngSubmit)="submit()">
+    <h1 *ngIf="!userAuth">Criar conta</h1>
+    <label for="userType">Tipo de Usuário:</label>
+    <select id="userType" formControlName="userType" required>
+      <option selected disabled value="">Escolha uma opção</option>
+      <option *ngIf="userAuth && userType == 'ADMIN'" value="ADMIN">Administrador</option>
+      <option value="USER">Usuário</option>
+    </select>
+
+    <app-input-text [showInput]="true" [showInputLabel]="true" [showInputTextPlaceholder]="true"
+      [inputTextPlaceholder]="'Nome de Usuário'" [labelName]="'Nome de Usuário'" idInput="Nome de Usuário"
+      [nameInput]="'Nome de Usuário'" formControlName="name"></app-input-text>
+    <div class="invalid-text" *ngIf="signupForm.controls['name'].invalid && signupForm.controls['name'].touched">
+      <small *ngIf="signupForm.controls['name'].errors?.['required']">O nome é obrigatório.</small>
+    </div>
+
+    <app-input-text [showInput]="true" [showInputLabel]="true" [showInputTextPlaceholder]="true"
+      [inputTextPlaceholder]="'E-mail do Usuário'" [labelName]="'E-mail'" idInput="email" [nameInput]="'email'"
+      formControlName="email"></app-input-text>
+    <div class="invalid-text" *ngIf="signupForm.controls['email'].invalid && signupForm.controls['email'].touched">
+      <small *ngIf="signupForm.controls['email'].errors?.['required']">O e-mail é obrigatório.</small>
+      <small *ngIf="signupForm.controls['email'].errors?.['email']">Fomarto do e-mail inválido.</small>
+    </div>
+
+    <app-input-text [inputType]="['password']" [showInput]="true" [showInputLabel]="true"
+      [showInputTextPlaceholder]="true" [inputTextPlaceholder]="'Senha do Usuário'" [labelName]="'Senha'"
+      idInput="senha" [nameInput]="'senha'" formControlName="password"></app-input-text>
+    <div class="invalid-text"
+      *ngIf="signupForm.controls['password'].invalid && signupForm.controls['password'].touched">
+      <small *ngIf="signupForm.controls['password'].errors?.['required']">A senha é obrigatória.</small>
+      <small *ngIf="signupForm.controls['password'].errors?.['minlength']">Deve ter pelo menos 6 caracteres.</small>
+    </div>
+
+    <app-input-text [inputType]="['password']" [showInput]="true" [showInputLabel]="true"
+      [showInputTextPlaceholder]="true" [inputTextPlaceholder]="'Confirme a Senha'" [labelName]="'Confirme a Senha'"
+      idInput="passwordConfirm" [nameInput]="'Confirme a Senha'" formControlName="passwordConfirm"></app-input-text>
+    <div class="invalid-text"
+      *ngIf="signupForm.controls['passwordConfirm'].invalid && signupForm.controls['passwordConfirm'].touched">
+      <small *ngIf="signupForm.controls['passwordConfirm'].errors?.['required']">A senha é obrigatória.</small>
+      <small *ngIf="signupForm.controls['passwordConfirm'].errors?.['minlength']">Deve ter pelo menos 6
+        caracteres.</small>
+    </div>
+
+    <button *ngIf="!userAuth" type="submit" [disabled]="signupForm.invalid">Cadastrar</button>
+    <button *ngIf="!userAuth" type="button" (click)="navigate()" class="back-button">Voltar</button>
+
+    <div *ngIf="!userAuth"  class="login">
+      <p>Já tem conta? Faça</p> <a [routerLink]="['/public/default-login/login']">Login</a>  
+    </div>
+  </form>

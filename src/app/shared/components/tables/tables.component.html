@@ -1,0 +1,39 @@
+<div class="card">
+  <div class="card-header">
+    <div>
+      {{tableName}}
+    </div>
+    <div *ngIf="botaoCadastroAparecer">
+      <button (click)="abrirModal()">{{botaoCadastro}}</button>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <table>
+      <thead>
+        <tr>
+          <th *ngFor="let header of headers">
+            {{ header }}
+          </th>
+          <th *ngIf="mostrarBotoesAcao">Ações</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="data.length > 0; else tabelaVazia">
+        <tr *ngFor="let row of data">
+          <td *ngFor="let header of headers">
+            {{ header === 'id' && row[header] ? row[header].slice(-4) : (row[header] ?? '') }}
+          </td>
+          <td *ngIf="mostrarBotoesAcao">
+            <app-delete-button [itemId]="row['id']" [itemType]="'user'" (deleted)="onDeleted()"></app-delete-button>
+           <app-edit-button></app-edit-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #tabelaVazia>
+    <tr>
+      <td colspan="100%">Nenhum dado disponível.</td>
+    </tr>
+  </ng-template>

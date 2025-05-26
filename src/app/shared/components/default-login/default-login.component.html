@@ -1,0 +1,9 @@
+<main>
+    <section class="section-form">
+            <router-outlet></router-outlet>
+    </section>
+
+    <section *ngIf="!showMain" class="section-main">
+        <img src="../../../../assets/img/logo.png" alt="Logo">
+    </section>
+</main>

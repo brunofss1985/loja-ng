@@ -1,0 +1,21 @@
+<h5>Usuários</h5>
+<app-tables 
+[botaoCadastroAparecer]="true"
+[mostrarBotoesAcao]="true"
+[botaoCadastro]="'Cadastrar'"
+[tableName]="'Tabela de Usuários Cadastrados'"
+[headers]="headers" 
+(deleted)="loadUsers()"
+[data]="users">
+</app-tables>
+
+<app-modal
+[(isOpen)]="modalAberto"
+[tittleModal]="'Cadastrar Usuário'"
+[size]="'small'"
+(saveClick)="save()"
+>
+<app-register
+ (registerSuccess)="onUserRegistered()"
+></app-register>
+</app-modal>

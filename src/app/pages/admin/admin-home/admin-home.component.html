@@ -1,0 +1,6 @@
+<div class="layout-container">
+  <app-sidebar (toggleSidebar)="isSidebarOpen = $event"></app-sidebar>
+  <div class="layout-content" [class.collapsed]="isSidebarOpen">
+    <router-outlet></router-outlet>
+  </div>
+</div>

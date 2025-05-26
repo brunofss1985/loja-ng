@@ -1,0 +1,8 @@
+<div *ngIf="showInput" class="content">
+
+    <label *ngIf="showInputLabel" for="{{forInputLabel}}">{{labelName}}
+    </label>
+
+    <input *ngIf="showInputTextPlaceholder" type="{{inputType}}" name="{{nameInput}}" id="{{idInput}}"
+        placeholder="{{inputTextPlaceholder}}" [value]="value" (input)="onInput($event)" (blur)="onTouched()" >
+</div>

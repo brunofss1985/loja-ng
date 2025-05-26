@@ -1,0 +1,28 @@
+main {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    .section-main {
+        display: grid;
+        place-items: center;
+        height: 45rem;
+    }
+}
+
+@media (max-width: 950px) {
+    main {
+        justify-content: center;
+    }
+
+    section img {
+        width: 25rem;
+    }
+}
+
+@media (max-width: 500px) {
+
+    section img {
+        width: 90%;
+    }
+}

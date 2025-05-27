@@ -1,17 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/core/services/authService/auth.service';
-import { User, UserService } from 'src/app/core/services/userService/user-service.service';
+import {
+  User,
+  UserService,
+} from 'src/app/core/services/userService/user-service.service';
 import { RegisterComponent } from '../../public/register/register.component';
 
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.component.html',
-  styleUrls: ['./usuarios.component.scss']
+  styleUrls: ['./usuarios.component.scss'],
 })
 export class UsuariosComponent implements OnInit {
-
   @ViewChild(RegisterComponent) registerComponent!: RegisterComponent;
-  
+
+  usuarioSelecionado: any = null;
+
   modalAberto!: boolean;
   tableName!: string;
   headers: string[] = [];
@@ -32,29 +36,21 @@ export class UsuariosComponent implements OnInit {
     }
   }
 
-  loadUsers(): void {
-    this.userService.getAllUsers().subscribe({
-      next: (data) => {
-        this.users = data.map(user => ({
-          'id': user.id,
-          'Nome': user.name,
-          'Email': user.email,
-          'Tipo de Usuário': user.userType
-        }));
-  
-        if (data.length > 0) {
-          this.headers = ['id', 'Nome', 'Email', 'Tipo de Usuário'];
-        }
-      },
-      error: (err) => console.error('Erro ao carregar usuários:', err)
-    });
-  }
+loadUsers(): void {
+  this.userService.getAllUsers().subscribe({
+    next: (data) => {
+      this.users = data;
+      this.headers = ['id', 'name', 'email', 'userType'];
+    },
+    error: (err) => console.error('Erro ao carregar usuários:', err),
+  });
+}
 
   deleteUser(id: string): void {
     if (confirm('Deseja realmente deletar este usuário?')) {
       this.userService.deleteUser(id).subscribe({
         next: () => this.loadUsers(),
-        error: (err) => console.error('Erro ao deletar usuário:', err)
+        error: (err) => console.error('Erro ao deletar usuário:', err),
       });
     }
   }
@@ -66,7 +62,20 @@ export class UsuariosComponent implements OnInit {
 
   save(): void {
     if (this.registerComponent) {
-      this.registerComponent.submit();
+      this.registerComponent.submit(this.usuarioSelecionado);
+      this.registerComponent.resetForm();
+    }
+  }
+
+  onEditUser(user: any) {
+    this.usuarioSelecionado = user;
+    this.modalAberto = true;
+  }
+
+  onModalFechado() {
+    this.usuarioSelecionado = null;
+    if (this.registerComponent) {
+      this.registerComponent.resetForm();
     }
   }
 }

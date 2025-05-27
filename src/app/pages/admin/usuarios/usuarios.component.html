@@ -2,20 +2,24 @@
 <app-tables 
 [botaoCadastroAparecer]="true"
 [mostrarBotoesAcao]="true"
-[botaoCadastro]="'Cadastrar'"
+[botaoCadastro]=" 'Cadastrar'"
 [tableName]="'Tabela de Usuários Cadastrados'"
 [headers]="headers" 
 (deleted)="loadUsers()"
-[data]="users">
+[data]="users"
+ (editUser)="onEditUser($event)">
+
 </app-tables>
 
 <app-modal
 [(isOpen)]="modalAberto"
-[tittleModal]="'Cadastrar Usuário'"
+  (isOpenChange)="onModalFechado()"
+[tittleModal]="!usuarioSelecionado ? 'Cadastrar Usuário' : 'Editar Usuário'"
 [size]="'small'"
 (saveClick)="save()"
 >
 <app-register
+[userToEdit]="usuarioSelecionado"
  (registerSuccess)="onUserRegistered()"
 ></app-register>
 </app-modal>

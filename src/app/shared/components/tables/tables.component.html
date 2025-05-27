@@ -25,7 +25,7 @@
           </td>
           <td *ngIf="mostrarBotoesAcao">
             <app-delete-button [itemId]="row['id']" [itemType]="'user'" (deleted)="onDeleted()"></app-delete-button>
-           <app-edit-button></app-edit-button>
+           <app-edit-button (click)="onEdit(row)"></app-edit-button>
           </td>
         </tr>
       </tbody>

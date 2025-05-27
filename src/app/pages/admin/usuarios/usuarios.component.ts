@@ -46,15 +46,6 @@ loadUsers(): void {
   });
 }
 
-  deleteUser(id: string): void {
-    if (confirm('Deseja realmente deletar este usuário?')) {
-      this.userService.deleteUser(id).subscribe({
-        next: () => this.loadUsers(),
-        error: (err) => console.error('Erro ao deletar usuário:', err),
-      });
-    }
-  }
-
   onUserRegistered() {
     this.loadUsers(); // Atualiza a tabela
     this.modalAberto = false; // Fecha o modal

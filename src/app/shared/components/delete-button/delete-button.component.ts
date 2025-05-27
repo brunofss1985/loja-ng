@@ -14,7 +14,6 @@ export class DeleteButtonComponent {
 
   constructor(private deleteService: DeleteService, private toastr: ToastrService) { }
 
-
   @Output() deleted = new EventEmitter<void>();
 
   delete() {

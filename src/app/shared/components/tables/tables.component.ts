@@ -7,17 +7,16 @@ import { ModalService } from 'src/app/core/services/modalService/modal.service';
   styleUrls: ['./tables.component.scss'],
 })
 export class TablesComponent implements OnInit {
-getCellValue(row: any, header: string): string {
-  const value = row?.[header];
-  if (header === 'id' && typeof value === 'string') {
-    return value.slice(-4);
+  getCellValue(row: any, header: string): string {
+    const value = row?.[header];
+    if (header === 'id' && typeof value === 'string') {
+      return value.slice(-4);
+    }
+    if (header === 'userType') {
+      return value === 'ADMIN' ? 'Administrador' : 'Usuário';
+    }
+    return value ?? '';
   }
-  if (header === 'userType') {
-    return value === 'ADMIN' ? 'Administrador' : 'Usuário';
-  }
-  return value ?? '';
-}
-
 
   @Input() headers: string[] = [];
   @Input() data: any[] = [];
@@ -58,6 +57,4 @@ getCellValue(row: any, header: string): string {
   onEdit(user: any) {
     this.editUser.emit(user);
   }
-
-  
 }

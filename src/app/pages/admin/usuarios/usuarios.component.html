@@ -7,19 +7,20 @@
 [headers]="headers" 
 (deleted)="loadUsers()"
 [data]="users"
- (editUser)="onEditUser($event)">
-
+(editUser)="onEditUser($event)">
 </app-tables>
 
 <app-modal
 [(isOpen)]="modalAberto"
-  (isOpenChange)="onModalFechado()"
+(isOpenChange)="onModalFechado()"
 [tittleModal]="!usuarioSelecionado ? 'Cadastrar Usuário' : 'Editar Usuário'"
 [size]="'small'"
 (saveClick)="save()"
 >
+
 <app-register
 [userToEdit]="usuarioSelecionado"
- (registerSuccess)="onUserRegistered()"
+(registerSuccess)="onUserRegistered()"
 ></app-register>
+
 </app-modal>

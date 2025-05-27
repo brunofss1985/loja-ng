@@ -65,64 +65,65 @@ export class RegisterComponent {
   }
 
   submit(usuarioSelecionado?: any) {
-  if (this.signupForm.invalid) {
-    this.toastService.error('Preencha corretamente todos os campos.');
-    return;
+    if (this.signupForm.invalid) {
+      this.toastService.error('Preencha corretamente todos os campos.');
+      return;
+    }
+
+    if (this.signupForm.hasError('passwordMismatch')) {
+      this.toastService.error('As senhas não coincidem.');
+      return;
+    }
+
+    const { name, email, password, userType } = this.signupForm.value;
+
+    if (usuarioSelecionado) {
+      // Edição
+      const userId = usuarioSelecionado.id;
+      const updatedUser = { name, email, password, userType };
+
+      this.userService.updateUser(userId, updatedUser).subscribe({
+        next: () => {
+          this.toastService.success('Usuário atualizado com sucesso!');
+          this.registerSuccess.emit();
+          this.resetForm(); // Limpa o formulário após salvar
+        },
+        error: () => this.toastService.error('Erro ao atualizar o usuário.'),
+      });
+    } else {
+      // Novo cadastro
+      this.loginService.register(name, email, password, userType).subscribe({
+        next: () => {
+          this.toastService.success('Registrado com sucesso!');
+          this.registerSuccess.emit();
+          this.resetForm();
+        },
+        error: () => this.toastService.error('Erro no registro.'),
+      });
+    }
   }
-
-  if (this.signupForm.hasError('passwordMismatch')) {
-    this.toastService.error('As senhas não coincidem.');
-    return;
-  }
-
-  const { name, email, password, userType } = this.signupForm.value;
-
-  if (usuarioSelecionado) {
-    // Edição
-    const userId = usuarioSelecionado.id;
-    const updatedUser = { name, email, password, userType };
-
-    this.userService.updateUser(userId, updatedUser).subscribe({
-      next: () => {
-        this.toastService.success("Usuário atualizado com sucesso!");
-        this.registerSuccess.emit();
-        this.resetForm(); // Limpa o formulário após salvar
-      },
-      error: () => this.toastService.error("Erro ao atualizar o usuário.")
-    });
-
-  } else {
-    // Novo cadastro
-    this.loginService.register(name, email, password, userType).subscribe({
-      next: () => {
-        this.toastService.success("Registrado com sucesso!");
-        this.registerSuccess.emit();
-        this.resetForm();
-      },
-      error: () => this.toastService.error("Erro no registro.")
-    });
-  }
-}
-
 
   navigate() {
     this.router.navigate(['']);
   }
 
-ngOnChanges(changes: SimpleChanges) {
-  if (changes['userToEdit'] && this.userToEdit) {
-    this.signupForm.patchValue({
-      name: this.userToEdit.name,
-      email: this.userToEdit.email,
-      userType: this.userToEdit.userType,
-    });
-    // Não defina senha aqui. Edite ela apenas se o usuário quiser mudar.
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['userToEdit'] && this.userToEdit) {
+      this.signupForm.patchValue({
+        name: this.userToEdit.name,
+        email: this.userToEdit.email,
+        userType: this.userToEdit.userType,
+      });
+    }
   }
-}
-
 
   resetForm() {
-  this.signupForm.reset(); // Limpa o formulário
-}
-
+    this.signupForm.reset({
+      userType: '',
+      name: '',
+      email: '',
+      password: '',
+      passwordConfirm: '',
+    });
+  }
 }

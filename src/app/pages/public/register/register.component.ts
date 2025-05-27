@@ -86,7 +86,8 @@ export class RegisterComponent {
         next: () => {
           this.toastService.success('Usuário atualizado com sucesso!');
           this.registerSuccess.emit();
-          this.resetForm(); // Limpa o formulário após salvar
+          window.location.reload(); // Solução rápida para limpar o formulario (atualiza toda a pagina - nao recomendado)
+
         },
         error: () => this.toastService.error('Erro ao atualizar o usuário.'),
       });
@@ -96,7 +97,6 @@ export class RegisterComponent {
         next: () => {
           this.toastService.success('Registrado com sucesso!');
           this.registerSuccess.emit();
-          this.resetForm();
         },
         error: () => this.toastService.error('Erro no registro.'),
       });

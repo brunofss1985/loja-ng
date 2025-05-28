@@ -1,7 +1,14 @@
+.logo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none; 
+}
+
 .logo {
   width: 50%;
   margin: 0 ;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 .logo-slim {

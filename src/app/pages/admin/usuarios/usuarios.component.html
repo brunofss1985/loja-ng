@@ -5,9 +5,12 @@
 [botaoCadastro]=" 'Cadastrar'"
 [tableName]="'Tabela de Usuários Cadastrados'"
 [headers]="headers" 
+[headerLabels]="headerLabels"
 (deleted)="loadUsers()"
 [data]="users"
-(editUser)="onEditUser($event)">
+(editUser)="onEditUser($event)"
+[formatCell]="formatUserCell.bind(this)">
+
 </app-tables>
 
 <app-modal

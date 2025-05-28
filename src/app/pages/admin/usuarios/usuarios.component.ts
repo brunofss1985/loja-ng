@@ -18,9 +18,16 @@ export class UsuariosComponent implements OnInit {
 
   modalAberto!: boolean;
   tableName!: string;
-  headers: string[] = [];
+
   users: User[] = [];
   isAdmin: boolean = false;
+  headers: string[] = ['id', 'name', 'email', 'userType'];
+  headerLabels: { [key: string]: string } = {
+    id: 'ID',
+    name: 'Nome Completo',
+    email: 'E-mail',
+    userType: 'Tipo de Usuário',
+  };
 
   constructor(
     private userService: UserService,
@@ -36,15 +43,14 @@ export class UsuariosComponent implements OnInit {
     }
   }
 
-loadUsers(): void {
-  this.userService.getAllUsers().subscribe({
-    next: (data) => {
-      this.users = data;
-      this.headers = ['id', 'name', 'email', 'userType'];
-    },
-    error: (err) => console.error('Erro ao carregar usuários:', err),
-  });
-}
+  loadUsers(): void {
+    this.userService.getAllUsers().subscribe({
+      next: (data) => {
+        this.users = data;
+      },
+      error: (err) => console.error('Erro ao carregar usuários:', err),
+    });
+  }
 
   onUserRegistered() {
     this.loadUsers(); // Atualiza a tabela
@@ -69,4 +75,15 @@ loadUsers(): void {
       this.registerComponent.resetForm();
     }
   }
+
+  formatUserCell(header: string, value: any) {
+  if (header === 'id' && typeof value === 'string') {
+    return value.slice(-4);
+  }
+  if (header === 'userType') {
+    return value === 'ADMIN' ? 'Administrador' : 'Usuário';
+  }
+  return value ?? '';
+}
+
 }

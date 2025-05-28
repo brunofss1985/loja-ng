@@ -13,7 +13,7 @@
       <thead>
         <tr>
           <th *ngFor="let header of headers">
-            {{ header }}
+            {{ headerLabels[header] || header }}
           </th>
           <th *ngIf="mostrarBotoesAcao">Ações</th>
         </tr>
@@ -21,7 +21,7 @@
       <tbody *ngIf="data.length > 0; else tabelaVazia">
         <tr *ngFor="let row of data">
           <td *ngFor="let header of headers">
-            {{ header === 'id' && row[header] ? row[header].slice(-4) : (row[header] ?? '') }}
+            {{ formatCell ? formatCell(header, row[header]) : row[header] }}
           </td>
           <td *ngIf="mostrarBotoesAcao">
             <app-delete-button [itemId]="row['id']" [itemType]="'user'" (deleted)="onDeleted()"></app-delete-button>

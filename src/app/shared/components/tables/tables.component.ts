@@ -7,28 +7,22 @@ import { ModalService } from 'src/app/core/services/modalService/modal.service';
   styleUrls: ['./tables.component.scss'],
 })
 export class TablesComponent implements OnInit {
-  getCellValue(row: any, header: string): string {
-    const value = row?.[header];
-    if (header === 'id' && typeof value === 'string') {
-      return value.slice(-4);
-    }
-    if (header === 'userType') {
-      return value === 'ADMIN' ? 'Administrador' : 'Usuário';
-    }
-    return value ?? '';
-  }
+  @Input() headerLabels: { [key: string]: string } = {};
 
   @Input() headers: string[] = [];
+
   @Input() data: any[] = [];
   @Input() tableName!: string;
 
   @Input() botaoCadastroAparecer: boolean = false;
   @Input() botaoCadastro!: string;
 
-  @Output() editUser = new EventEmitter<any>();
-
   @Input() mostrarBotoesAcao: boolean = false;
   @Input() botoesAcao!: string;
+
+  @Input() formatCell?: (header: string, value: any) => string;
+
+  @Output() editUser = new EventEmitter<any>();
 
   @Output() botaoCadastroClick = new EventEmitter<void>();
   @Output() botaoDeleteClick = new EventEmitter<void>();

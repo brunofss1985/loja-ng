@@ -5,6 +5,7 @@ import {
   UserService,
 } from 'src/app/core/services/userService/user-service.service';
 import { RegisterComponent } from '../../public/register/register.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-usuarios',
@@ -31,7 +32,8 @@ export class UsuariosComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -68,6 +70,23 @@ export class UsuariosComponent implements OnInit {
     this.usuarioSelecionado = user;
     this.modalAberto = true;
   }
+
+  onDeleteUser(id: any) {
+  const confirmar = confirm('Tem certeza que deseja deletar este item?');
+  if (!confirmar) return;
+
+  this.userService.deleteUser(id).subscribe({
+    next: () => {
+      this.toastr.success(`Usuário ${id} deletado com sucesso`);
+      this.loadUsers(); // Atualiza a lista
+    },
+    error: (error) => {
+      this.toastr.error('Erro ao deletar usuário');
+      console.error('Erro ao deletar usuário:', error);
+    },
+  });
+}
+
 
   onModalFechado() {
     this.usuarioSelecionado = null;

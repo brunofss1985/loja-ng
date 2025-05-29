@@ -24,8 +24,9 @@
             {{ formatCell ? formatCell(header, row[header]) : row[header] }}
           </td>
           <td *ngIf="mostrarBotoesAcao">
-            <app-delete-button [itemId]="row['id']" [itemType]="'user'" (deleted)="onDeleted()"></app-delete-button>
-           <app-edit-button (click)="onEdit(row)"></app-edit-button>
+            <app-delete-button [itemId]="row['id']" (deleteClicked)="onDelete(row['id'])">
+            </app-delete-button>
+            <app-edit-button (click)="onEdit(row)"></app-edit-button>
           </td>
         </tr>
       </tbody>

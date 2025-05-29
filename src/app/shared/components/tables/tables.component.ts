@@ -39,9 +39,9 @@ export class TablesComponent implements OnInit {
     this.modalService.open();
   }
 
-  onDeleted() {
-    this.deleted.emit(); // Dispara o evento para o componente pai
-  }
+  onDelete(id: any) {
+  this.deleted.emit(id); // Emite o ID para o componente pai
+}
 
   onEdit(user: any) {
     this.editUser.emit(user);

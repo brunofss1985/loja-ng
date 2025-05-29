@@ -9,8 +9,8 @@
 (deleted)="loadUsers()"
 [data]="users"
 (editUser)="onEditUser($event)"
-[formatCell]="formatUserCell.bind(this)">
-
+[formatCell]="formatUserCell.bind(this)"
+(deleted)="onDeleteUser($event)">
 </app-tables>
 
 <app-modal

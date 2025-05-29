@@ -40,7 +40,6 @@ export class TablesComponent implements OnInit {
   }
 
   onDeleted() {
-    debugger
     this.deleted.emit(); // Dispara o evento para o componente pai
   }
 

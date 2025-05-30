@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Produto } from 'src/app/core/models/product.model';
 import { ModalService } from 'src/app/core/services/modalService/modal.service';
 
 @Component({
@@ -10,14 +11,14 @@ export class ModalComponent implements OnInit {
 
   constructor(private modalService: ModalService) {}
 
-  @Output() saveClick = new EventEmitter<void>();
+  @Output() saveClick = new EventEmitter<Produto>();
 
   @Output() isOpenChange = new EventEmitter<boolean>();
 
   @Input() isOpen = false;
   @Input() tittleModal = '';
   @Input() showRegisterForm = false;
-  @Input() size: 'small' | 'medium' | 'large' = 'medium';
+  @Input() size!: 'small' | 'medium' | 'large' | 'xlarge';
 
   ngOnInit(): void {
     this.modalService.openModal$.subscribe(() => {

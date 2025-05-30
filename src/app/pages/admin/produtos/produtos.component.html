@@ -1,1 +1,17 @@
-<p>produtos works!</p>
+<h5>Produtos</h5>
+<app-tables
+[tableName]="'Tabela de Produtos'"
+[botaoCadastroAparecer]="true"
+[botaoCadastro]="'Cadastrar'"
+></app-tables>
+
+<app-modal
+[tittleModal]="'Cadastrar Produto'"
+[size]="'large'"
+(saveClick)="save()"
+>
+
+<app-produto-form 
+(produtoSalvo)="onProdutoSalvo($event)"></app-produto-form>
+
+</app-modal>

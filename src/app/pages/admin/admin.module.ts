@@ -11,9 +11,10 @@ import { PerfilAdminComponent } from './perfil-admin/perfil-admin.component';
 import { ProdutosEmFaltaComponent } from './produtos-em-falta/produtos-em-falta.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 import { PublicModule } from '../public/public.module';
 import { ProdutosComponent } from './produtos/produtos.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductFormComponent } from './produtos/produto-form/produto-form.component';
 
 @NgModule({
   declarations: [
@@ -25,13 +26,16 @@ import { ProdutosComponent } from './produtos/produtos.component';
     PerfilAdminComponent,
     ProdutosEmFaltaComponent,
     UsuariosComponent,
-    ProdutosComponent
+    ProdutosComponent,
+    ProductFormComponent
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     SharedModule,
-    PublicModule
+    PublicModule,
+    ReactiveFormsModule,
+    FormsModule
     
   ]
 })

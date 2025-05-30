@@ -7,15 +7,16 @@ import { ModalService } from 'src/app/core/services/modalService/modal.service';
   styleUrls: ['./tables.component.scss'],
 })
 export class TablesComponent implements OnInit {
-  @Input() headerLabels: { [key: string]: string } = {};
+  @Input() tableName!: string;
 
   @Input() headers: string[] = [];
 
-  @Input() data: any[] = [];
-  @Input() tableName!: string;
+  @Input() headerLabels: { [key: string]: string } = {};
 
   @Input() botaoCadastroAparecer: boolean = false;
   @Input() botaoCadastro!: string;
+
+  @Input() data: any[] = [];
 
   @Input() mostrarBotoesAcao: boolean = false;
   @Input() botoesAcao!: string;
@@ -40,8 +41,8 @@ export class TablesComponent implements OnInit {
   }
 
   onDelete(id: any) {
-  this.deleted.emit(id); // Emite o ID para o componente pai
-}
+    this.deleted.emit(id); // Emite o ID para o componente pai
+  }
 
   onEdit(user: any) {
     this.editUser.emit(user);

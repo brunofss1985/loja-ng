@@ -1,0 +1,145 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="container">
+
+    <!-- Inputs normais (texto) -->
+    <div class="row mt-4">
+      <div class="col-4">
+        <label class="mt-2">Nome</label>
+        <input class="form-control" formControlName="nome" />
+      </div>
+      <div class="col-4">
+        <label class="mt-2">Categoria</label>
+        <input class="form-control" formControlName="categoria" />
+      </div>
+      <div class="col-4">
+        <label class="mt-2">Peso</label>
+        <input class="form-control" formControlName="peso" />
+      </div>
+      <div class="col-4">
+        <label class="mt-2">Sabor</label>
+        <input class="form-control" formControlName="sabor" />
+      </div>
+      <div class="col-4">
+        <label class="mt-2">Tamanho Porção</label>
+        <input class="form-control" formControlName="tamanhoPorcao" />
+      </div>
+      <div class="col-4">
+        <label class="mt-2">Fornecedor</label>
+        <input class="form-control" formControlName="fornecedor" />
+      </div>
+      <div class="col-4">
+        <label class="mt-2">SKU</label>
+        <input class="form-control" formControlName="sku" />
+      </div>
+      <div class="col-4">
+        <label class="mt-2">Código de Barras</label>
+        <input class="form-control" formControlName="codigoBarras" />
+      </div>
+      <div class="col-4">
+        <label class="mt-2">Imagem URL</label>
+        <input class="form-control" formControlName="imagemUrl" />
+      </div>
+
+      <!-- Inputs pequenos agrupados -->
+      <div class="col-3">
+        <label class="mt-2">Data Expiração</label>
+        <input class="form-control" formControlName="dataExpiracao" type="date" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Última Compra</label>
+        <input class="form-control" formControlName="ultimaCompra" type="date" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Qtd. Avaliações</label>
+        <input class="form-control" formControlName="quantidadeAvaliacoes" type="number" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Preço</label>
+        <input class="form-control" formControlName="preco" type="number" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Preço com Desconto</label>
+        <input class="form-control" formControlName="precoDesconto" type="number" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Estoque</label>
+        <input class="form-control" formControlName="estoque" type="number" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Qtd. Mínima Estoque</label>
+        <input class="form-control" formControlName="qtdMinimaEstoque" type="number" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Custo</label>
+        <input class="form-control" formControlName="custo" type="number" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Lucro Estimado</label>
+        <input class="form-control" formControlName="lucroEstimado" type="number" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Quantidade Vendida</label>
+        <input class="form-control" formControlName="quantidadeVendida" type="number" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Avaliação Média</label>
+        <input class="form-control" formControlName="avaliacaoMedia" type="number" step="0.1" />
+      </div>
+      <div class="col-3">
+        <label class="mt-2">Status Aprovação</label>
+        <select class="form-control" formControlName="statusAprovacao">
+          <option value="aprovado">Aprovado</option>
+          <option value="pendente">Pendente</option>
+          <option value="rejeitado">Rejeitado</option>
+        </select>
+      </div>
+
+      <!-- Textareas -->
+      <div class="col-12">
+        <label class="mt-2">Galeria (URLs separadas por vírgula)</label>
+        <input class="form-control" formControlName="galeria" />
+      </div>
+
+      <div class="col-12">
+        <label class="mt-2">Descrição</label>
+        <textarea class="form-control" formControlName="descricao"></textarea>
+      </div>
+      <div class="col-12">
+        <label class="mt-2">Descrição Curta</label>
+        <textarea class="form-control" formControlName="descricaoCurta"></textarea>
+      </div>
+      <div class="col-12">
+        <label class="mt-2">Ingredientes (separados por vírgula)</label>
+        <input class="form-control" formControlName="ingredientes" />
+      </div>
+      <div class="col-12">
+        <label class="mt-2">Tags (separadas por vírgula)</label>
+        <input class="form-control" formControlName="tags" />
+      </div>
+      <div class="col-12">
+        <label class="mt-2">Tabela Nutricional (JSON)</label>
+        <textarea class="form-control" formControlName="tabelaNutricional"></textarea>
+      </div>
+      <div class="col-12">
+        <label class="mt-2">Comentários do Admin (separados por linha)</label>
+        <textarea class="form-control" formControlName="comentariosAdmin"></textarea>
+      </div>
+    </div>
+
+    <!-- Checkboxes -->
+    <div class="row mt-4">
+      <div class="col-4"
+        *ngFor="let campo of ['destaque', 'novoLancamento', 'maisVendido', 'promocaoAtiva', 'publicado', 'ativo']">
+        <label class="mt-2">
+          <input type="checkbox" [formControlName]="campo" /> {{ campo | titlecase }}
+        </label>
+      </div>
+    </div>
+
+    <!-- Select -->
+    <div class="row mt-4">
+
+    </div>
+
+  </div>
+</form>

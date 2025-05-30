@@ -1,0 +1,54 @@
+form {
+  margin: auto;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  // max-width: 900px;
+}
+
+form h1 {
+  margin-bottom: 2rem;
+  color: #007bff;
+  font-weight: bold;
+  text-align: center;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+button[type="submit"] {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+small {
+  color: red;
+  font-size: 0.7rem;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Responsividade ajustada */
+@media (max-width: 950px) {
+  form {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+  }
+}

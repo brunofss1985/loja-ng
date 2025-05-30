@@ -13,6 +13,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 import { PublicModule } from '../public/public.module';
+import { ProdutosComponent } from './produtos/produtos.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { PublicModule } from '../public/public.module';
     OrcamentosComponent,
     PerfilAdminComponent,
     ProdutosEmFaltaComponent,
-    UsuariosComponent
+    UsuariosComponent,
+    ProdutosComponent
   ],
   imports: [
     CommonModule,

@@ -17,6 +17,7 @@ export class SidebarComponent implements OnInit {
 
   adminMenu = [
     { icon: 'fa-solid fa-face-smile', label: 'Perfil', route: '/admin/perfil' },
+    { icon: 'fa-brands fa-product-hunt', label: 'Produtos', route: '/admin/produtos' },
     { icon: 'fa-solid fa-circle-user', label: 'Usuários', route: '/admin/usuarios' },
     { icon: 'fas fa-box', label: 'Estoque', route: '/admin/estoque' },
     { icon: 'fas fa-shopping-cart', label: 'Compras', route: '/admin/compras' },

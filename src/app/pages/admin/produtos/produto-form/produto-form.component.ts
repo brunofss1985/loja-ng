@@ -22,10 +22,9 @@ export class ProductFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.produtosService.getAllProdutos().subscribe((res)=>{
-      this.allProdutos = res
-    }
-    )
+    this.produtosService.getAllProdutos().subscribe((res) => {
+      this.allProdutos = res;
+    });
 
     this.form = this.fb.group({
       nome: ['', Validators.required],
@@ -82,92 +81,98 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
-submit() {
-  if (this.form.valid) {
-    const formValue = this.form.value;
+  submit() {
+    if (this.form.valid) {
+      const formValue = this.form.value;
 
-    const produto: Produto = {
-      ...this.produtoParaEditar,
-      ...formValue,
+      const produto: Produto = {
+        ...this.produtoParaEditar,
+        ...formValue,
 
-      // 🧹 Converte campos de string para número
-      preco: Number(formValue.preco),
-      precoDesconto: Number(formValue.precoDesconto),
-      estoque: Number(formValue.estoque),
-      qtdMinimaEstoque: Number(formValue.qtdMinimaEstoque),
-      custo: Number(formValue.custo),
-      lucroEstimado: Number(formValue.lucroEstimado),
-      quantidadeVendida: Number(formValue.quantidadeVendida),
-      avaliacaoMedia: Number(formValue.avaliacaoMedia),
-      quantidadeAvaliacoes: Number(formValue.quantidadeAvaliacoes),
+        // 🧹 Converte campos de string para número
+        preco: Number(formValue.preco),
+        precoDesconto: Number(formValue.precoDesconto),
+        estoque: Number(formValue.estoque),
+        qtdMinimaEstoque: Number(formValue.qtdMinimaEstoque),
+        custo: Number(formValue.custo),
+        lucroEstimado: Number(formValue.lucroEstimado),
+        quantidadeVendida: Number(formValue.quantidadeVendida),
+        avaliacaoMedia: Number(formValue.avaliacaoMedia),
+        quantidadeAvaliacoes: Number(formValue.quantidadeAvaliacoes),
 
-      // 🧹 Converte campos de texto para array
-      tags: formValue.tags
-        ? formValue.tags.split(',').map((t: string) => t.trim())
-        : [],
-      ingredientes: formValue.ingredientes
-        ? formValue.ingredientes.split(',').map((i: string) => i.trim())
-        : [],
-      galeria: formValue.galeria
-        ? formValue.galeria.split(',').map((g: string) => g.trim())
-        : [],
-      comentariosAdmin: formValue.comentariosAdmin
-        ? formValue.comentariosAdmin.split('\n').map((c: string) => c.trim())
-        : [],
+        // 🧹 Converte campos de texto para array
+        tags: formValue.tags
+          ? formValue.tags.split(',').map((t: string) => t.trim())
+          : [],
+        ingredientes: formValue.ingredientes
+          ? formValue.ingredientes.split(',').map((i: string) => i.trim())
+          : [],
+        galeria: formValue.galeria
+          ? formValue.galeria.split(',').map((g: string) => g.trim())
+          : [],
+        comentariosAdmin: formValue.comentariosAdmin
+          ? formValue.comentariosAdmin.split('\n').map((c: string) => c.trim())
+          : [],
 
-      // 🧹 Tabela Nutricional
-      tabelaNutricional: (() => {
-        try {
-          return formValue.tabelaNutricional
-            ? JSON.parse(formValue.tabelaNutricional)
-            : {};
-        } catch (e) {
-          alert('Campo "Tabela Nutricional" deve ser um JSON válido!');
-          throw e;
-        }
-      })(),
+        // 🧹 Tabela Nutricional
+        tabelaNutricional: (() => {
+          try {
+            return formValue.tabelaNutricional
+              ? JSON.parse(formValue.tabelaNutricional)
+              : {};
+          } catch (e) {
+            alert('Campo "Tabela Nutricional" deve ser um JSON válido!');
+            throw e;
+          }
+        })(),
+        
 
-      // 🧹 Datas
-      dataExpiracao: formValue.dataExpiracao || null,
-      ultimaCompra: formValue.ultimaCompra || null,
-      criadoEm: this.isEditMode ? this.produtoParaEditar!.criadoEm : new Date(),
-      atualizadoEm: new Date(),
-    };
+        // 🧹 Datas
+        dataExpiracao: formValue.dataExpiracao || null,
+        ultimaCompra: formValue.ultimaCompra || null,
+        criadoEm: this.isEditMode
+          ? this.produtoParaEditar!.criadoEm
+          : new Date(),
+        atualizadoEm: new Date(),
+      };
 
-    const produtoParaEnviar = {
-      ...produto,
-      tabelaNutricional: JSON.stringify(produto.tabelaNutricional || {}),
-    };
+      const produtoParaEnviar = {
+        ...produto,
+        tabelaNutricional: JSON.stringify(produto.tabelaNutricional || {}),
+      };
 
-    if (this.isEditMode && produto.id) {
-      // Edição
-      this.produtosService.updateProduto(produto.id, produtoParaEnviar).subscribe({
-        next: (res) => {
-          this.produtoSalvo.emit(res);
-          this.form.reset();
-          this.isEditMode = false;
-        },
-        error: (err) => {
-          console.error('Erro ao atualizar produto:', err);
-        },
-      });
+      if (this.isEditMode && produto.id) {
+        // Edição
+        this.produtosService
+          .updateProduto(produto.id, produtoParaEnviar)
+          .subscribe({
+            next: (res) => {
+              this.produtoSalvo.emit(res);
+              this.form.reset();
+              this.isEditMode = false;
+            },
+            error: (err) => {
+              console.error('Erro ao atualizar produto:', err);
+            },
+          });
+      } else {
+        // Cadastro novo
+        this.produtosService.createProduto(produtoParaEnviar).subscribe({
+          next: (res) => {
+            this.produtoSalvo.emit(res);
+            this.form.reset();
+            this.isEditMode = false;
+          },
+          error: (err) => {
+            console.error('Erro ao criar produto:', err);
+          },
+        });
+      }
     } else {
-      // Cadastro novo
-      this.produtosService.createProduto(produtoParaEnviar).subscribe({
-        next: (res) => {
-          this.produtoSalvo.emit(res);
-          this.form.reset();
-          this.isEditMode = false;
-        },
-        error: (err) => {
-          console.error('Erro ao criar produto:', err);
-        },
-      });
+      alert('Preenche direito');
+      this.form.markAllAsTouched();
     }
-  } else {
-    alert('Preenche direito');
-    this.form.markAllAsTouched();
   }
-}
+
 
 }

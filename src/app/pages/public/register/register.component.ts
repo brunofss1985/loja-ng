@@ -108,6 +108,7 @@ export class RegisterComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    
     if (changes['userToEdit'] && this.userToEdit) {
       this.signupForm.patchValue({
         name: this.userToEdit.name,

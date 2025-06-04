@@ -1,11 +1,13 @@
 <h5>Produtos</h5>
 <app-tables
-[tableName]="'Tabela de Produtos'"
-[botaoCadastroAparecer]="true"
-[botaoCadastro]="'Cadastrar'"
-[data]="allProducts"
-[headers]="headers"
-[headerLabels]="headerLabels"
+[title]="'Tabela de Produtos'"
+[showCreateButton]="true"
+[createButtonLabel]="'Cadastrar'"
+[rows]="allProducts"
+[columns]="columns"
+[columnLabels]="columnLabels"
+(deleteRow)="onDeleteProducts($event)"
+[showActionButtons]="true"
 >
 </app-tables>
 

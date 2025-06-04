@@ -1,16 +1,17 @@
 <h5>Usuários</h5>
 <app-tables 
-[botaoCadastroAparecer]="true"
-[mostrarBotoesAcao]="true"
-[botaoCadastro]=" 'Cadastrar'"
-[tableName]="'Tabela de Usuários Cadastrados'"
-[headers]="headers" 
-[headerLabels]="headerLabels"
+[showCreateButton]="true"
+[showActionButtons]="true"
+[createButtonLabel]=" 'Cadastrar'"
+[title]="'Tabela de Usuários Cadastrados'"
+[columns]="headers" 
+[columnLabels]="columnLabels"
 (deleted)="loadUsers()"
-[data]="users"
-(editUser)="onEditUser($event)"
-[formatCell]="formatUserCell.bind(this)"
-(deleted)="onDeleteUser($event)">
+[rows]="users"
+[cellFormatter]="formatUserCell.bind(this)" 
+(editRow)="onEditUser($event)"
+(deleteRow)="onDeleteUser($event)"
+>
 </app-tables>
 
 <app-modal
@@ -20,7 +21,6 @@
 [size]="'small'"
 (saveClick)="save()"
 >
-
 <app-register
 [userToEdit]="usuarioSelecionado"
 (registerSuccess)="onUserRegistered()"

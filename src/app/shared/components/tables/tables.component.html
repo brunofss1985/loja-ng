@@ -1,10 +1,10 @@
 <div class="card">
   <div class="card-header">
     <div>
-      {{tableName}}
+      {{title}}
     </div>
-    <div *ngIf="botaoCadastroAparecer">
-      <button (click)="abrirModal()">{{botaoCadastro}}</button>
+    <div *ngIf="showCreateButton">
+      <button (click)="openModal()">{{createButtonLabel}}</button>
     </div>
   </div>
 
@@ -12,21 +12,21 @@
     <table>
       <thead>
         <tr>
-          <th *ngFor="let header of headers">
-            {{ headerLabels[header] || header }}
+          <th *ngFor="let column of columns">
+            {{ columnLabels[column] || column }}
           </th>
-          <th *ngIf="mostrarBotoesAcao">Ações</th>
+          <th *ngIf="showActionButtons">Ações</th>
         </tr>
       </thead>
-      <tbody *ngIf="data.length > 0; else tabelaVazia">
-        <tr *ngFor="let row of data">
-          <td *ngFor="let header of headers">
-            {{ formatCell ? formatCell(header, row[header]) : row[header] }}
+      <tbody *ngIf="rows.length > 0; else tabelaVazia">
+        <tr *ngFor="let row of rows">
+          <td *ngFor="let header of columns">
+            {{ cellFormatter ? cellFormatter(header, row[header]) : row[header] }}
           </td>
-          <td *ngIf="mostrarBotoesAcao">
-            <app-delete-button [itemId]="row['id']" (deleteClicked)="onDelete(row['id'])">
+          <td *ngIf="showActionButtons">
+            <app-delete-button [itemId]="row['id']" (deleteClicked)="onDeleteRow(row['id'])">
             </app-delete-button>
-            <app-edit-button (click)="onEdit(row)"></app-edit-button>
+            <app-edit-button (editClicked)="onEditRow(row['id'])"></app-edit-button>
           </td>
         </tr>
       </tbody>

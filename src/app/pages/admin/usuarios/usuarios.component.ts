@@ -23,7 +23,7 @@ export class UsuariosComponent implements OnInit {
   users: User[] = [];
   isAdmin: boolean = false;
   headers: string[] = ['id', 'name', 'email', 'userType'];
-  headerLabels: { [key: string]: string } = {
+  columnLabels: { [key: string]: string } = {
     id: 'ID',
     name: 'Nome Completo',
     email: 'E-mail',
@@ -55,8 +55,8 @@ export class UsuariosComponent implements OnInit {
   }
 
   onUserRegistered() {
-    this.loadUsers(); // Atualiza a tabela
-    this.modalAberto = false; // Fecha o modal
+    this.loadUsers(); 
+    this.modalAberto = false;
   }
 
   save(): void {
@@ -66,8 +66,8 @@ export class UsuariosComponent implements OnInit {
     }
   }
 
-  onEditUser(user: any) {
-    this.usuarioSelecionado = user;
+  onEditUser(id: any) {
+    this.usuarioSelecionado = id;
     this.modalAberto = true;
   }
 
@@ -86,7 +86,6 @@ export class UsuariosComponent implements OnInit {
     },
   });
 }
-
 
   onModalFechado() {
     this.usuarioSelecionado = null;

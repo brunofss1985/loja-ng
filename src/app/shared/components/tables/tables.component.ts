@@ -7,44 +7,44 @@ import { ModalService } from 'src/app/core/services/modalService/modal.service';
   styleUrls: ['./tables.component.scss'],
 })
 export class TablesComponent implements OnInit {
-  @Input() tableName!: string;
+  @Input() title!: string;
 
-  @Input() headers: string[] = [];
+  @Input() columns: string[] = [];
+  @Input() columnLabels: { [key: string]: string } = {};
 
-  @Input() headerLabels: { [key: string]: string } = {};
+  @Input() showCreateButton: boolean = false;
+  @Input() createButtonLabel!: string;
 
-  @Input() botaoCadastroAparecer: boolean = false;
-  @Input() botaoCadastro!: string;
+  @Input() rows: any[] = [];
 
-  @Input() data: any[] = [];
+  @Input() showActionButtons: boolean = false;
+  @Input() actionButtonsLabel!: string;
 
-  @Input() mostrarBotoesAcao: boolean = false;
-  @Input() botoesAcao!: string;
+  @Input() cellFormatter?: (header: string, value: any) => string;
 
-  @Input() formatCell?: (header: string, value: any) => string;
+  @Output() editRow  = new EventEmitter<any>();
 
-  @Output() editUser = new EventEmitter<any>();
+  @Output() createButtonClicked = new EventEmitter<void>();
 
-  @Output() botaoCadastroClick = new EventEmitter<void>();
-  @Output() deleted = new EventEmitter<void>();
+  @Output() deleteRow  = new EventEmitter<void>();
 
   constructor(private modalService: ModalService) {}
 
   ngOnInit(): void {}
 
-  onBotaoClick(): void {
-    this.botaoCadastroClick.emit(); // Emite o evento para o componente pai
+  onCreateButtonClick(): void {
+    this.createButtonClicked.emit();
   }
 
-  abrirModal() {
+  openModal() {
     this.modalService.open();
   }
 
-  onDelete(id: any) {
-    this.deleted.emit(id); // Emite o ID para o componente pai
+  onDeleteRow(id: any) {
+    this.deleteRow.emit(id);
   }
 
-  onEdit(user: any) {
-    this.editUser.emit(user);
+  onEditRow(id: any) {
+    this.editRow.emit(id);
   }
 }

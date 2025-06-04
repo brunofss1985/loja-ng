@@ -26,7 +26,7 @@
           <td *ngIf="showActionButtons">
             <app-delete-button [itemId]="row['id']" (deleteClicked)="onDeleteRow(row['id'])">
             </app-delete-button>
-            <app-edit-button (editClicked)="onEditRow(row['id'])"></app-edit-button>
+            <app-edit-button (click)="onEditRow(row)"></app-edit-button>
           </td>
         </tr>
       </tbody>

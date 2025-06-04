@@ -21,7 +21,7 @@ export class ProdutosComponent implements OnInit {
 
   allProducts: Produto[] = [];
 
-  modalAberto!: boolean;
+  modalAberto: boolean = true;
 
   isAdmin: boolean = false;
   columns: string[] = ['id', 'nome', 'categoria', 'preco'];
@@ -37,11 +37,16 @@ export class ProdutosComponent implements OnInit {
   }
 
   save() {
-    this.productFormComponent.submit();
+    if (this.productFormComponent) {
+      this.productFormComponent.submit();
+    }  }
+
+    onEditProduct(id: any) {
+    this.produtoSelecionado = id;
+    this.modalAberto = true;
   }
 
   onProdutoSalvo(produto: Produto): void {
-    this.produtoService.createProduto(produto);
     this.loadProducts(); // Atualiza a tabela
     this.modalAberto = false; // Fecha o modal
   }

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Produto } from 'src/app/core/models/product.model';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
@@ -84,7 +91,6 @@ export class ProductFormComponent implements OnInit {
   submit() {
     if (this.form.valid) {
       const formValue = this.form.value;
-
       const produto: Produto = {
         ...this.produtoParaEditar,
         ...formValue,
@@ -125,7 +131,6 @@ export class ProductFormComponent implements OnInit {
             throw e;
           }
         })(),
-        
 
         // 🧹 Datas
         dataExpiracao: formValue.dataExpiracao || null,
@@ -174,5 +179,19 @@ export class ProductFormComponent implements OnInit {
     }
   }
 
-
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['produtoParaEditar'] && this.produtoParaEditar) {
+      this.isEditMode = true;
+      this.form.patchValue({
+        ...this.produtoParaEditar,
+        tags: this.produtoParaEditar.tags?.join(', '),
+        ingredientes: this.produtoParaEditar.ingredientes?.join(', '),
+        galeria: this.produtoParaEditar.galeria?.join(', '),
+        comentariosAdmin: this.produtoParaEditar.comentariosAdmin?.join('\n'),
+        tabelaNutricional: this.produtoParaEditar.tabelaNutricional
+          ? JSON.stringify(this.produtoParaEditar.tabelaNutricional)
+          : '',
+      });
+    }
+  }
 }

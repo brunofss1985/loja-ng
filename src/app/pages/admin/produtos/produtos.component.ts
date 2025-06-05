@@ -39,14 +39,15 @@ export class ProdutosComponent implements OnInit {
   save() {
     if (this.productFormComponent) {
       this.productFormComponent.submit();
-    }  }
+    }
+  }
 
-    onEditProduct(id: any) {
-    this.produtoSelecionado = id;
+  onEditProduct(produto: Produto) {
+    this.produtoSelecionado = produto;
     this.modalAberto = true;
   }
 
-  onProdutoSalvo(produto: Produto): void {
+  onProdutoSalvo(produto: any): void {
     this.loadProducts(); // Atualiza a tabela
     this.modalAberto = false; // Fecha o modal
   }

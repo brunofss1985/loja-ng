@@ -3,6 +3,38 @@
 
     <!-- Inputs normais (texto) -->
     <div class="row mt-4">
+     <div class="col-12 mt-3">
+  <!-- Mostra imagem já existente ao editar -->
+  <div *ngIf="imagemPreview && !imagemSelecionada" class="imagem-preview-antiga">
+    <label>Imagem atual:</label><br />
+    <img
+      [src]="imagemPreview"
+      alt="Imagem do produto"
+      width="200"
+      style="margin-top: 8px; border: 1px solid #ccc; border-radius: 4px;"
+    />
+  </div>
+
+  <!-- Mostra nova imagem assim que for escolhida -->
+  <div *ngIf="imagemSelecionada" class="imagem-preview-nova">
+    <label>Nova imagem selecionada:</label><br />
+    <img
+      [src]="imagemPreview"
+      alt="Nova imagem"
+      width="200"
+      style="margin-top: 8px; border: 1px solid #ccc; border-radius: 4px;"
+    />
+  </div>
+
+  <label class="mt-2">Imagem do Produto</label>
+  <input
+    type="file"
+    class="form-control"
+    (change)="onImagemSelecionada($event)"
+  />
+</div>
+
+
       <div class="col-4">
         <label class="mt-2">Nome</label>
         <input class="form-control" formControlName="nome" />

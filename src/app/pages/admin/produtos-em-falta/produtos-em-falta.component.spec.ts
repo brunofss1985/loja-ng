@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ProdutosEmFaltaComponent } from './produtos-em-falta.component';
 
 
 describe('ProdutosEmFaltaComponent', () => {

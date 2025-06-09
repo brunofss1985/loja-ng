@@ -1,1 +1,73 @@
-<p>produtos-em-falta works!</p>
+<div class="container mt-4">
+  <button class="btn btn-primary mb-3" (click)="abrirModal()">Adicionar Produto</button>
+
+  <table class="table table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th>Preço</th>
+        <th>Estoque</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let produto of produtos">
+        <td>{{ produto.nome }}</td>
+        <td>{{ produto.categoria }}</td>
+        <td>{{ produto.preco | currency }}</td>
+        <td>{{ produto.estoque }}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-2" (click)="editarProduto(produto)">Editar</button>
+          <button class="btn btn-sm btn-danger" (click)="removerProduto(produto.id)">Remover</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade show" style="display: block;" tabindex="-1" *ngIf="modalAberto">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form [formGroup]="produtoForm" (ngSubmit)="salvar()">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ editando ? 'Editar Produto' : 'Novo Produto' }}</h5>
+          <button type="button" class="btn-close" (click)="fecharModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Nome</label>
+              <input class="form-control" type="text" formControlName="nome" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Categoria</label>
+              <input class="form-control" type="text" formControlName="categoria" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Preço</label>
+              <input class="form-control" type="number" formControlName="preco" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Estoque</label>
+              <input class="form-control" type="number" formControlName="estoque" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Descrição</label>
+              <textarea class="form-control" rows="3" formControlName="descricao"></textarea>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Imagem</label>
+              <input class="form-control" type="file" (change)="onFileChange($event)" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="fecharModal()">Cancelar</button>
+          <button type="submit" class="btn btn-success" [disabled]="produtoForm.invalid">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

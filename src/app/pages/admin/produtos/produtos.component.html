@@ -6,17 +6,15 @@
 [rows]="allProducts"
 [columns]="columns"
 [columnLabels]="columnLabels"
-(deleteRow)="onDeleteProducts($event)"
 [showActionButtons]="true"
 (editRow)="onEditProduct($event)"
+(deleteRow)="onDeleteProducts($event)"
 >
 </app-tables>
 
 <app-modal
 [tittleModal]="'Cadastrar Produto'"
 [size]="'large'"
-*ngIf="modalAberto"
-(fechar)="modalAberto = false"
 (saveClick)="save()"
 >
 

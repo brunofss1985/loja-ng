@@ -15,6 +15,7 @@ import { PublicModule } from '../public/public.module';
 import { ProdutosComponent } from './produtos/produtos.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductFormComponent } from './produtos/produto-form/produto-form.component';
+import { ProdutosEmFaltaFormComponent } from './produtos-em-falta/produtos-em-falta-form/produtos-em-falta-form.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ProductFormComponent } from './produtos/produto-form/produto-form.compo
     ProdutosEmFaltaComponent,
     UsuariosComponent,
     ProdutosComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    ProdutosEmFaltaFormComponent
   ],
   imports: [
     CommonModule,

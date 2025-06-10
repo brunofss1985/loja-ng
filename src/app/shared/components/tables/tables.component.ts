@@ -35,7 +35,7 @@ export class TablesComponent implements OnInit {
   onCreateButtonClick(): void {
     this.createButtonClicked.emit();
   }
-
+  
   openModal() {
     this.modalService.open();
   }

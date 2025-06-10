@@ -42,24 +42,28 @@ export class ProdutosEmFaltaComponent implements OnInit {
   }
 
   onProdutoSalvo() {
-  this.produtosService.getAllProdutos().subscribe({
-    next: (data) => {
-      this.allProducts = data;
-      this.modalAberto = false;
-      this.produtoSelecionado = null;
-    },
-    error: (err) => console.error('Erro ao atualizar a lista:', err),
-  });
-}
+    this.produtosService.getAllProdutos().subscribe({
+      next: (data) => {
+        this.allProducts = data;
+        this.modalAberto = false;
+        this.produtoSelecionado = null;
+      },
+      error: (err) => console.error('Erro ao atualizar a lista:', err),
+    });
+  }
 
   onEditProdutos(produto: Produto) {
     this.produtoSelecionado = produto;
     this.modalAberto = true;
   }
 
-    onDeleteProducts(id: any) {
+  onDeleteProducts(id: any) {
     if (confirm('Deseja realmente excluir este produto?')) {
       this.produtosService.deleteProduto(String(id)).subscribe(() => {
+        this.produtosService.getAllProdutos().subscribe({
+          next: (data) => (this.allProducts = data),
+          error: (err) => console.error('Erro ao atualizar a lista:', err),
+        });
       });
     }
   }

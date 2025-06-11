@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import {
   FormBuilder,
-  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
@@ -42,38 +41,38 @@ export class ProductFormComponent implements OnInit, OnChanges {
       descricao: ['', Validators.required],
       descricaoCurta: [''],
       categoria: ['', Validators.required],
-      tags: [''],
       peso: ['', Validators.required],
       sabor: [''],
-      tamanhoPorcao: [''],
-      ingredientes: [''],
-      tabelaNutricional: [''],
       preco: [0, [Validators.required, Validators.min(0)]],
       precoDesconto: [0],
-      estoque: [0, [Validators.required, Validators.min(0)]],
-      qtdMinimaEstoque: [0],
       custo: [0],
       fornecedor: [''],
       lucroEstimado: [0],
-      sku: [''],
-      codigoBarras: [''],
-      imagemUrl: [''],
-      galeria: [''],
-      destaque: [false],
-      novoLancamento: [false],
-      maisVendido: [false],
-      promocaoAtiva: [false],
-      dataExpiracao: [null],
-      ultimaCompra: [null],
-      quantidadeVendida: [0],
-      comentariosAdmin: [''],
       statusAprovacao: ['pendente'],
-      publicado: [false],
-      avaliacaoMedia: [0],
-      quantidadeAvaliacoes: [0],
-      ativo: [true],
-      criadoEm: [null],
-      atualizadoEm: [null],
+      tamanhoPorcao: [''],
+      // tags: [''],
+      // ingredientes: [''],
+      // tabelaNutricional: [''],
+      // estoque: [0, [Validators.required, Validators.min(0)]],
+      // qtdMinimaEstoque: [0],
+      // sku: [''],
+      // codigoBarras: [''],
+      // imagemUrl: [''],
+      // galeria: [''],
+      // destaque: [false],
+      // novoLancamento: [false],
+      // maisVendido: [false],
+      // promocaoAtiva: [false],
+      // dataExpiracao: [null],
+      // ultimaCompra: [null],
+      // quantidadeVendida: [0],
+      // comentariosAdmin: [''],
+      // publicado: [false],
+      // avaliacaoMedia: [0],
+      // quantidadeAvaliacoes: [0],
+      // ativo: [true],
+      // criadoEm: [null],
+      // atualizadoEm: [null],
     });
   }
 
@@ -108,14 +107,14 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
     this.form.patchValue({
       ...edit,
-      imagemUrl: edit.imagemUrl,
-      tags: edit.tags?.join(', ') ?? '',
-      ingredientes: edit.ingredientes?.join(', ') ?? '',
-      galeria: edit.galeria?.join(', ') ?? '',
-      comentariosAdmin: edit.comentariosAdmin?.join('\n') ?? '',
-      tabelaNutricional: edit.tabelaNutricional
-        ? JSON.stringify(edit.tabelaNutricional, null, 2)
-        : '',
+      // imagemUrl: edit.imagemUrl,
+      // tags: edit.tags?.join(', ') ?? '',
+      // ingredientes: edit.ingredientes?.join(', ') ?? '',
+      // galeria: edit.galeria?.join(', ') ?? '',
+      // comentariosAdmin: edit.comentariosAdmin?.join('\n') ?? '',
+      // tabelaNutricional: edit.tabelaNutricional
+      //   ? JSON.stringify(edit.tabelaNutricional, null, 2)
+      //   : '',
     });
   }
 
@@ -127,17 +126,17 @@ export class ProductFormComponent implements OnInit, OnChanges {
     }
 
     const formValue = this.form.value;
-    let tabelaNutricionalConvertida: Record<string, any> = {};
-    try {
-      tabelaNutricionalConvertida = formValue.tabelaNutricional
-        ? JSON.parse(formValue.tabelaNutricional)
-        : {};
-    } catch {
-      this.toastService.error(
-        'Campo "Tabela Nutricional" deve ser um JSON válido!'
-      );
-      return;
-    }
+    // let tabelaNutricionalConvertida: Record<string, any> = {};
+    // try {
+    //   tabelaNutricionalConvertida = formValue.tabelaNutricional
+    //     ? JSON.parse(formValue.tabelaNutricional)
+    //     : {};
+    // } catch {
+    //   this.toastService.error(
+    //     'Campo "Tabela Nutricional" deve ser um JSON válido!'
+    //   );
+    //   return;
+    // }
 
     const safeSplit = (value: any, sep = ',') =>
       typeof value === 'string'
@@ -154,31 +153,31 @@ export class ProductFormComponent implements OnInit, OnChanges {
       id: formValue.id ?? 0,
       preco: Number(formValue.preco),
       precoDesconto: Number(formValue.precoDesconto || 0),
-      estoque: Number(formValue.estoque),
-      qtdMinimaEstoque: Number(formValue.qtdMinimaEstoque || 0),
+      // estoque: Number(formValue.estoque),
+      // qtdMinimaEstoque: Number(formValue.qtdMinimaEstoque || 0),
       custo: Number(formValue.custo || 0),
-      lucroEstimado: Number(formValue.lucroEstimado || 0),
-      quantidadeVendida: Number(formValue.quantidadeVendida || 0),
-      avaliacaoMedia: Number(formValue.avaliacaoMedia || 0),
-      quantidadeAvaliacoes: Number(formValue.quantidadeAvaliacoes || 0),
-      tags: safeSplit(formValue.tags),
-      ingredientes: safeSplit(formValue.ingredientes),
-      galeria: safeSplit(formValue.galeria),
-      comentariosAdmin: safeSplit(formValue.comentariosAdmin, '\n'),
-      tabelaNutricional: tabelaNutricionalConvertida,
-      dataExpiracao: formValue.dataExpiracao
-        ? new Date(formValue.dataExpiracao)
-        : null,
-      ultimaCompra: formValue.ultimaCompra
-        ? new Date(formValue.ultimaCompra)
-        : null,
-      criadoEm: formValue.criadoEm ? new Date(formValue.criadoEm) : new Date(),
-      atualizadoEm: new Date(),
-      destaque: !!formValue.destaque,
-      novoLancamento: !!formValue.novoLancamento,
-      maisVendido: !!formValue.maisVendido,
-      promocaoAtiva: !!formValue.promocaoAtiva,
-      publicado: !!formValue.publicado,
+      // lucroEstimado: Number(formValue.lucroEstimado || 0),
+      // quantidadeVendida: Number(formValue.quantidadeVendida || 0),
+      // avaliacaoMedia: Number(formValue.avaliacaoMedia || 0),
+      // quantidadeAvaliacoes: Number(formValue.quantidadeAvaliacoes || 0),
+      // tags: safeSplit(formValue.tags),
+      // ingredientes: safeSplit(formValue.ingredientes),
+      // galeria: safeSplit(formValue.galeria),
+      // comentariosAdmin: safeSplit(formValue.comentariosAdmin, '\n'),
+      // tabelaNutricional: tabelaNutricionalConvertida,
+      // dataExpiracao: formValue.dataExpiracao
+      //   ? new Date(formValue.dataExpiracao)
+      //   : null,
+      // ultimaCompra: formValue.ultimaCompra
+      //   ? new Date(formValue.ultimaCompra)
+      //   : null,
+      // criadoEm: formValue.criadoEm ? new Date(formValue.criadoEm) : new Date(),
+      // atualizadoEm: new Date(),
+      // destaque: !!formValue.destaque,
+      // novoLancamento: !!formValue.novoLancamento,
+      // maisVendido: !!formValue.maisVendido,
+      // promocaoAtiva: !!formValue.promocaoAtiva,
+      // publicado: !!formValue.publicado,
       ativo: formValue.ativo !== false,
       statusAprovacao: formValue.statusAprovacao || 'pendente',
     };
@@ -221,39 +220,55 @@ export class ProductFormComponent implements OnInit, OnChanges {
       descricao: '',
       descricaoCurta: '',
       categoria: '',
-      tags: '',
       peso: '',
       sabor: '',
       tamanhoPorcao: '',
-      ingredientes: '',
-      tabelaNutricional: '',
       preco: 0,
       precoDesconto: 0,
-      estoque: 0,
-      qtdMinimaEstoque: 0,
       custo: 0,
       fornecedor: '',
       lucroEstimado: 0,
-      sku: '',
-      codigoBarras: '',
-      imagemUrl: '',
-      galeria: '',
-      destaque: false,
-      novoLancamento: false,
-      maisVendido: false,
-      promocaoAtiva: false,
-      dataExpiracao: null,
-      ultimaCompra: null,
-      quantidadeVendida: 0,
-      comentariosAdmin: '',
+      // tags: '',
+      // ingredientes: '',
+      // tabelaNutricional: '',
+      // estoque: 0,
+      // qtdMinimaEstoque: 0,
+      // sku: '',
+      // codigoBarras: '',
+      // imagemUrl: '',
+      // galeria: '',
+      // destaque: false,
+      // novoLancamento: false,
+      // maisVendido: false,
+      // promocaoAtiva: false,
+      // dataExpiracao: null,
+      // ultimaCompra: null,
+      // quantidadeVendida: 0,
+      // comentariosAdmin: '',
       statusAprovacao: 'pendente',
-      publicado: false,
-      avaliacaoMedia: 0,
-      quantidadeAvaliacoes: 0,
-      ativo: true,
-      criadoEm: null,
-      atualizadoEm: null,
+      // publicado: false,
+      // avaliacaoMedia: 0,
+      // quantidadeAvaliacoes: 0,
+      // ativo: true,
+      // criadoEm: null,
+      // atualizadoEm: null,
     });
-    this.imagemSelecionada = null;
+    // this.imagemSelecionada = null;
   }
+
+      //   id: [null],
+      // nome: ['', Validators.required],
+      // slug: [''],
+      // descricao: ['', Validators.required],
+      // descricaoCurta: [''],
+      // categoria: ['', Validators.required],
+      // peso: ['', Validators.required],
+      // sabor: [''],
+      // preco: [0, [Validators.required, Validators.min(0)]],
+      // precoDesconto: [0],
+      // custo: [0],
+      // fornecedor: [''],
+      // lucroEstimado: [0],
+      // statusAprovacao: ['pendente'],
+      // tamanhoPorcao: [''],
 }

@@ -50,6 +50,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       lucroEstimado: [0],
       statusAprovacao: ['pendente'],
       tamanhoPorcao: [''],
+      imagemUrl: [''],
       // tags: [''],
       // ingredientes: [''],
       // tabelaNutricional: [''],
@@ -57,7 +58,6 @@ export class ProductFormComponent implements OnInit, OnChanges {
       // qtdMinimaEstoque: [0],
       // sku: [''],
       // codigoBarras: [''],
-      // imagemUrl: [''],
       // galeria: [''],
       // destaque: [false],
       // novoLancamento: [false],
@@ -89,25 +89,29 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   imagemPreview: string | null = null;
 
-  onImagemSelecionada(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input?.files?.length) {
-      this.imagemSelecionada = input.files[0];
+onImagemSelecionada(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (input?.files?.length) {
+    this.imagemSelecionada = input.files[0];
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagemPreview = reader.result as string;
-      };
-      reader.readAsDataURL(this.imagemSelecionada);
-    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagemPreview = reader.result as string;
+    };
+    reader.readAsDataURL(this.imagemSelecionada);
+
+    // ⚡ Aqui colocamos o nome do arquivo no campo "imagemUrl"
+    this.form.get('imagemUrl')?.setValue(this.imagemSelecionada.name);
   }
+}
+
 
   private patchFormFromProduct(edit: Produto) {
     this.imagemPreview = edit.imagemUrl || null;
 
     this.form.patchValue({
       ...edit,
-      // imagemUrl: edit.imagemUrl,
+      imagemUrl: edit.imagemUrl,
       // tags: edit.tags?.join(', ') ?? '',
       // ingredientes: edit.ingredientes?.join(', ') ?? '',
       // galeria: edit.galeria?.join(', ') ?? '',
@@ -228,6 +232,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
       custo: 0,
       fornecedor: '',
       lucroEstimado: 0,
+      statusAprovacao: 'pendente',
+      imagemUrl: '',
       // tags: '',
       // ingredientes: '',
       // tabelaNutricional: '',
@@ -235,7 +241,6 @@ export class ProductFormComponent implements OnInit, OnChanges {
       // qtdMinimaEstoque: 0,
       // sku: '',
       // codigoBarras: '',
-      // imagemUrl: '',
       // galeria: '',
       // destaque: false,
       // novoLancamento: false,
@@ -245,7 +250,6 @@ export class ProductFormComponent implements OnInit, OnChanges {
       // ultimaCompra: null,
       // quantidadeVendida: 0,
       // comentariosAdmin: '',
-      statusAprovacao: 'pendente',
       // publicado: false,
       // avaliacaoMedia: 0,
       // quantidadeAvaliacoes: 0,
@@ -253,7 +257,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       // criadoEm: null,
       // atualizadoEm: null,
     });
-    // this.imagemSelecionada = null;
+    this.imagemSelecionada = null;
   }
 
       //   id: [null],

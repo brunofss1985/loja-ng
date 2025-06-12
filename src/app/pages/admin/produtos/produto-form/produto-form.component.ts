@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -32,7 +33,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
   constructor(
     private fb: FormBuilder,
     private produtosService: ProdutosService,
-    private toastService: ToastrService
+    private toastService: ToastrService,
+      private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       id: [null],
@@ -108,37 +110,28 @@ export class ProductFormComponent implements OnInit, OnChanges {
   }
 
 patchFormFromProduct(edit: Produto): void {
+  console.log("Dados recebidos:", edit);
+
   this.form.patchValue({
-    ...edit,
-    galeria: [],
+    ...edit
   });
 
-  // Imagem principal (thumbnail)
-  this.imagemPreview = null;
-  if (edit.imagem && edit.imagemMimeType && edit.imagem.length > 0) {
-    const base64 = this.arrayBufferToBase64(edit.imagem);
-    if (base64) {
-      this.imagemPreview = `data:${edit.imagemMimeType};base64,${base64}`;
-    }
-  }
+  // Atualizar imagem principal
+  this.imagemPreview = edit.imagem ? `data:${edit.imagemMimeType};base64,${edit.imagem}` : null;
 
-  // Galeria de imagens
+  // Atualizar galeria de imagens (verifica se galeria é um array antes de acessar)
   this.galeriaPreviewUrls = [];
-  this.galeriaSelecionada = [];
-
-  if (edit.galeria && edit.galeria.length) {
-    for (let i = 0; i < edit.galeria.length; i++) {
-      const buffer = edit.galeria[i];
-      const mime = edit.galeriaMimeTypes?.[i] || 'image/jpeg';
-      if (buffer && buffer.length > 0) {
-        const base64 = this.arrayBufferToBase64(buffer);
-        if (base64) {
-          this.galeriaPreviewUrls.push(`data:${mime};base64,${base64}`);
-        }
-      }
-    }
+  if (Array.isArray(edit.galeria) && edit.galeria.length > 0) {
+    this.galeriaPreviewUrls = edit.galeria.map((base64Data, i) => 
+      `data:${edit.galeriaMimeTypes?.[i] || 'image/jpeg'};base64,${base64Data}`
+    );
   }
+
+  // Forçar atualização da UI
+  setTimeout(() => this.cdr.detectChanges(), 100);
 }
+
+
 
   submit(): void {
     if (this.form.invalid) {

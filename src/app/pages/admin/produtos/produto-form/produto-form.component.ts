@@ -34,7 +34,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private produtosService: ProdutosService,
     private toastService: ToastrService,
-      private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       id: [null],
@@ -112,25 +112,28 @@ export class ProductFormComponent implements OnInit, OnChanges {
 patchFormFromProduct(edit: Produto): void {
   console.log("Dados recebidos:", edit);
 
+  // 👇 exclui os campos que NÃO pertencem ao form
+  const { imagem, imagemMimeType, galeria, galeriaMimeTypes, ...formValues } = edit;
+
   this.form.patchValue({
-    ...edit
+    ...formValues
   });
 
-  // Atualizar imagem principal
-  this.imagemPreview = edit.imagem ? `data:${edit.imagemMimeType};base64,${edit.imagem}` : null;
+  // Imagem principal
+  if (imagem && imagemMimeType && !this.imagemSelecionada) {
+    this.imagemPreview = `data:${imagemMimeType};base64,${imagem}`;
+  }
 
-  // Atualizar galeria de imagens (verifica se galeria é um array antes de acessar)
+  // Galeria
   this.galeriaPreviewUrls = [];
-  if (Array.isArray(edit.galeria) && edit.galeria.length > 0) {
-    this.galeriaPreviewUrls = edit.galeria.map((base64Data, i) => 
-      `data:${edit.galeriaMimeTypes?.[i] || 'image/jpeg'};base64,${base64Data}`
+  if (Array.isArray(galeria) && galeria.length > 0) {
+    this.galeriaPreviewUrls = galeria.map((base64Data, i) =>
+      `data:${galeriaMimeTypes?.[i] || 'image/jpeg'};base64,${base64Data}`
     );
   }
 
-  // Forçar atualização da UI
   setTimeout(() => this.cdr.detectChanges(), 100);
 }
-
 
 
   submit(): void {
@@ -213,14 +216,12 @@ patchFormFromProduct(edit: Produto): void {
     this.galeriaPreviewUrls = [];
   }
 
-  // Converte ArrayBuffer para Base64 (byte[] vindo do backend)
-arrayBufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
-  const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
-  let binary = '';
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
+  arrayBufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
+    const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
   }
-  return window.btoa(binary);
-}
-
 }

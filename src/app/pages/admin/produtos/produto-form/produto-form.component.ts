@@ -7,11 +7,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Produto } from 'src/app/core/models/product.model';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
@@ -28,6 +24,10 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   form!: FormGroup;
   imagemSelecionada: File | null = null;
+
+  imagemPreview: string | null = null;
+  galeriaSelecionada: File[] = [];
+  galeriaPreviewUrls: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -51,6 +51,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       statusAprovacao: ['pendente'],
       tamanhoPorcao: [''],
       imagemUrl: [''],
+      galeria: [[]],
       // tags: [''],
       // ingredientes: [''],
       // tabelaNutricional: [''],
@@ -87,42 +88,81 @@ export class ProductFormComponent implements OnInit, OnChanges {
     }
   }
 
-  imagemPreview: string | null = null;
+  onImagemSelecionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input?.files?.length) {
+      this.imagemSelecionada = input.files[0];
 
-onImagemSelecionada(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (input?.files?.length) {
-    this.imagemSelecionada = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagemPreview = reader.result as string;
+      };
+      reader.readAsDataURL(this.imagemSelecionada);
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagemPreview = reader.result as string;
-    };
-    reader.readAsDataURL(this.imagemSelecionada);
+      // ⚡ Aqui colocamos o nome do arquivo no campo "imagemUrl"
+      this.form.get('imagemUrl')?.setValue(this.imagemSelecionada.name);
+    }
+  }
 
-    // ⚡ Aqui colocamos o nome do arquivo no campo "imagemUrl"
-    this.form.get('imagemUrl')?.setValue(this.imagemSelecionada.name);
+  onGaleriaSelecionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input?.files?.length) {
+      const files = Array.from(input.files);
+
+      files.forEach((file) => {
+        // Evita arquivos duplicados
+        if (!this.galeriaSelecionada.find((f) => f.name === file.name)) {
+          this.galeriaSelecionada.push(file);
+
+          const reader = new FileReader();
+          reader.onload = () => {
+            this.galeriaPreviewUrls.push(reader.result as string);
+          };
+          reader.readAsDataURL(file);
+
+        }
+      });
+
+      // Atualiza os nomes no formulário
+      const nomes = this.galeriaSelecionada.map((f) => f.name);
+      this.form.get('galeria')?.setValue(nomes);
+    }
+  }
+
+  removerImagemGaleria(index: number): void {
+    this.galeriaSelecionada.splice(index, 1);
+    this.galeriaPreviewUrls.splice(index, 1);
+    const nomesAtualizados = this.galeriaSelecionada.map((f) => f.name);
+    this.form.get('galeria')?.setValue(nomesAtualizados);
+  }
+
+private patchFormFromProduct(edit: Produto) {
+  this.imagemPreview = edit.imagemUrl || null;
+
+  this.form.patchValue({
+    ...edit,
+    galeria: edit.galeria ?? [],
+  });
+
+  // Resetando galerias locais
+  this.galeriaPreviewUrls = [];
+  this.galeriaSelecionada = [];
+
+  if (edit.galeria && edit.galeria.length) {
+    for (const imageName of edit.galeria) {
+      // Se os nomes já são URLs completas, use diretamente:
+      const url = imageName.startsWith('http')
+        ? imageName
+        : `http://localhost:8080/imagens/${imageName}`;
+
+      this.galeriaPreviewUrls.push(url);
+    }
   }
 }
 
 
-  private patchFormFromProduct(edit: Produto) {
-    this.imagemPreview = edit.imagemUrl || null;
-
-    this.form.patchValue({
-      ...edit,
-      imagemUrl: edit.imagemUrl,
-      // tags: edit.tags?.join(', ') ?? '',
-      // ingredientes: edit.ingredientes?.join(', ') ?? '',
-      // galeria: edit.galeria?.join(', ') ?? '',
-      // comentariosAdmin: edit.comentariosAdmin?.join('\n') ?? '',
-      // tabelaNutricional: edit.tabelaNutricional
-      //   ? JSON.stringify(edit.tabelaNutricional, null, 2)
-      //   : '',
-    });
-  }
-
   submit(): void {
+    console.log('teste', this.form.value);
     if (this.form.invalid) {
       this.toastService.error('Preencha corretamente todos os campos.');
       this.form.markAllAsTouched();
@@ -160,6 +200,8 @@ onImagemSelecionada(event: Event): void {
       // estoque: Number(formValue.estoque),
       // qtdMinimaEstoque: Number(formValue.qtdMinimaEstoque || 0),
       custo: Number(formValue.custo || 0),
+      galeria: formValue.galeria,
+      imagemUrl: formValue.imagemUrl,
       // lucroEstimado: Number(formValue.lucroEstimado || 0),
       // quantidadeVendida: Number(formValue.quantidadeVendida || 0),
       // avaliacaoMedia: Number(formValue.avaliacaoMedia || 0),
@@ -195,6 +237,10 @@ onImagemSelecionada(event: Event): void {
     if (this.imagemSelecionada) {
       formData.append('imagem', this.imagemSelecionada);
     }
+
+    this.galeriaSelecionada.forEach((file) => {
+      formData.append('galeria', file); // mesmo nome, tipo array
+    });
 
     const acao =
       produto.id && produto.id > 0
@@ -260,19 +306,19 @@ onImagemSelecionada(event: Event): void {
     this.imagemSelecionada = null;
   }
 
-      //   id: [null],
-      // nome: ['', Validators.required],
-      // slug: [''],
-      // descricao: ['', Validators.required],
-      // descricaoCurta: [''],
-      // categoria: ['', Validators.required],
-      // peso: ['', Validators.required],
-      // sabor: [''],
-      // preco: [0, [Validators.required, Validators.min(0)]],
-      // precoDesconto: [0],
-      // custo: [0],
-      // fornecedor: [''],
-      // lucroEstimado: [0],
-      // statusAprovacao: ['pendente'],
-      // tamanhoPorcao: [''],
+  //   id: [null],
+  // nome: ['', Validators.required],
+  // slug: [''],
+  // descricao: ['', Validators.required],
+  // descricaoCurta: [''],
+  // categoria: ['', Validators.required],
+  // peso: ['', Validators.required],
+  // sabor: [''],
+  // preco: [0, [Validators.required, Validators.min(0)]],
+  // precoDesconto: [0],
+  // custo: [0],
+  // fornecedor: [''],
+  // lucroEstimado: [0],
+  // statusAprovacao: ['pendente'],
+  // tamanhoPorcao: [''],
 }

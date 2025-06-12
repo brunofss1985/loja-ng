@@ -21,7 +21,6 @@ export interface Produto {
   sku?: string;
   codigoBarras?: string;
   imagemUrl: string;
-  galeria?: string[];
   destaque?: boolean;
   novoLancamento?: boolean;
   maisVendido?: boolean;
@@ -37,4 +36,12 @@ export interface Produto {
   criadoEm: Date;
   atualizadoEm: Date;
   ativo: boolean;
+    // ✅ NOVOS CAMPOS binários
+  imagem?: Uint8Array; // ou ArrayBuffer, dependendo do Angular HTTPClient
+  imagemMimeType?: string;
+
+  galeria?: Uint8Array[];
+  galeriaMimeTypes?: string[];
+
+
 }

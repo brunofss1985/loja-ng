@@ -5,11 +5,12 @@
     <div class="row mt-4">
       <div class="col-12 mt-3">
         <!-- Mostra imagem já existente ao editar  -->
-        <div *ngIf="imagemPreview && !imagemSelecionada" class="imagem-preview-antiga">
+        <div *ngIf="imagemPreview" class="imagem-preview-antiga">
           <label>Imagem atual:</label><br />
           <img [src]="imagemPreview" alt="Imagem do produto" width="200"
             style="margin-top: 8px; border: 1px solid #ccc; border-radius: 4px;" />
         </div>
+
 
         <!-- Mostra nova imagem assim que for escolhida  -->
         <div *ngIf="imagemSelecionada" class="imagem-preview-nova">
@@ -22,10 +23,10 @@
         <input type="file" class="form-control" (change)="onImagemSelecionada($event)" />
       </div>
 
-          <div class="col-4" >
+      <div class="col-4">
         <label class="mt-2">Imagem URL</label>
-        <input class="form-control" formControlName="imagemUrl"   />
-      </div> 
+        <!-- <input class="form-control" formControlName="imagemUrl"   /> -->
+      </div>
     </div>
 
 
@@ -63,7 +64,7 @@
         <input class="form-control" formControlName="codigoBarras" />
       </div>-->
 
-  
+
 
 
 
@@ -177,40 +178,23 @@
     </div> -->
 
       <!-- Select -->
-<div class="col-12 mt-4">
-  <label class="mt-2">Galeria de Imagens</label>
-  <input
-    type="file"
-    class="form-control"
-    accept="image/*"
-    multiple
-    (change)="onGaleriaSelecionada($event)"
-  />
+      <div class="col-12 mt-4">
+        <label class="mt-2">Galeria de Imagens</label>
+        <input type="file" class="form-control" accept="image/*" multiple (change)="onGaleriaSelecionada($event)" />
 
-  <div class="d-flex flex-wrap mt-3">
-    <div
-      *ngFor="let img of galeriaPreviewUrls; let i = index"
-      class="me-2 mb-2"
-      style="position: relative;"
-    >
-      <img
-        [src]="[img]"
-        alt="Imagem da galeria"
-        width="100"
-        style="border: 1px solid #ccc; border-radius: 4px;"
-      />
-      <button
-        type="button"
-        class="btn btn-sm btn-danger"
-        style="position: absolute; top: 0; right: 0;"
-        (click)="removerImagemGaleria(i)"
-      >
-        ✕
-      </button>
- <input class="form-control" formControlName="galeria" />    </div>
-  </div>
-</div>
+        <div class="d-flex flex-wrap mt-3">
+          <div *ngFor="let img of galeriaPreviewUrls; let i = index" class="me-2 mb-2" style="position: relative;">
+            <img [src]="img" alt="Imagem da galeria" width="100" height="100"
+              style="object-fit: cover; border: 1px solid #ccc; border-radius: 4px;" />
+            <button type="button" class="btn btn-sm btn-danger" style="position: absolute; top: 0; right: 0;"
+              (click)="removerImagemGaleria(i)">
+              ✕
+            </button>
+          </div>
+        </div>
+      </div>
 
     </div>
+
   </div>
 </form>

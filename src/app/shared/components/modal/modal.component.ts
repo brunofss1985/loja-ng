@@ -1,14 +1,20 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Produto } from 'src/app/core/models/product.model';
 import { ModalService } from 'src/app/core/services/modalService/modal.service';
 
 @Component({
   selector: 'app-modal',
   templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.scss']
+  styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent implements OnInit {
-
   constructor(private modalService: ModalService) {}
 
   @Output() saveClick = new EventEmitter<Produto>();
@@ -25,18 +31,18 @@ export class ModalComponent implements OnInit {
       this.isOpen = true;
     });
   }
-    // Fechar o modal com a tecla ESC
-    @HostListener('document:keydown.escape', ['$event'])
-    onEscapeKey(event: KeyboardEvent) {
-      this.close();
-    }
+  // Fechar o modal com a tecla ESC
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscapeKey(event: KeyboardEvent) {
+    this.close();
+  }
 
-    save() {
-      this.saveClick.emit();
-    }
+  save() {
+    this.saveClick.emit();
+  }
 
-    close() {
-      this.isOpen = false;
-      this.isOpenChange.emit(false);
-    }
+  close() {
+    this.isOpen = false;
+    this.isOpenChange.emit(false);
+  }
 }

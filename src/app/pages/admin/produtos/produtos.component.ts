@@ -18,11 +18,8 @@ export class ProdutosComponent implements OnInit {
   ) {}
 
   produtoSelecionado: any = null;
-
   allProducts: Produto[] = [];
-
-  modalAberto: boolean = true;
-
+  modalAberto: boolean = false;
   isAdmin: boolean = false;
   columns: string[] = ['id', 'nome', 'categoria', 'preco'];
   columnLabels: { [key: string]: string } = {
@@ -34,6 +31,27 @@ export class ProdutosComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProducts();
+  }
+
+  novoProduto(): void {
+    this.produtoSelecionado = undefined;
+    this.modalAberto = true;
+
+    // Resetar o formulário se estiver carregado
+    setTimeout(() => {
+      if (this.productFormComponent) {
+        this.productFormComponent.resetFormToDefaults();
+      }
+    }, 0);
+  }
+
+  onModalAbertoChange(valor: boolean): void {
+    this.modalAberto = valor;
+
+    if (!valor && this.productFormComponent) {
+      this.productFormComponent.resetFormToDefaults();
+      this.produtoSelecionado = null;
+    }
   }
 
   save() {

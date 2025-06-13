@@ -109,32 +109,31 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.form.get('galeria')?.setValue(nomesAtualizados);
   }
 
-patchFormFromProduct(edit: Produto): void {
-  console.log("Dados recebidos:", edit);
+  patchFormFromProduct(edit: Produto): void {
+    // 👇 exclui os campos que NÃO pertencem ao form
+    const { imagem, imagemMimeType, galeria, galeriaMimeTypes, ...formValues } =
+      edit;
 
-  // 👇 exclui os campos que NÃO pertencem ao form
-  const { imagem, imagemMimeType, galeria, galeriaMimeTypes, ...formValues } = edit;
+    this.form.patchValue({
+      ...formValues,
+    });
 
-  this.form.patchValue({
-    ...formValues
-  });
+    // Imagem principal
+    if (imagem && imagemMimeType && !this.imagemSelecionada) {
+      this.imagemPreview = `data:${imagemMimeType};base64,${imagem}`;
+    }
 
-  // Imagem principal
-  if (imagem && imagemMimeType && !this.imagemSelecionada) {
-    this.imagemPreview = `data:${imagemMimeType};base64,${imagem}`;
+    // Galeria
+    this.galeriaPreviewUrls = [];
+    if (Array.isArray(galeria) && galeria.length > 0) {
+      this.galeriaPreviewUrls = galeria.map(
+        (base64Data, i) =>
+          `data:${galeriaMimeTypes?.[i] || 'image/jpeg'};base64,${base64Data}`
+      );
+    }
+
+    setTimeout(() => this.cdr.detectChanges(), 100);
   }
-
-  // Galeria
-  this.galeriaPreviewUrls = [];
-  if (Array.isArray(galeria) && galeria.length > 0) {
-    this.galeriaPreviewUrls = galeria.map((base64Data, i) =>
-      `data:${galeriaMimeTypes?.[i] || 'image/jpeg'};base64,${base64Data}`
-    );
-  }
-
-  setTimeout(() => this.cdr.detectChanges(), 100);
-}
-
 
   submit(): void {
     if (this.form.invalid) {
@@ -193,6 +192,7 @@ patchFormFromProduct(edit: Produto): void {
 
   resetFormToDefaults(): void {
     this.form.reset({
+      id: null,
       nome: '',
       slug: '',
       descricao: '',
@@ -217,7 +217,8 @@ patchFormFromProduct(edit: Produto): void {
   }
 
   arrayBufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
-    const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+    const bytes =
+      buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
     let binary = '';
     for (let i = 0; i < bytes.byteLength; i++) {
       binary += String.fromCharCode(bytes[i]);

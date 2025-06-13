@@ -74,7 +74,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagemPreview = reader.result as string;
+      this.imagemPreview = reader.result as string; // ⚠️ substitui apenas no preview
       };
       reader.readAsDataURL(this.imagemSelecionada);
     }

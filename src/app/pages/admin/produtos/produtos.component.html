@@ -13,7 +13,7 @@
 </app-tables>
 
 <app-modal
-[tittleModal]="'Cadastrar Produto'"
+[tittleModal]="!produtoSelecionado ? 'Cadastrar Produto' : 'Editar Produto'"
 [size]="'large'"
 [isOpen]="modalAberto"
 (isOpenChange)="onModalAbertoChange($event)"

@@ -5,43 +5,47 @@ export interface Produto {
   descricao: string;
   descricaoCurta?: string;
   categoria: string;
-  tags: string[];
   peso: string;
   sabor?: string;
-  tamanhoPorcao?: string;
-  ingredientes: string[];
-  tabelaNutricional?: { [chave: string]: string | number };
   preco: number;
   precoDesconto?: number;
-  estoque: number;
-  qtdMinimaEstoque?: number;
   custo?: number;
   fornecedor?: string;
-  lucroEstimado?: number; // Pode ser calculado no frontend
-  sku?: string;
-  codigoBarras?: string;
-  imagemUrl: string;
-  destaque?: boolean;
-  novoLancamento?: boolean;
-  maisVendido?: boolean;
-  promocaoAtiva?: boolean;
-  dataExpiracao?: Date;
-  ultimaCompra?: Date;
-  quantidadeVendida?: number;
-  comentariosAdmin?: string[];
-  statusAprovacao?: 'aprovado' | 'pendente' | 'rejeitado';
-  publicado?: boolean;
-  avaliacaoMedia?: number;
-  quantidadeAvaliacoes?: number;
-  criadoEm: Date;
-  atualizadoEm: Date;
-  ativo: boolean;
-    // ✅ NOVOS CAMPOS binários
-  imagem?: Uint8Array; // ou ArrayBuffer, dependendo do Angular HTTPClient
+  lucroEstimado?: number;
+  statusAprovacao?: string;
+  tamanhoPorcao?: string;
+  galeria?: string[]; // base64 ou nomes
+  imagem?: string;
   imagemMimeType?: string;
-
-  galeria?: Uint8Array[];
   galeriaMimeTypes?: string[];
 
-
+  // Novos campos
+  ativo?: boolean;
+  estoque?: number;
+  estoqueMinimo?: number;
+  estoqueMaximo?: number;
+  localizacaoFisica?: string;
+  codigoBarras?: string;
+  dimensoes?: {
+    altura: number | null;
+    largura: number | null;
+    profundidade: number | null;
+  };
+  restricoes?: string[];
+  tabelaNutricional?: any; // ou defina melhor se quiser tipar os nutrientes
+  modoDeUso?: string;
+  palavrasChave?: string[];
+  avaliacoes?: {
+    media: number | null;
+    comentarios: string[];
+  };
+  dataCadastro?: string | Date;
+  dataUltimaAtualizacao?: string | Date;
+  dataValidade?: string | Date;
+  fornecedorId?: number;
+  cnpjFornecedor?: string;
+  contatoFornecedor?: string;
+  prazoEntregaFornecedor?: string;
+  quantidadeVendida?: number;
+  vendasMensais?: number[];
 }

@@ -1,120 +1,80 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <div class="container">
+  <div class="container-fluid">
+    <div class="row">
 
-    <!-- Inputs normais (texto)  -->
-<div class="row mt-4">
-  <div class="col-12 mt-3">
-    <!-- Imagem atual do produto -->
-    <div *ngIf="imagemPreview && !imagemSelecionada" class="imagem-preview-antiga">
-      <label>Imagem atual:</label><br />
-      <img [src]="imagemPreview" alt="Imagem atual" width="200"
-        style="margin-top: 8px; border: 1px solid #ccc; border-radius: 4px;" />
-    </div>
+      <!-- 🔳 IMAGEM PRINCIPAL -->
+      <div class="col-md-3 col-sm-12">
+        <div *ngIf="imagemPreview && !imagemSelecionada" class="mb-3">
+          <label>Imagem atual:</label>
+          <img [src]="imagemPreview" alt="Imagem atual" class="img-fluid border rounded w-100 mb-2" />
+        </div>
 
-    <!-- Nova imagem selecionada -->
-    <div *ngIf="imagemSelecionada" class="imagem-preview-nova">
-      <label>Nova imagem selecionada:</label><br />
-      <img [src]="imagemPreview" alt="Nova imagem" width="200"
-        style="margin-top: 8px; border: 1px solid #ccc; border-radius: 4px;" />
-    </div>
+        <div *ngIf="imagemSelecionada" class="mb-3">
+          <label>Nova imagem selecionada:</label>
+          <img [src]="imagemPreview" alt="Nova imagem" class="img-fluid border rounded w-100 mb-2" />
+        </div>
 
-    <label class="mt-2">Imagem do Produto</label>
-    <input type="file" class="form-control" (change)="onImagemSelecionada($event)" />
-  </div>
-</div>
-
-
-
-
-    <div class="col-4">
-      <label class="mt-2">Nome</label>
-      <input class="form-control" formControlName="nome" />
-    </div>
-    <div class="col-4">
-      <label class="mt-2">Categoria</label>
-      <input class="form-control" formControlName="categoria" />
-    </div>
-    <div class="col-4">
-      <label class="mt-2">Peso</label>
-      <input class="form-control" formControlName="peso" type="number" />
-    </div>
-    <div class="col-4">
-      <label class="mt-2">Sabor</label>
-      <input class="form-control" formControlName="sabor" />
-    </div>
-    <div class="col-4">
-      <label class="mt-2">Tamanho Porção</label>
-      <input class="form-control" formControlName="tamanhoPorcao" />
-    </div>
-    <div class="col-4">
-      <label class="mt-2">Fornecedor</label>
-      <input class="form-control" formControlName="fornecedor" />
-    </div>
-    <!-- <div class="col-4">
-        <label class="mt-2">SKU</label>
-        <input class="form-control" formControlName="sku" />
+        <label class="mt-2">Imagem do Produto</label>
+        <input type="file" class="form-control mt-1" (change)="onImagemSelecionada($event)" />
       </div>
-      <div class="col-4">
-        <label class="mt-2">Código de Barras</label>
-        <input class="form-control" formControlName="codigoBarras" />
-      </div>-->
 
-
-
-
-
-
-
-    <!-- Inputs pequenos agrupados -->
-    <!-- <div class="col-3">
-        <label class="mt-2">Data Expiração</label>
-        <input class="form-control" formControlName="dataExpiracao" type="date" />
+      <!-- 🧾 CAMPOS DO PRODUTO -->
+      <div class="col-md-9 col-sm-12">
+        <div class="row">
+          <div class="col-md-4">
+            <label class="mt-2">Nome</label>
+            <input class="form-control" formControlName="nome" />
+          </div>
+          <div class="col-md-4">
+            <label class="mt-2">Categoria</label>
+            <input class="form-control" formControlName="categoria" />
+          </div>
+          <div class="col-md-4">
+            <label class="mt-2">Peso</label>
+            <input class="form-control" formControlName="peso" type="number" />
+          </div>
+          <div class="col-md-4">
+            <label class="mt-2">Sabor</label>
+            <input class="form-control" formControlName="sabor" />
+          </div>
+          <div class="col-md-4">
+            <label class="mt-2">Tamanho Porção</label>
+            <input class="form-control" formControlName="tamanhoPorcao" />
+          </div>
+          <div class="col-md-4">
+            <label class="mt-2">Slug</label>
+            <input class="form-control" formControlName="slug" />
+          </div>
+          <div class="col-12">
+            <label class="mt-2">Descrição</label>
+            <textarea class="form-control" formControlName="descricao"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="mt-2">Descrição Curta</label>
+            <textarea class="form-control" formControlName="descricaoCurta"></textarea>
+          </div>
+        </div>
       </div>
-      <div class="col-3">
-        <label class="mt-2">Última Compra</label>
-        <input class="form-control" formControlName="ultimaCompra" type="date" />
-      </div>
-      <div class="col-3">
-        <label class="mt-2">Qtd. Avaliações</label>
-        <input class="form-control" formControlName="quantidadeAvaliacoes" type="number" />
-      </div> -->
-
-
-    <div class="col-3">
-      <label class="mt-2">Preço</label>
-      <input class="form-control" formControlName="preco" type="number" />
     </div>
-    <div class="col-3">
-      <label class="mt-2">Preço com Desconto</label>
-      <input class="form-control" formControlName="precoDesconto" type="number" />
-    </div>
-    <!-- <div class="col-3">
-        <label class="mt-2">Estoque</label>
-        <input class="form-control" formControlName="estoque" type="number" />
+    <!-- 💰 Preços -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <label class="mt-2">Preço</label>
+        <input class="form-control" formControlName="preco" type="number" />
       </div>
-      <div class="col-3">
-        <label class="mt-2">Qtd. Mínima Estoque</label>
-        <input class="form-control" formControlName="qtdMinimaEstoque" type="number" />
-      </div> -->
-
-
-    <div class="col-3">
-      <label class="mt-2">Custo</label>
-      <input class="form-control" formControlName="custo" type="number" />
-    </div>
-    <div class="col-3">
-      <label class="mt-2">Lucro Estimado</label>
-      <input class="form-control" formControlName="lucroEstimado" type="number" />
-      <!-- </div>
-      <div class="col-3">
-        <label class="mt-2">Quantidade Vendida</label>
-        <input class="form-control" formControlName="quantidadeVendida" type="number" />
+      <div class="col-md-4">
+        <label class="mt-2">Preço com Desconto</label>
+        <input class="form-control" formControlName="precoDesconto" type="number" />
       </div>
-      <div class="col-3">
-        <label class="mt-2">Avaliação Média</label>
-        <input class="form-control" formControlName="avaliacaoMedia" type="number" step="0.1" />
-      </div> -->
-      <div class="col-3">
+      <div class="col-md-4">
+        <label class="mt-2">Custo</label>
+        <input class="form-control" formControlName="custo" type="number" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Lucro Estimado</label>
+        <input class="form-control" formControlName="lucroEstimado" type="number" />
+      </div>
+      <div class="col-md-4">
         <label class="mt-2">Status Aprovação</label>
         <select class="form-control" formControlName="statusAprovacao">
           <option value="aprovado">Aprovado</option>
@@ -122,74 +82,167 @@
           <option value="rejeitado">Rejeitado</option>
         </select>
       </div>
-
-
-
-
-      <!-- Textareas -->
-      <!-- <div class="col-12">
-        <label class="mt-2">Galeria (URLs separadas por vírgula)</label>
-        <input class="form-control" formControlName="galeria" />
-      </div> -->
-      <div class="col-4">
-        <label class="mt-2">Slug</label>
-        <input class="form-control" formControlName="slug" />
+      <div class="col-md-4">
+        <label class="mt-2">Produto Ativo</label>
+        <select class="form-control" formControlName="ativo">
+          <option [ngValue]="true">Sim</option>
+          <option [ngValue]="false">Não</option>
+        </select>
       </div>
+    </div>
 
+    <!-- 📦 Estoque & Logística -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <label class="mt-2">Estoque</label>
+        <input class="form-control" formControlName="estoque" type="number" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Estoque Mínimo</label>
+        <input class="form-control" formControlName="estoqueMinimo" type="number" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Estoque Máximo</label>
+        <input class="form-control" formControlName="estoqueMaximo" type="number" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Localização Física</label>
+        <input class="form-control" formControlName="localizacaoFisica" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Código de Barras</label>
+        <input class="form-control" formControlName="codigoBarras" />
+      </div>
+    </div>
+    
+    
+    <div [formGroup]="dimensoesGroup">
+      <div class="row mt-4">
+   <div class="col-md-4">
+    <label class="mt-2">Altura (cm)</label>
+    <input class="form-control" formControlName="altura" type="number" />
+  </div>
+  <div class="col-md-4">
+    <label class="mt-2">Largura (cm)</label>
+    <input class="form-control" formControlName="largura" type="number" />
+  </div>
+  <div class="col-md-4">
+    <label class="mt-2">Profundidade (cm)</label>
+    <input class="form-control" formControlName="profundidade" type="number" />
+  </div>
+</div>
+</div>
+    
+
+
+
+    <!-- 🏭 Fornecedor -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <label class="mt-2">Fornecedor</label>
+        <input class="form-control" formControlName="fornecedor" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Fornecedor ID</label>
+        <input class="form-control" formControlName="fornecedorId" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">CNPJ do Fornecedor</label>
+        <input class="form-control" formControlName="cnpjFornecedor" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Contato do Fornecedor</label>
+        <input class="form-control" formControlName="contatoFornecedor" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Prazo de Entrega</label>
+        <input class="form-control" formControlName="prazoEntregaFornecedor" />
+      </div>
+    </div>
+
+    <!-- 📆 Datas -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <label class="mt-2">Data de Cadastro</label>
+        <input class="form-control" type="date" formControlName="dataCadastro" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Última Atualização</label>
+        <input class="form-control" type="date" formControlName="dataUltimaAtualizacao" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Data de Validade</label>
+        <input class="form-control" type="date" formControlName="dataValidade" />
+      </div>
+    </div>
+    <!-- 🧪 Nutrição & SEO -->
+    <div class="row mt-4">
       <div class="col-12">
-        <label class="mt-2">Descrição</label>
-        <textarea class="form-control" formControlName="descricao"></textarea>
-      </div>
-      <div class="col-12">
-        <label class="mt-2">Descrição Curta</label>
-        <textarea class="form-control" formControlName="descricaoCurta"></textarea>
-      </div>
-      <!-- <div class="col-12">
-        <label class="mt-2">Ingredientes (separados por vírgula)</label>
-        <input class="form-control" formControlName="ingredientes" />
-      </div>
-      <div class="col-12">
-        <label class="mt-2">Tags (separadas por vírgula)</label>
-        <input class="form-control" formControlName="tags" />
-      </div>
-      <div class="col-12">
-        <label class="mt-2">Tabela Nutricional (JSON)</label>
+        <label class="mt-2">Tabela Nutricional (JSON ou livre)</label>
         <textarea class="form-control" formControlName="tabelaNutricional"></textarea>
       </div>
+      <div class="col-md-4">
+        <label class="mt-2">Modo de Uso</label>
+        <input class="form-control" formControlName="modoDeUso" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Restrição Alimentar</label>
+        <input class="form-control" formControlName="restricoes" placeholder="Ex: Sem glúten, vegano" />
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Palavras-chave</label>
+        <input class="form-control" formControlName="palavrasChave" placeholder="Ex: proteína, whey" />
+      </div>
+    </div>
+
+    <!-- 📊 Vendas -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <label class="mt-2">Quantidade Vendida</label>
+        <input class="form-control" formControlName="quantidadeVendida" type="number" />
+      </div>
+      <div class="col-md-8">
+        <label class="mt-2">Vendas Mensais (números separados por vírgula)</label>
+        <input class="form-control" formControlName="vendasMensais" placeholder="Ex: 10,15,20,18" />
+      </div>
+    </div>
+
+    <!-- 📸 Galeria -->
+    <div class="row mt-4">
       <div class="col-12">
-        <label class="mt-2">Comentários do Admin (separados por linha)</label>
-        <textarea class="form-control" formControlName="comentariosAdmin"></textarea>
-      </div>
-    </div> -->
-
-      <!-- Checkboxes -->
-      <!-- <div class="row mt-4">
-      <div class="col-4"
-        *ngFor="let campo of ['destaque', 'novoLancamento', 'maisVendido', 'promocaoAtiva', 'publicado', 'ativo']">
-        <label class="mt-2">
-          <input type="checkbox" [formControlName]="campo" /> {{ campo | titlecase }}
-        </label>
-      </div>
-    </div> -->
-
-      <!-- Select -->
-      <div class="col-12 mt-4">
         <label class="mt-2">Galeria de Imagens</label>
         <input type="file" class="form-control" accept="image/*" multiple (change)="onGaleriaSelecionada($event)" />
-
-        <div class="d-flex flex-wrap mt-3">
-          <div *ngFor="let img of galeriaPreviewUrls; let i = index" class="me-2 mb-2" style="position: relative;">
-            <img [src]="img" alt="Imagem da galeria" width="100" height="100"
-              style="object-fit: cover; border: 1px solid #ccc; border-radius: 4px;" />
-            <button type="button" class="btn btn-sm btn-danger" style="position: absolute; top: 0; right: 0;"
-              (click)="removerImagemGaleria(i)">
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <div *ngFor="let img of galeriaPreviewUrls; let i = index" class="position-relative">
+            <img
+              [src]="img"
+              alt="Imagem da galeria"
+              width="100"
+              height="100"
+              style="object-fit: cover; border: 1px solid #ccc; border-radius: 4px;"
+            />
+            <button
+              type="button"
+              class="btn btn-sm btn-danger position-absolute top-0 end-0"
+              (click)="removerImagemGaleria(i)"
+            >
               ✕
             </button>
           </div>
         </div>
       </div>
-
     </div>
 
+        <!-- ⭐ Avaliações -->
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <label class="mt-2">Média de Avaliações</label>
+        <input disabled class="form-control" type="number"  readonly />
+      </div>
+      <div class="col-md-8">
+        <label class="mt-2">Comentários (visualização)</label>
+        <textarea disabled class="form-control"  rows="3" readonly></textarea>
+      </div>
+    </div>
   </div>
 </form>

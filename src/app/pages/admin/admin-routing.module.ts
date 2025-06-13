@@ -6,7 +6,7 @@ import { ComprasComponent } from './compras/compras.component';
 import { EstoqueComponent } from './estoque/estoque.component';
 import { OrcamentosComponent } from './orcamentos/orcamentos.component';
 import { PerfilAdminComponent } from './perfil-admin/perfil-admin.component';
-import { ProdutosEmFaltaComponent } from './produtos-em-falta/produtos-em-falta.component';
+// import { ProdutosEmFaltaComponent } from './produtos-em-falta/produtos-em-falta.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { AdminGuard } from 'src/app/core/guards/admin-guard';
 import { ProdutosComponent } from './produtos/produtos.component';
@@ -23,7 +23,7 @@ const routes: Routes = [
       { path: 'estoque', component: EstoqueComponent },
       { path: 'orcamentos', component: OrcamentosComponent },
       { path: 'produtos', component: ProdutosComponent },
-      { path: 'produtos-em-falta', component: ProdutosEmFaltaComponent },
+      // { path: 'produtos-em-falta', component: ProdutosEmFaltaComponent },
   ]}
 ];
 

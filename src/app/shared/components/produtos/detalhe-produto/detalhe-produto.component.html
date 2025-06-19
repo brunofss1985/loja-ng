@@ -1,0 +1,110 @@
+<div class="container my-4" *ngIf="produto">
+    <div class="row">
+        <!-- Imagem -->
+        <div class="col-md-5">
+            <img [src]="imagemSelecionada || 'data:' + produto.imagemMimeType + ';base64,' + produto.imagem"
+                alt="Imagem do Produto" class="img-fluid rounded shadow-sm">
+
+            <!-- Galeria -->
+            <div class="d-flex gap-2 mt-3" *ngIf="produto.galeria?.length">
+                <img *ngFor="let img of produto.galeria; let i = index"
+                    [src]="'data:' + produto.galeriaMimeTypes[i] + ';base64,' + img" class="img-thumbnail"
+                    alt="Imagem da galeria" (click)="selecionarImagemGaleria(img, produto.galeriaMimeTypes[i])">
+            </div>
+        </div>
+
+        <!-- Dados principais -->
+        <div class="col-md-7">
+            <h2 class="fw-bold">{{ produto.nome }}</h2>
+            <!-- Descrição curta -->
+            <p class="lead">{{ produto.descricaoCurta }}</p>
+            <p class="text-muted">
+                SKU: {{ produto.slug }} |
+                Código de Barras: {{ produto.codigoBarras }} |
+                Categoria: {{ produto.categoria }}
+            </p>
+
+            <!-- Status -->
+            <div class="mb-2">
+                <span *ngIf="produto.statusAprovacao === 'pendente'" class="badge bg-warning text-dark">Pendente</span>
+                <span *ngIf="produto.ativo" class="badge bg-success">Ativo</span>
+            </div>
+
+            <!-- Preço -->
+            <h3 class="text-success">
+                R$ {{ produto.preco | number:'1.2-2' }}
+                <small *ngIf="produto.precoDesconto" class="text-muted text-decoration-line-through">
+                    R$ {{ produto.precoDesconto | number:'1.2-2' }}
+                </small>
+            </h3>
+
+            <!-- Botões -->
+            <div class="d-flex gap-2 mb-4">
+                <button class="btn btn-primary">Adicionar ao Carrinho</button>
+                <button class="btn btn-outline-secondary">Comprar Agora</button>
+            </div>
+
+            <!-- Avaliação -->
+            <div>
+                <h6>Avaliação dos Clientes:</h6>
+                <p>
+                    ⭐⭐⭐⭐☆ ({{ produto.avaliacaoMedia || 'Sem' }} de 5) -
+                    {{ produto.quantidadeAvaliacoes || 0 }} avaliações
+                </p>
+            </div>
+
+            <!-- Vendas -->
+            <div class="col-md-6">
+                <ul *ngFor="let venda of produto.vendasMensais">
+                </ul>
+                <h6>Total Vendido:</h6>
+                <p> {{ produto.quantidadeVendida }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Descrição completa -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h4>Descrição do Produto</h4>
+            <p>{{ produto.descricao }}</p>
+        </div>
+    </div>
+
+    <!-- Informações Nutricionais -->
+    <div class="row mt-5" *ngIf="produto.tabelaNutricional">
+        <h4>Informações Nutricionais</h4>
+        <div>
+                <p class="card-text">{{ produto.tabelaNutricional }}</p>
+        </div>
+
+        <div *ngIf="produto.ingredientes">
+            <strong>Ingredientes:</strong>
+            <p>{{ produto.ingredientes }}</p>
+        </div>
+
+        <div *ngIf="produto.restricoes?.length">
+            <strong>Restrições:</strong>
+                <p *ngFor="let restricao of produto.restricoes">{{ restricao }}</p>
+        </div>
+
+        <div *ngIf="produto.modoDeUso">
+            <strong>Modo de Uso:</strong>
+            <p>{{ produto.modoDeUso }}</p>
+        </div>
+    </div>
+
+    <!-- Dimensões e Peso -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h5 class="card-title">Dimensões</h5>
+            <p>
+                Altura: {{ produto.dimensoes?.altura }} cm <br>
+                Largura: {{ produto.dimensoes?.largura }} cm <br>
+                Profundidade: {{ produto.dimensoes?.profundidade }} cm <br>
+
+            </p>
+        </div>
+    </div>
+
+</div>

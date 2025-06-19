@@ -1,0 +1,87 @@
+/* Espaçamento e alinhamento geral */
+.container {
+  max-width: 1200px;
+}
+
+/* Imagem principal */
+.img-fluid {
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Galeria de imagens */
+.img-thumbnail {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.img-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+/* Títulos */
+h2 {
+  font-weight: 700;
+}
+
+h5, h6 {
+  font-weight: 600;
+}
+
+/* Preço */
+h4 {
+  font-weight: 600;
+}
+
+.text-success {
+  font-size: 1.8rem;
+}
+
+.text-decoration-line-through {
+  font-size: 1rem;
+}
+
+/* Tags */
+.badge {
+  font-size: 0.9rem;
+  padding: 0.5em 0.75em;
+  border-radius: 8px;
+}
+
+/* Botões */
+button {
+  padding: 0.6em 1.2em;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+/* Avaliações */
+.stars {
+  color: #ffc107;
+  font-size: 1.2rem;
+}
+
+/* Seções adicionais */
+.row.mt-5 {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .img-thumbnail {
+    width: 80px;
+    height: 80px;
+  }
+
+  .text-success {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+}

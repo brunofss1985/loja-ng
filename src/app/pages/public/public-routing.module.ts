@@ -4,19 +4,31 @@ import { PublicHomeComponent } from './public-home/public-home.component';
 import { LoginComponent } from './login/login.component';
 import { DefaultLoginComponent } from 'src/app/shared/components/default-login/default-login.component';
 import { RegisterComponent } from './register/register.component';
+import { ListaProdutosComponent } from 'src/app/shared/components/produtos/lista-produtos/lista-produtos.component';
+import { DetalheProdutoComponent } from 'src/app/shared/components/produtos/detalhe-produto/detalhe-produto.component';
 
 const routes: Routes = [
-  { path: '', component: PublicHomeComponent },
-  { path: 'default-login', component: DefaultLoginComponent,
+  {
+    path: '',
+    component: PublicHomeComponent,
+    children: [
+      { path: 'produtos', component: ListaProdutosComponent },
+      { path: 'produtos/:categoria', component: ListaProdutosComponent },
+      { path: 'produto/:id', component: DetalheProdutoComponent },
+    ],
+  },
+  {
+    path: 'default-login',
+    component: DefaultLoginComponent,
     children: [
       { path: 'register', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
-    ]
-  }
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class PublicRoutingModule { }
+export class PublicRoutingModule {}

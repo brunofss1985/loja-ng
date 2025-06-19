@@ -30,6 +30,16 @@ export class ProdutosService {
     return this.http.get<Produto[]>(this.apiUrl);
   }
 
+
+  buscarPorId(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
+
+buscarPorCategoria(categoria: string): Observable<any[]> {
+  return this.http.get<any[]>(this.apiUrl + `/categoria/${categoria}`);
+}
+
+
   createProduto(produto: Produto): Observable<Produto> {
     return this.http.post<Produto>(this.apiUrl, produto, {
       headers: this.getAuthHeaders(),

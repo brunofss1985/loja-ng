@@ -10,6 +10,9 @@ import { InputTextComponent } from './components/input-text/input-text.component
 import { ModalComponent } from './components/modal/modal.component';
 import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
 import { EditButtonComponent } from './components/edit-button/edit-button.component';
+import { ListaProdutosComponent } from './components/produtos/lista-produtos/lista-produtos.component';
+import { DetalheProdutoComponent } from './components/produtos/detalhe-produto/detalhe-produto.component';
+import { ProductCardComponent } from './components/produtos/product-card/product-card.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +24,10 @@ import { EditButtonComponent } from './components/edit-button/edit-button.compon
     SidebarComponent,
     ModalComponent,
     DeleteButtonComponent,
-    EditButtonComponent
+    EditButtonComponent,
+    ListaProdutosComponent,
+    DetalheProdutoComponent,
+    ProductCardComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +41,10 @@ import { EditButtonComponent } from './components/edit-button/edit-button.compon
     TablesComponent,
     SidebarComponent,
     ModalComponent,
-    DeleteButtonComponent
+    DeleteButtonComponent,
+    ListaProdutosComponent,
+    DetalheProdutoComponent,
+    ProductCardComponent
   ]
 })
 export class SharedModule { }

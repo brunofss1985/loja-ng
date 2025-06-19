@@ -1,0 +1,11 @@
+<div class="content" >
+    <app-product-card
+    *ngFor="let produto of produtos"
+    [productId]="produto.id"
+    [productNome]="produto.nome"
+    [productModelo]="produto.descricaoCurta"
+    [productPeso]="produto.peso + 'g'"
+    [productImage]="'data:' + (produto.imagemMimeType) + ';base64,' + produto.imagem"
+    [productPreco]="produto.preco"
+    ></app-product-card>
+</div>

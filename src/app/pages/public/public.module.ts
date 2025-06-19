@@ -22,7 +22,8 @@ import { RegisterComponent } from './register/register.component';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    HttpClientModule 
+    HttpClientModule,
+    
   ],
   exports: [
     RegisterComponent

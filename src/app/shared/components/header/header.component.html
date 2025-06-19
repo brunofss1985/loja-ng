@@ -49,10 +49,12 @@
         <ul>
             <li>Todas as categorias</li>
             <li>Novidades</li>
-            <li>Todos os produtos</li>
-            <li>Creatina</li>
-            <li>Whey protein</li>
-            <li>Pré treino</li>
+            <li [routerLink]="['/public/produtos']">Todos os produtos</li>
+
+
+            <li [routerLink]="['/public/produtos', 'creatina']">Creatina</li>
+            <li [routerLink]="['/public/produtos', 'whey']">Whey protein</li>
+            <li [routerLink]="['/public/produtos', 'pre treino']">Pré treino</li>
             <li>Promoções</li>
         </ul>
     </div>

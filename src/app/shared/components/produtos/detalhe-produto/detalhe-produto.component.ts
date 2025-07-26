@@ -5,10 +5,9 @@ import { ProdutosService } from 'src/app/core/services/produtosService/produtos.
 @Component({
   selector: 'app-detalhe-produto',
   templateUrl: './detalhe-produto.component.html',
-  styleUrls: ['./detalhe-produto.component.scss']
+  styleUrls: ['./detalhe-produto.component.scss'],
 })
 export class DetalheProdutoComponent implements OnInit {
-
   @Input() produto: any;
   imagemSelecionada: string = '';
 
@@ -22,7 +21,7 @@ export class DetalheProdutoComponent implements OnInit {
     if (id) {
       this.carregarProdutoPorId(id);
     } else if (this.produto) {
-      this.setImagemPrincipal();
+      this.selecionarImagemPrincipal();
     }
   }
 
@@ -30,17 +29,21 @@ export class DetalheProdutoComponent implements OnInit {
     this.produtoService.buscarPorId(id).subscribe({
       next: (res: any) => {
         this.produto = res;
-        this.setImagemPrincipal();
+        this.selecionarImagemPrincipal();
       },
       error: (err: any) => {
         console.error('Erro ao buscar produto:', err);
-      }
+      },
     });
   }
 
-  setImagemPrincipal() {
+  selecionarImagemPrincipal() {
     if (this.produto.imagem && this.produto.imagemMimeType) {
-      this.imagemSelecionada = 'data:' + this.produto.imagemMimeType + ';base64,' + this.produto.imagem;
+      this.imagemSelecionada =
+        'data:' +
+        this.produto.imagemMimeType +
+        ';base64,' +
+        this.produto.imagem;
     } else {
       this.imagemSelecionada = '';
     }
@@ -52,5 +55,11 @@ export class DetalheProdutoComponent implements OnInit {
 
   selecionarImagemGaleria(imagem: string, mimeType: string) {
     this.selecionarImagem(imagem, mimeType);
+  }
+
+  // Função para calcular a porcentagem de desconto
+  calcularDesconto(precoAtual: any, precoAntigo: any) {
+    if (!precoAntigo || precoAntigo <= precoAtual) return 0;
+    return Math.round(((precoAntigo - precoAtual) / precoAntigo) * 100);
   }
 }

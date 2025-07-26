@@ -1,110 +1,185 @@
-<div class="container my-4" *ngIf="produto">
-    <div class="row">
-        <!-- Imagem -->
-        <div class="col-md-5">
-            <img [src]="imagemSelecionada || 'data:' + produto.imagemMimeType + ';base64,' + produto.imagem"
-                alt="Imagem do Produto" class="img-fluid rounded shadow-sm">
-
-            <!-- Galeria -->
-            <div class="d-flex gap-2 mt-3" *ngIf="produto.galeria?.length">
-                <img *ngFor="let img of produto.galeria; let i = index"
-                    [src]="'data:' + produto.galeriaMimeTypes[i] + ';base64,' + img" class="img-thumbnail"
-                    alt="Imagem da galeria" (click)="selecionarImagemGaleria(img, produto.galeriaMimeTypes[i])">
+ <div class="container product-container" *ngIf="produto">
+        <div class="row">
+            <!-- Coluna da Imagem -->
+            <div class="col-lg-5 mb-4">
+                <!-- Imagem Principal com Badge -->
+                <div class="product-image-container">
+                    <span class="product-badge" *ngIf="produto.precoDesconto">OFERTA</span>
+                    <img [src]="imagemSelecionada || 'data:' + produto.imagemMimeType + ';base64,' + produto.imagem"
+                        alt="Imagem do Produto" class="product-image">
+                </div>
+                
+                <!-- Galeria de Miniaturas -->
+                <div class="gallery-thumbnails" *ngIf="produto.galeria?.length">
+                    <!-- Miniatura da imagem principal -->
+                    <img [src]="'data:' + produto.imagemMimeType + ';base64,' + produto.imagem" 
+                        class="gallery-thumbnail" 
+                        [class.active]="!imagemSelecionada"
+                        alt="Imagem principal" 
+                        (click)="selecionarImagemPrincipal()">
+                    
+                    <!-- Miniaturas da galeria -->
+                    <img *ngFor="let img of produto.galeria; let i = index"
+                        [src]="'data:' + produto.galeriaMimeTypes[i] + ';base64,' + img" 
+                        class="gallery-thumbnail"
+                        [class.active]="imagemSelecionada === 'data:' + produto.galeriaMimeTypes[i] + ';base64,' + img"
+                        alt="Imagem da galeria" 
+                        (click)="selecionarImagemGaleria(img, produto.galeriaMimeTypes[i])">
+                </div>
+            </div>
+            
+            <!-- Coluna de Informações -->
+            <div class="col-lg-7">
+                <!-- Título e Descrição Curta -->
+                <h1 class="product-title">{{ produto.nome }}</h1>
+                <p class="product-short-desc">{{ produto.descricaoCurta }}</p>
+                
+                <!-- Status do Produto -->
+                <div class="product-status">
+                    <span *ngIf="produto.statusAprovacao === 'pendente'" class="status-badge status-pending">Pendente</span>
+                    <span *ngIf="produto.ativo" class="status-badge status-active">Ativo</span>
+                </div>
+                
+                <!-- Metadados do Produto -->
+                <div class="product-meta">
+                    <span><i class="bi bi-tag"></i> SKU: {{ produto.slug }}</span>
+                    <span><i class="bi bi-upc"></i> Código de Barras: {{ produto.codigoBarras }}</span>
+                    <span><i class="bi bi-folder"></i> Categoria: {{ produto.categoria }}</span>
+                </div>
+                
+                <!-- Avaliação -->
+                <div class="product-rating">
+                    <div class="rating-stars">
+                        <span *ngFor="let star of [1,2,3,4,5]">
+                            <span *ngIf="star <= (produto.avaliacaoMedia || 0)">★</span>
+                            <span *ngIf="star > (produto.avaliacaoMedia || 0)">☆</span>
+                        </span>
+                    </div>
+                    <div class="rating-count">
+                        {{ produto.avaliacaoMedia || 'Sem' }} de 5 ({{ produto.quantidadeAvaliacoes || 0 }} avaliações)
+                    </div>
+                </div>
+                
+                <!-- Preço -->
+                <div class="product-price">
+                    <span class="current-price">R$ {{ produto.preco | number:'1.2-2' }}</span>
+                    <span *ngIf="produto.precoDesconto" class="old-price">
+                        R$ {{ produto.precoDesconto | number:'1.2-2' }}
+                    </span>
+                    <span *ngIf="produto.precoDesconto" class="discount-badge">
+                        {{ calcularDesconto(produto.preco, produto.precoDesconto) }}% OFF
+                    </span>
+                </div>
+                
+                <!-- Botões de Ação -->
+                <div class="product-actions">
+                    <button class="btn-add-cart">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        Adicionar ao Carrinho
+                    </button>
+                    <button class="btn-buy-now">Comprar Agora</button>
+                </div>
+                
+                <!-- Vendas -->
+                <div class="sales-info">
+                    <div class="sales-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M16,6H8A3,3 0 0,0 5,9V21H19V9A3,3 0 0,0 16,6M14,14H10V12H14V14M3,9A3,3 0 0,1 6,6H7V4H17V6H18A3,3 0 0,1 21,9V21A2,2 0 0,1 19,23H5A2,2 0 0,1 3,21V9Z" />
+                        </svg>
+                    </div>
+                    <div class="sales-text">
+                        {{ produto.quantidadeVendida || 0 }} unidades vendidas
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Dados principais -->
-        <div class="col-md-7">
-            <h2 class="fw-bold">{{ produto.nome }}</h2>
-            <!-- Descrição curta -->
-            <p class="lead">{{ produto.descricaoCurta }}</p>
-            <p class="text-muted">
-                SKU: {{ produto.slug }} |
-                Código de Barras: {{ produto.codigoBarras }} |
-                Categoria: {{ produto.categoria }}
-            </p>
-
-            <!-- Status -->
-            <div class="mb-2">
-                <span *ngIf="produto.statusAprovacao === 'pendente'" class="badge bg-warning text-dark">Pendente</span>
-                <span *ngIf="produto.ativo" class="badge bg-success">Ativo</span>
+        
+        <!-- Seções de Informações -->
+        <div class="row mt-5">
+            <!-- Descrição Completa -->
+            <div class="col-12">
+                <div class="info-card">
+                    <h4 class="section-title">Descrição do Produto</h4>
+                    <p>{{ produto.descricao }}</p>
+                </div>
             </div>
-
-            <!-- Preço -->
-            <h3 class="text-success">
-                R$ {{ produto.preco | number:'1.2-2' }}
-                <small *ngIf="produto.precoDesconto" class="text-muted text-decoration-line-through">
-                    R$ {{ produto.precoDesconto | number:'1.2-2' }}
-                </small>
-            </h3>
-
-            <!-- Botões -->
-            <div class="d-flex gap-2 mb-4">
-                <button class="btn btn-primary">Adicionar ao Carrinho</button>
-                <button class="btn btn-outline-secondary">Comprar Agora</button>
+            
+            <!-- Informações Nutricionais -->
+            <div class="col-md-6" *ngIf="produto.tabelaNutricional">
+                <div class="info-card">
+                    <h4 class="section-title">Informações Nutricionais</h4>
+                    <div class="nutritional-info">
+                        <p>{{ produto.tabelaNutricional }}</p>
+                    </div>
+                    
+                    <div class="info-section" *ngIf="produto.ingredientes">
+                        <strong>Ingredientes:</strong>
+                        <p>{{ produto.ingredientes }}</p>
+                    </div>
+                    
+                    <div class="info-section" *ngIf="produto.restricoes?.length">
+                        <strong>Restrições:</strong>
+                        <div>
+                            <span class="restriction-tag" *ngFor="let restricao of produto.restricoes">
+                                {{ restricao }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="info-section" *ngIf="produto.modoDeUso">
+                        <strong>Modo de Uso:</strong>
+                        <p>{{ produto.modoDeUso }}</p>
+                    </div>
+                </div>
             </div>
-
-            <!-- Avaliação -->
-            <div>
-                <h6>Avaliação dos Clientes:</h6>
-                <p>
-                    ⭐⭐⭐⭐☆ ({{ produto.avaliacaoMedia || 'Sem' }} de 5) -
-                    {{ produto.quantidadeAvaliacoes || 0 }} avaliações
-                </p>
-            </div>
-
-            <!-- Vendas -->
+            
+            <!-- Dimensões e Peso -->
             <div class="col-md-6">
-                <ul *ngFor="let venda of produto.vendasMensais">
-                </ul>
-                <h6>Total Vendido:</h6>
-                <p> {{ produto.quantidadeVendida }}</p>
+                <div class="info-card">
+                    <h4 class="section-title">Especificações Técnicas</h4>
+                    
+                    <table class="dimensions-table">
+                        <tr>
+                            <th>Dimensão</th>
+                            <th>Medida</th>
+                        </tr>
+                        <tr>
+                            <td>Altura</td>
+                            <td>{{ produto.dimensoes?.altura || '-' }} cm</td>
+                        </tr>
+                        <tr>
+                            <td>Largura</td>
+                            <td>{{ produto.dimensoes?.largura || '-' }} cm</td>
+                        </tr>
+                        <tr>
+                            <td>Profundidade</td>
+                            <td>{{ produto.dimensoes?.profundidade || '-' }} cm</td>
+                        </tr>
+                        <tr>
+                            <td>Peso</td>
+                            <td>{{ produto.dimensoes?.peso || '-' }} g</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Produtos Relacionados (opcional) -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h4 class="section-title">Produtos Relacionados</h4>
+                <div class="row">
+                    <!-- Aqui você pode adicionar uma lista de produtos relacionados -->
+                    <div class="col-6 col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <p class="text-muted">Produtos relacionados aparecerão aqui</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Descrição completa -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <h4>Descrição do Produto</h4>
-            <p>{{ produto.descricao }}</p>
-        </div>
-    </div>
-
-    <!-- Informações Nutricionais -->
-    <div class="row mt-5" *ngIf="produto.tabelaNutricional">
-        <h4>Informações Nutricionais</h4>
-        <div>
-                <p class="card-text">{{ produto.tabelaNutricional }}</p>
-        </div>
-
-        <div *ngIf="produto.ingredientes">
-            <strong>Ingredientes:</strong>
-            <p>{{ produto.ingredientes }}</p>
-        </div>
-
-        <div *ngIf="produto.restricoes?.length">
-            <strong>Restrições:</strong>
-                <p *ngFor="let restricao of produto.restricoes">{{ restricao }}</p>
-        </div>
-
-        <div *ngIf="produto.modoDeUso">
-            <strong>Modo de Uso:</strong>
-            <p>{{ produto.modoDeUso }}</p>
-        </div>
-    </div>
-
-    <!-- Dimensões e Peso -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <h5 class="card-title">Dimensões</h5>
-            <p>
-                Altura: {{ produto.dimensoes?.altura }} cm <br>
-                Largura: {{ produto.dimensoes?.largura }} cm <br>
-                Profundidade: {{ produto.dimensoes?.profundidade }} cm <br>
-
-            </p>
-        </div>
-    </div>
-
-</div>

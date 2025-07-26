@@ -64,7 +64,8 @@
  .search-box button {
    background: #007BFF;
    border: none;
-   padding: 10px 20px;
+   border-radius:  00px 0px 20px 0px;
+   padding: 12px 20px;
    cursor: pointer;
    display: flex;
    align-items: center;
@@ -75,6 +76,11 @@
  .search-box button:hover {
    background: #0056b3;
  }
+
+  .search-box button svg {
+  color:white;
+ }
+
 
  .search-box button img {
    height: 20px;

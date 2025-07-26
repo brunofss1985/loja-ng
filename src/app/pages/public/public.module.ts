@@ -7,14 +7,16 @@ import { PublicRoutingModule } from './public-routing.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { RegisterComponent } from './register/register.component';
+import { PublicComponent } from './public.component';
 
 
 
 @NgModule({
   declarations: [
+    PublicComponent,
     LoginComponent,
     PublicHomeComponent,
-    RegisterComponent
+    RegisterComponent,
   ],
   imports: [
     CommonModule,

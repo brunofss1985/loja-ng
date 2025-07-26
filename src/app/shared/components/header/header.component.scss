@@ -114,16 +114,28 @@
    transform: translateY(-2px);
  }
 
- .li-a {
-   display: flex;
-   align-items: center;
- }
+// Ajuste para a logo ocupar o espaço total do header e não ser cortada
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+.icon-logo {
+  width: 100%;
+  max-width: 140px;
+  height: 60px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
 
- .li-a li {
-   list-style: none;
-   font-weight: 500;
-   margin-left: 5px;
- }
+@media (max-width: 768px) {
+  .icon-logo {
+    max-width: 110px;
+    height: 48px;
+  }
+}
 
  .header-botton {
    

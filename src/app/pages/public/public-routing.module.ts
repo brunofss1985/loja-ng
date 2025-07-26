@@ -6,12 +6,14 @@ import { DefaultLoginComponent } from 'src/app/shared/components/default-login/d
 import { RegisterComponent } from './register/register.component';
 import { ListaProdutosComponent } from 'src/app/shared/components/produtos/lista-produtos/lista-produtos.component';
 import { DetalheProdutoComponent } from 'src/app/shared/components/produtos/detalhe-produto/detalhe-produto.component';
+import { PublicComponent } from './public.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: PublicHomeComponent,
+    component: PublicComponent,
     children: [
+      { path: 'home', component: PublicHomeComponent },
       { path: 'produtos', component: ListaProdutosComponent },
       { path: 'produtos/:categoria', component: ListaProdutosComponent },
       { path: 'produto/:id', component: DetalheProdutoComponent },

@@ -8,6 +8,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { RegisterComponent } from './register/register.component';
 import { PublicComponent } from './public.component';
+import { ChatComponent } from './chat/chat.component';
 
 
 
@@ -17,6 +18,7 @@ import { PublicComponent } from './public.component';
     LoginComponent,
     PublicHomeComponent,
     RegisterComponent,
+    ChatComponent,
   ],
   imports: [
     CommonModule,
@@ -25,6 +27,7 @@ import { PublicComponent } from './public.component';
     ReactiveFormsModule,
     SharedModule,
     HttpClientModule,
+    
     
   ],
   exports: [

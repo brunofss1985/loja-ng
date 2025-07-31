@@ -1,0 +1,50 @@
+<!-- src/app/components/chat/chat.component.html -->
+<div class="chat-widget"> <!-- Chat Button --> <button *ngIf="!isOpen" (click)="toggleChat()" class="chat-button"
+        [class.offline]="!isOnline"> <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+            </path>
+        </svg>
+        <div class="chat-tooltip"> {{ isOnline ? 'Precisa de ajuda? 💬' : 'Offline' }} </div>
+    </button> <!-- Chat Window -->
+    <div *ngIf="isOpen" class="chat-window"> <!-- Header -->
+        <div class="chat-header">
+            <div class="flex items-center space-x-3">
+                <div class="chat-avatar">🤖</div>
+                <div>
+                    <h3 class="font-semibold text-white">Assistente IA</h3>
+                    <p class="text-xs text-blue-100"> {{ isOnline ? 'Online agora' : 'Offline' }} </p>
+                </div>
+            </div> <button (click)="toggleChat()" class="chat-close"> <svg class="w-5 h-5" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg> </button>
+        </div> <!-- Messages -->
+        <div #messagesContainer class="chat-messages">
+            <div *ngFor="let message of messages" class="message" [class.user-message]="message.isUser"
+                [class.bot-message]="!message.isUser">
+                <div class="message-avatar"> {{ message.isUser ? '👤' : '🤖' }} </div>
+                <div class="message-bubble">
+                    <p [innerHTML]="message.content"></p> <span class="message-time"> {{ message.timestamp |
+                        date:'HH:mm' }} </span>
+                </div>
+            </div> <!-- Typing Indicator -->
+            <div *ngIf="isTyping" class="message bot-message">
+                <div class="message-avatar">🤖</div>
+                <div class="message-bubble typing">
+                    <div class="typing-dots"> <span></span> <span></span> <span></span> </div>
+                </div>
+            </div>
+        </div> <!-- Quick Actions -->
+        <div class="quick-actions"> <button *ngFor="let action of quickActions" (click)="sendQuickAction(action)"
+                class="quick-action-btn"> {{ action.label }} </button> </div> <!-- Input -->
+        <div class="chat-input"> <input #messageInput [(ngModel)]="currentMessage" (keypress)="onKeyPress($event)"
+                placeholder="Digite sua pergunta..." class="message-input" [disabled]="!isOnline"> <button
+                (click)="sendMessage()" class="send-button" [disabled]="!currentMessage.trim() || !isOnline"> <svg
+                    class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                </svg> </button> </div>
+    </div>
+</div>

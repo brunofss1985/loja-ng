@@ -31,7 +31,8 @@ import { ChatComponent } from './chat/chat.component';
     
   ],
   exports: [
-    RegisterComponent
+    RegisterComponent,
+    ChatComponent
   ]
 })
 export class PublicModule { }

@@ -4,6 +4,7 @@ import {
   OnDestroy,
   ViewChild,
   ElementRef,
+  AfterViewChecked,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ChatMessage, QuickAction } from 'src/app/core/models/chat.interface';
@@ -14,7 +15,7 @@ import { ChatService } from 'src/app/core/services/chatService/chat.service';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
   
@@ -25,33 +26,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   isOnline = true;
   
   quickActions: QuickAction[] = [
-    // {
-    //   label: '💪 Produtos para massa',
-    //   message: 'Quais produtos vocês têm para ganhar massa muscular?',
-    // },
-    // {
-    //   label: '🚚 Horários de entrega',
-    //   message: 'Quais são os horários de entrega?',
-    // },
-    // { 
-    //   label: '🥤 Como usar whey', 
-    //   message: 'Como devo usar o whey protein?' 
-    // },
-    // { 
-    //   label: '📦 Informações sobre frete', 
-    //   message: 'Como funciona o frete?' 
-    // },
-    // {
-    //   label: '💰 Ver preços',
-    //   message: 'Quais são os preços dos produtos?'
-    // },
-    // {
-    //   label: '⚡ Sobre creatina',
-    //   message: 'Me fale sobre a creatina'
-    // }
+    // { label: 'Falar com atendente', message: 'Gostaria de falar com um atendente humano' },
+    // { label: 'Ver pedidos', message: 'Quero consultar meus pedidos' },
+    // { label: 'Suporte técnico', message: 'Preciso de ajuda técnica' }
   ];
   
   private subscription = new Subscription();
+  private shouldScrollToBottom = false;
 
   constructor(private chatService: ChatService) {}
 
@@ -59,7 +40,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.chatService.messages$.subscribe((messages) => {
         this.messages = messages;
-        setTimeout(() => this.scrollToBottom(), 100);
+        this.shouldScrollToBottom = true;
       })
     );
     this.checkServiceHealth();
@@ -67,6 +48,13 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  ngAfterViewChecked() {
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
   }
 
   toggleChat() {
@@ -81,14 +69,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     console.log('Mensagem:', this.currentMessage);
     console.log('Online:', this.isOnline);
     
-    if (!this.currentMessage.trim()) {
-      console.log('=== MENSAGEM VAZIA - CANCELANDO ===');
+    if (!this.currentMessage.trim() || !this.isOnline) {
+      console.log('=== MENSAGEM VAZIA OU OFFLINE - CANCELANDO ===');
       return;
     }
     
     const message = this.currentMessage.trim();
     this.currentMessage = '';
     this.isTyping = true;
+    this.shouldScrollToBottom = true;
 
     console.log('=== CHAMANDO CHAT SERVICE ===');
 
@@ -106,16 +95,22 @@ export class ChatComponent implements OnInit, OnDestroy {
         
         this.chatService.addBotMessage(messageContent);
         this.isTyping = false;
+        this.shouldScrollToBottom = true;
       },
       error: (error) => {
         console.error('=== ERRO NO COMPONENT:', error);
         this.chatService.addBotMessage('❌ **Erro inesperado**\n\nOcorreu um problema na comunicação. Tente novamente ou contate o suporte.\n\n📞 (11) 3333-4444');
         this.isTyping = false;
+        this.shouldScrollToBottom = true;
       }
     });
   }
 
   sendQuickAction(action: QuickAction) {
+    if (!this.isOnline) {
+      return;
+    }
+    
     this.currentMessage = action.message;
     this.sendMessage();
   }
@@ -150,5 +145,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   clearChat() {
     this.chatService.clearMessages();
+  }
+
+  // Método para alternar status (útil para testes)
+  toggleStatus() {
+    this.isOnline = !this.isOnline;
   }
 }

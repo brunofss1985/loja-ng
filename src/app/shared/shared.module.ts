@@ -13,6 +13,8 @@ import { EditButtonComponent } from './components/edit-button/edit-button.compon
 import { ListaProdutosComponent } from './components/produtos/lista-produtos/lista-produtos.component';
 import { DetalheProdutoComponent } from './components/produtos/detalhe-produto/detalhe-produto.component';
 import { ProductCardComponent } from './components/produtos/product-card/product-card.component';
+import { PaymentComponent } from './components/payment-component/payment-component.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,11 +29,13 @@ import { ProductCardComponent } from './components/produtos/product-card/product
     EditButtonComponent,
     ListaProdutosComponent,
     DetalheProdutoComponent,
-    ProductCardComponent
+    ProductCardComponent,
+    PaymentComponent
   ],
   imports: [
     CommonModule,
     RouterModule,
+    ReactiveFormsModule 
   ],
   exports: [
     HeaderComponent,

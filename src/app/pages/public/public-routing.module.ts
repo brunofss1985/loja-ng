@@ -7,6 +7,8 @@ import { RegisterComponent } from './register/register.component';
 import { ListaProdutosComponent } from 'src/app/shared/components/produtos/lista-produtos/lista-produtos.component';
 import { DetalheProdutoComponent } from 'src/app/shared/components/produtos/detalhe-produto/detalhe-produto.component';
 import { PublicComponent } from './public.component';
+import { CartComponent } from './cart-component/cart-component.component';
+import { PaymentComponent } from 'src/app/shared/components/payment-component/payment-component.component';
 
 const routes: Routes = [
   {
@@ -17,6 +19,8 @@ const routes: Routes = [
       { path: 'produtos', component: ListaProdutosComponent },
       { path: 'produtos/:categoria', component: ListaProdutosComponent },
       { path: 'produto/:id', component: DetalheProdutoComponent },
+      { path: 'cart', component: CartComponent },
+      { path: 'payment', component: PaymentComponent },
     ],
   },
   {

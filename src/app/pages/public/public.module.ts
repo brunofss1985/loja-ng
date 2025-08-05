@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RegisterComponent } from './register/register.component';
 import { PublicComponent } from './public.component';
 import { ChatComponent } from './chat/chat.component';
+import { CartComponent } from './cart-component/cart-component.component';
 
 
 
@@ -19,6 +20,7 @@ import { ChatComponent } from './chat/chat.component';
     PublicHomeComponent,
     RegisterComponent,
     ChatComponent,
+    CartComponent
   ],
   imports: [
     CommonModule,

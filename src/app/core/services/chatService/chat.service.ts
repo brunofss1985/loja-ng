@@ -20,23 +20,31 @@ export class ChatService {
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json; charset=utf-8',
-      'Accept': 'application/json'
-    })
+      Accept: 'application/json',
+    }),
   };
 
   constructor(private http: HttpClient) {
     this.initializeChat();
   }
 
-  private initializeChat() {
-    const welcomeMessage: ChatMessage = {
-      id: this.generateId(),
-      content: '👋 Olá! Sou o assistente inteligente da **SupplementStore**!\n\nPosso ajudar com:\n• Informações sobre produtos\n• Preços e promoções\n• Frete e entrega\n• Dicas de uso\n\nComo posso ajudar você hoje? 😊',
-      isUser: false,
-      timestamp: new Date(),
-    };
-    this.messagesSubject.next([welcomeMessage]);
-  }
+private initializeChat() {
+  const welcomeMessage: ChatMessage = {
+    id: this.generateId(),
+    content: `
+      👋 <strong>Olá! Bem-vindo(a)!</strong><br><br>
+      Estou aqui para te ajudar com:<br>
+      • Informações sobre produtos<br>
+      • Preços, promoções e descontos<br>
+      • Frete, prazos e formas de entrega<br>
+      • Dúvidas sobre uso e recomendações<br><br>
+      💬 <strong>Como posso te ajudar hoje?</strong>
+    `,
+    isUser: false,
+    timestamp: new Date(),
+  };
+  this.messagesSubject.next([welcomeMessage]);
+}
 
   sendMessage(message: string): Observable<ChatResponse> {
     console.log('=== CHAT SERVICE - ENVIANDO MENSAGEM ===');
@@ -49,26 +57,28 @@ export class ChatService {
       isUser: true,
       timestamp: new Date(),
     };
-    
+
     const currentMessages = this.messagesSubject.value;
     this.messagesSubject.next([...currentMessages, userMessage]);
 
     const request: ChatRequest = { message };
-    
-    return this.http.post<ChatResponse>(`${this.apiUrl}/chat`, request, this.httpOptions)
+
+    return this.http
+      .post<ChatResponse>(`${this.apiUrl}/chat`, request, this.httpOptions)
       .pipe(
-        tap(response => {
+        tap((response) => {
           console.log('=== RESPOSTA RECEBIDA NO SERVICE:', response);
         }),
-        catchError(error => {
+        catchError((error) => {
           console.error('=== ERRO NO SERVICE:', error);
-          
+
           const errorResponse: ChatResponse = {
-            response: '⚠️ **Erro de conexão**\n\nNão foi possível conectar com o servidor.\n\n**Tente:**\n• Verificar sua conexão\n• Recarregar a página\n• Contatar suporte se persistir\n\n📞 (11) 3333-4444',
+            response:
+              '⚠️ **Erro de conexão**\n\nNão foi possível conectar com o servidor.\n\n**Tente:**\n• Verificar sua conexão\n• Recarregar a página\n• Contatar suporte se persistir\n\n📞 (11) 3333-4444',
             source: 'error',
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           };
-          
+
           return of(errorResponse);
         })
       );
@@ -95,13 +105,12 @@ export class ChatService {
 
   checkHealth(): Observable<any> {
     console.log('=== VERIFICANDO HEALTH ===');
-    return this.http.get(`${this.apiUrl}/health`, this.httpOptions)
-      .pipe(
-        tap(response => console.log('=== HEALTH OK:', response)),
-        catchError(error => {
-          console.error('=== HEALTH ERROR:', error);
-          return of({ status: 'offline' });
-        })
-      );
+    return this.http.get(`${this.apiUrl}/health`, this.httpOptions).pipe(
+      tap((response) => console.log('=== HEALTH OK:', response)),
+      catchError((error) => {
+        console.error('=== HEALTH ERROR:', error);
+        return of({ status: 'offline' });
+      })
+    );
   }
 }

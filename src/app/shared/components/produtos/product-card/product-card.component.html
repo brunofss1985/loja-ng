@@ -1,12 +1,17 @@
- <div class="content">
-        <div class="product-card">
-            <h5 class="nome">Whey Protein Isolado</h5>
-            <p class="modelo">Premium Series</p>
-            <h6>900g</h6>
-            <a [routerLink]="['/produto', productId]">
-      <img [src]="productImage" alt="{{ productNome }}" class="product-image" loading="lazy" /></a>
-            <div class="footerCard">
-                <h6 class="preco" style="color: black;">R$ 149,90</h6>
- <a [routerLink]="['/produto', productId]"><button type="button" class="btn btn-warning">Compre Agora</button></a>            </div>
-        </div>
+<div class="content">
+  <div class="product-card">
+    <p>dwqdq</p>
+    <h5 class="nome">{{ productNome }}</h5>
+    <p class="modelo">{{ productModelo }}</p>
+    <h6>{{ productPeso }}</h6>
+    <a [routerLink]="['/produto', productId]">
+      <img [src]="productImage" alt="{{ productNome }}" class="product-image" loading="lazy" />
+    </a>
+    <div class="footerCard">
+      <h6 class="preco" style="color: black;">R$ {{ productPreco }}</h6>
+      <a [routerLink]="['/produto', productId]">
+        <button type="button" class="btn btn-warning">Compre Agora</button>
+      </a>
     </div>
+  </div>
+</div>

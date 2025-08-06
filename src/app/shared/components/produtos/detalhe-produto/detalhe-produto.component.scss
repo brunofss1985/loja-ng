@@ -70,42 +70,48 @@
         
         .product-actions {
             display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 16px;
+            margin-top: 24px;
         }
         
         .btn-add-cart {
-            padding: 12px 25px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 30px;
+            padding: 12px 28px;
+            background: #fff;
+            color: #007bff;
+            border: 2px solid #007bff;
+            border-radius: 6px;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            outline: none;
         }
         
         .btn-add-cart:hover {
-            background-color: var(--primary-dark);
+            background: #007bff;
+            color: #fff;
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
         }
         
         .btn-buy-now {
-            padding: 12px 25px;
-            background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            border-radius: 30px;
+            padding: 12px 28px;
+            background: #ffb300;
+            color: #222;
+            border: 2px solid #ffb300;
+            border-radius: 6px;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
         }
         
         .btn-buy-now:hover {
-            background-color: var(--primary);
-            color: white;
+            background: #ffa000;
+            color: #fff;
+            border-color: #ffa000;
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
         }

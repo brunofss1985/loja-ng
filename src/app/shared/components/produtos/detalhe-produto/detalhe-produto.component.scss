@@ -122,16 +122,21 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             margin-bottom: 20px;
+            width: 350px;      // largura fixa
+            height: 350px;     // altura fixa
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .product-image {
-            width: 100%;
-            height: auto;
+            max-width: 250px;
+            max-height: 250px;
+            object-fit: contain; // mantém proporção e centraliza
             transition: transform 0.5s ease;
-        }
-        
-        .product-image-container:hover .product-image {
-            transform: scale(1.05);
+            background: #fafbfc;
+            border-radius: 10px;
+            display: block;
         }
         
         .product-badge {

@@ -186,7 +186,7 @@
 .about {
     position: relative;
     background-color: var(--white);
-        top: -200px;
+    top: -200px;
 }
 
 .about-content {
@@ -230,7 +230,7 @@
 
 /* Categories Section */
 .categories {
-        position: relative;
+    position: relative;
     top: -162px;
     background-color: var(--gray);
 }
@@ -289,8 +289,9 @@
 
 /* Featured Products */
 .featured-products {
-    padding: 80px 0;
+    position: relative;
     background-color: var(--white);
+    top: -135px;
 }
 
 .products-grid {
@@ -424,8 +425,9 @@
 
 /* Benefits Section */
 .benefits {
-    padding: 80px 0;
+    position: relative;
     background-color: var(--gray);
+    top: -100px;
 }
 
 .benefits-grid {
@@ -478,8 +480,9 @@
 
 /* Testimonials */
 .testimonials {
-    padding: 80px 0;
+    position: relative;
     background-color: var(--white);
+    top: -100px;
 }
 
 .testimonials-grid {
@@ -547,7 +550,6 @@
 
 /* Newsletter */
 .newsletter {
-    padding: 60px 0;
     background-color: var(--primary);
     color: var(--white);
 }
@@ -762,7 +764,7 @@
     }
 
     .hero {
-     text-align: center; 
+        text-align: center;
 
         height: 400px;
     }

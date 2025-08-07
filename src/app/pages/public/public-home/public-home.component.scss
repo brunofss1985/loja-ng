@@ -711,3 +711,39 @@
         padding: 15px;
     }
 }
+
+/* Remova espaçamentos verticais extras entre as seções */
+section,
+.hero,
+.about,
+.categories,
+.featured-products,
+.benefits,
+.testimonials,
+.newsletter {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Remova posicionamentos relativos que causam sobreposição ou espaçamento negativo */
+.hero,
+.about,
+.categories,
+.featured-products,
+.benefits,
+.testimonials {
+  position: static !important;
+  top: 0 !important;
+}
+
+/* Ajuste containers internos para não adicionar espaçamento extra */
+.container {
+  margin-bottom: 50px !important;
+  padding-bottom: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Se quiser um pequeno espaço entre as seções, use algo como: */
+/* section + section { margin-top: 16px; } */

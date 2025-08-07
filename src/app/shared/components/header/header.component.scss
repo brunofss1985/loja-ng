@@ -254,6 +254,13 @@ ul {
     grid-column: 1;
   }
 
+  .icon-logo {
+  display: inline-flex;
+  width: 35px;
+  height: 35px;
+}
+
+
   /* Linha superior com 3 colunas: hambúrguer | logo | ícones */
   .header-top {
     grid-template-columns: auto 1fr auto;
@@ -328,6 +335,22 @@ ul {
   /* Em desktop o menu é sempre visível como barra */
   #menu-toggle:checked~.header-botton {
     display: flex;
+  }
+
+  .header-top {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100%;
+  }
+
+  .logo-container {
+    margin-left: 15px !important;
+    justify-self: start;
+  }
+
+  .user {
+    margin-right: 15px !important;
+    justify-self: end;
   }
 }
 

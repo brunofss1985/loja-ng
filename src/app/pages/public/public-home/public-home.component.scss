@@ -1,3 +1,8 @@
+.hero {
+    position: relative !important;
+    top: 107px !important;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -714,6 +719,11 @@
     }
 }
 
+.newsletter {
+    margin-top: 0 !important;
+    margin-bottom: 150px !important;
+}
+
 /* Remova espaçamentos verticais extras entre as seções */
 section,
 .hero,
@@ -721,8 +731,7 @@ section,
 .categories,
 .featured-products,
 .benefits,
-.testimonials,
-.newsletter {
+.testimonials {
     margin-top: 0 !important;
     margin-bottom: 50px !important;
     padding-top: 0 !important;
@@ -730,7 +739,6 @@ section,
 }
 
 /* Remova posicionamentos relativos que causam sobreposição ou espaçamento negativo */
-.hero,
 .about,
 .categories,
 .featured-products,
@@ -745,6 +753,8 @@ section,
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
     padding-top: 0 !important;
+    position: relative;
+    top: 100px;
 }
 
 /* Se quiser um pequeno espaço entre as seções, use algo como: */

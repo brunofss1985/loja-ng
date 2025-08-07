@@ -546,6 +546,9 @@
 }
 
 .newsletter-content {
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+padding: 25px;
+    border-radius: 90px;
     max-width: 600px;
     margin: 0 auto;
     text-align: center;
@@ -557,7 +560,8 @@
 }
 
 .newsletter p {
-    margin-bottom: 25px;
+    margin-top: 25px;
+    margin: 25px;
     opacity: 0.9;
 }
 
@@ -570,10 +574,13 @@
 .newsletter-input {
     flex: 1;
     padding: 15px;
-    border: none;
+        border: solid var(--cor-secundaria) 1px;
     border-radius: 30px 0 0 30px;
     outline: none;
     font-size: 16px;
+}
+.newsletter-input:focus  {
+        border: solid var(--cor-secundaria) 1.6px;
 }
 
 .newsletter-btn {

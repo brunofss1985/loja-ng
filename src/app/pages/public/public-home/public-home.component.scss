@@ -34,22 +34,9 @@
 /* Hero Section ajustes mobile */
 @media (max-width: 768px) {
     .hero {
+        min-height: 260px;
         height: 260px;
         padding: 24px 0;
-    }
-
-    .hero-content {
-        padding: 0 8px;
-    }
-
-    .hero h1 {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-    }
-
-    .hero p {
-        font-size: 1rem;
-        margin-bottom: 18px;
     }
 }
 
@@ -146,14 +133,18 @@
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1579758629938-03607ccdbaba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;
-    height: 500px;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                url('https://images.unsplash.com/photo-1579758629938-03607ccdbaba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') center center / cover no-repeat;
+    height: calc(100vh - 70px) !important;  // Substitua 70px pela altura real do seu header
+    min-height: 400px;
+    width: 100%;
     display: flex;
     align-items: center;
     color: var(--white);
     position: relative;
-    clip-path: inset(0 0 29% 0);
-
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
 
 .hero-content {
@@ -722,7 +713,7 @@ section,
 .testimonials,
 .newsletter {
   margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  margin-bottom: 50px !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
@@ -740,7 +731,7 @@ section,
 
 /* Ajuste containers internos para não adicionar espaçamento extra */
 .container {
-  margin-bottom: 50px !important;
+  margin-bottom: 0 !important;
   padding-bottom: 0 !important;
   padding-top: 0 !important;
 }

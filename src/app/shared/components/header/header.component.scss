@@ -255,10 +255,10 @@ ul {
   }
 
   .icon-logo {
-  display: inline-flex;
-  width: 35px;
-  height: 35px;
-}
+    display: inline-flex;
+    width: 35px;
+    height: 35px;
+  }
 
 
   /* Linha superior com 3 colunas: hambúrguer | logo | ícones */
@@ -357,4 +357,18 @@ ul {
 /* Estado afinado (quando a página rolar) */
 .header.is-scrolled .header-botton {
   height: calc(var(--nav-altura) - 6px);
+}
+
+@media (max-width: 768px) {
+  .search-box {
+    width: 80% !important;
+    height: 22px !important; // altura menor
+    font-size: 14px; // fonte menor
+    padding: 4px 10px; // menos espaço interno
+  }
+
+  #button-addon2 {
+    height: 22px !important; // botão com altura menor
+    width: 32px !important; // botão com largura menor
+  }
 }

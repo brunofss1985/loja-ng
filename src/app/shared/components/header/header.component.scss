@@ -202,6 +202,11 @@ ul {
   font-size: 13px;
 }
 
+.li-a {
+  cursor: pointer;
+}
+
+
 .btn.btn-outline-secondary:hover {
   filter: brightness(1.05);
 }
@@ -371,4 +376,17 @@ ul {
     height: 22px !important; // botão com altura menor
     width: 32px !important; // botão com largura menor
   }
+}
+
+/* Ícones minimalistas */
+.ico {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+}
+
+.ico svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }

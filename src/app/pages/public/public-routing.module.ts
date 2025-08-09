@@ -9,6 +9,7 @@ import { DetalheProdutoComponent } from 'src/app/shared/components/produtos/deta
 import { PublicComponent } from './public.component';
 import { CartComponent } from './cart-component/cart-component.component';
 import { PaymentComponent } from 'src/app/shared/components/payment-component/payment-component.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
       { path: 'produto/:id', component: DetalheProdutoComponent },
       { path: 'cart', component: CartComponent },
       { path: 'payment', component: PaymentComponent },
+      { path: 'perfil', component: PerfilComponent },
     ],
   },
   {

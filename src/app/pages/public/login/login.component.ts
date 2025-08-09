@@ -39,7 +39,7 @@ export class LoginComponent {
         if (userType === 'ADMIN') {
           this.router.navigate(['/admin']);
         } else if (userType === 'USER') {
-          this.router.navigate(['/user']);
+          this.router.navigate(['']);
         } else {
           this.router.navigate(['/']);
         }

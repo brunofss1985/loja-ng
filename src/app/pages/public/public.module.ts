@@ -10,6 +10,7 @@ import { RegisterComponent } from './register/register.component';
 import { PublicComponent } from './public.component';
 import { ChatComponent } from './chat/chat.component';
 import { CartComponent } from './cart-component/cart-component.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 
 
@@ -20,7 +21,8 @@ import { CartComponent } from './cart-component/cart-component.component';
     PublicHomeComponent,
     RegisterComponent,
     ChatComponent,
-    CartComponent
+    CartComponent,
+    PerfilComponent
   ],
   imports: [
     CommonModule,

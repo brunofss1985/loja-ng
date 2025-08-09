@@ -39,6 +39,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.form = this.fb.group({
       id: [null],
       nome: ['', Validators.required],
+      marca: ['', Validators.required],
       slug: [''],
       descricao: ['', Validators.required],
       descricaoCurta: [''],
@@ -135,6 +136,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.form.reset({
       id: null,
       nome: '',
+      marca: '',
       slug: '',
       descricao: '',
       descricaoCurta: '',

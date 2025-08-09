@@ -1,6 +1,7 @@
 <div class="content">
   <div class="product-card">
     <h3 class="nome">{{ productNome }}</h3>
+    <h4 class="nome">{{ productMarca }}</h4>
     <a [routerLink]="['/produto', productId]">
       <img [src]="productImage" alt="{{ productNome }}" class="product-image" loading="lazy" />
     </a>

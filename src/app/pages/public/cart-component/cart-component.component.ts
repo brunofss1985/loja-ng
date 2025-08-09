@@ -1,14 +1,8 @@
+// src/app/pages/public/cart-component/cart-component.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-export interface CartItem {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  icon: string;
-}
+import { CartItem } from 'src/app/core/models/cart-item.model';
+import { CartService } from 'src/app/core/services/cartService/cart-service.service';
 
 @Component({
   selector: 'app-cart',
@@ -16,32 +10,7 @@ export interface CartItem {
   styleUrls: ['./cart-component.component.scss']
 })
 export class CartComponent implements OnInit {
-  cartItems: CartItem[] = [
-    {
-      id: 1,
-      name: 'Whey Protein Concentrado',
-      description: 'Sabor Chocolate - 900g',
-      price: 89.90,
-      quantity: 2,
-      icon: '🥤'
-    },
-    {
-      id: 2,
-      name: 'Creatina Monohidratada',
-      description: '300g - Pura',
-      price: 45.90,
-      quantity: 1,
-      icon: '💊'
-    },
-    {
-      id: 3,
-      name: 'Termogênico Extreme',
-      description: '60 cápsulas',
-      price: 67.90,
-      quantity: 1,
-      icon: '🔥'
-    }
-  ];
+  cartItems: CartItem[] = [];
 
   couponCode: string = '';
   appliedDiscount: number = 0;
@@ -53,11 +22,14 @@ export class CartComponent implements OnInit {
     'FRETE20': 0.20
   };
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private cartService: CartService) {}
 
   ngOnInit(): void {
-    // Aqui você pode carregar os itens do carrinho de um serviço
-    // this.loadCartItems();
+    this.cartService.getCartItems().subscribe(items => {
+      this.cartItems = items;
+      // se remover o último item, zera desconto
+      if (this.cartItems.length === 0) this.appliedDiscount = 0;
+    });
   }
 
   get subtotal(): number {
@@ -69,40 +41,26 @@ export class CartComponent implements OnInit {
   }
 
   increaseQuantity(itemId: number): void {
-    const item = this.cartItems.find(item => item.id === itemId);
-    if (item) {
-      item.quantity++;
-    }
+    const item = this.cartItems.find(i => i.id === itemId);
+    if (item) this.cartService.updateQuantity(itemId, item.quantity + 1);
   }
 
   decreaseQuantity(itemId: number): void {
-    const item = this.cartItems.find(item => item.id === itemId);
-    if (item && item.quantity > 1) {
-      item.quantity--;
-    }
+    const item = this.cartItems.find(i => i.id === itemId);
+    if (item && item.quantity > 1) this.cartService.updateQuantity(itemId, item.quantity - 1);
   }
 
   updateQuantity(itemId: number, event: any): void {
-    const quantity = parseInt(event.target.value);
-    if (quantity >= 1) {
-      const item = this.cartItems.find(item => item.id === itemId);
-      if (item) {
-        item.quantity = quantity;
-      }
-    }
+    const quantity = parseInt(event.target.value, 10);
+    if (quantity >= 1) this.cartService.updateQuantity(itemId, quantity);
   }
 
   removeItem(itemId: number): void {
-    this.cartItems = this.cartItems.filter(item => item.id !== itemId);
-    // Reset discount if cart becomes empty
-    if (this.cartItems.length === 0) {
-      this.appliedDiscount = 0;
-    }
+    this.cartService.removeFromCart(itemId);
   }
 
   applyCoupon(): void {
-    const code = this.couponCode.toUpperCase();
-    
+    const code = (this.couponCode || '').toUpperCase();
     if (this.validCoupons[code]) {
       this.appliedDiscount = this.subtotal * this.validCoupons[code];
       const discountPercent = this.validCoupons[code] * 100;
@@ -119,27 +77,13 @@ export class CartComponent implements OnInit {
 
   goToProducts(): void {
     this.router.navigate(['/produtos']);
-    // ou simplesmente: alert('Redirecionando para produtos...');
   }
 
   proceedToCheckout(): void {
     if (this.cartItems.length === 0) {
-
       alert('Seu carrinho está vazio!');
-      
       return;
     }
-    
-    // Navegar para checkout ou processar pedido
     this.router.navigate(['/payment']);
-    // ou: alert(`Redirecionando para checkout... Total: ${this.formatPrice(this.total)}`);
-  }
-
-  // Método para carregar itens do carrinho (conectar com seu serviço)
-  private loadCartItems(): void {
-    // Exemplo de como você pode integrar com um serviço:
-    // this.cartService.getCartItems().subscribe(items => {
-    //   this.cartItems = items;
-    // });
   }
 }

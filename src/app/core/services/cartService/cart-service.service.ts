@@ -1,54 +1,69 @@
+// src/app/core/services/cart.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CartItem } from 'src/app/pages/public/cart-component/cart-component.component';
+import { CartItem } from '../../models/cart-item.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+const STORAGE_KEY = 'cart_items';
+
+@Injectable({ providedIn: 'root' })
 export class CartService {
-  private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
+  private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.load());
   public cartItems$ = this.cartItemsSubject.asObservable();
 
-  constructor() { }
+  constructor() {}
 
   getCartItems(): Observable<CartItem[]> {
     return this.cartItems$;
   }
 
   addToCart(item: CartItem): void {
-    const currentItems = this.cartItemsSubject.value;
-    const existingItem = currentItems.find(cartItem => cartItem.id === item.id);
-    
-    if (existingItem) {
-      existingItem.quantity += item.quantity;
+    const currentItems = [...this.cartItemsSubject.value];
+    const existing = currentItems.find(ci => ci.id === item.id);
+
+    if (existing) {
+      existing.quantity += item.quantity;
     } else {
       currentItems.push(item);
     }
-    
-    this.cartItemsSubject.next([...currentItems]);
+    this.set(currentItems);
   }
 
   removeFromCart(itemId: number): void {
-    const currentItems = this.cartItemsSubject.value;
-    const updatedItems = currentItems.filter(item => item.id !== itemId);
-    this.cartItemsSubject.next(updatedItems);
+    const updated = this.cartItemsSubject.value.filter(i => i.id !== itemId);
+    this.set(updated);
   }
 
   updateQuantity(itemId: number, quantity: number): void {
-    const currentItems = this.cartItemsSubject.value;
-    const item = currentItems.find(cartItem => cartItem.id === itemId);
-    
-    if (item) {
-      item.quantity = quantity;
-      this.cartItemsSubject.next([...currentItems]);
-    }
+    if (quantity < 1) return;
+    const updated = this.cartItemsSubject.value.map(i =>
+      i.id === itemId ? { ...i, quantity } : i
+    );
+    this.set(updated);
   }
 
   clearCart(): void {
-    this.cartItemsSubject.next([]);
+    this.set([]);
   }
 
   getCartTotal(): number {
-    return this.cartItemsSubject.value.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return this.cartItemsSubject.value.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  }
+
+  // Persistência simples no localStorage
+  private set(items: CartItem[]) {
+    this.cartItemsSubject.next(items);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }
+
+  private load(): CartItem[] {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
   }
 }

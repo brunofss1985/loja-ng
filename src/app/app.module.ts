@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PublicModule } from './pages/public/public.module';
-import { UserModule } from './pages/user/user.module';
 import { AdminModule } from './pages/admin/admin.module';
 import { SharedModule } from './shared/shared.module';
 import { ToastrModule } from 'ngx-toastr';
@@ -22,7 +21,6 @@ import { TokenInterceptor } from './core/interceptors/token.interceptor';
     FormsModule,
     SharedModule,
     PublicModule,
-    UserModule,
     AdminModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),

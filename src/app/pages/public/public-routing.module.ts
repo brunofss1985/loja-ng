@@ -15,7 +15,7 @@ const routes: Routes = [
     path: '',
     component: PublicComponent,
     children: [
-      { path: 'home', component: PublicHomeComponent },
+      { path: '', component: PublicHomeComponent },
       { path: 'produtos', component: ListaProdutosComponent },
       { path: 'produtos/:categoria', component: ListaProdutosComponent },
       { path: 'produto/:id', component: DetalheProdutoComponent },

@@ -3,10 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard } from './core/guards/admin-guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'public/home', pathMatch: 'full' },
-  { path: 'public', loadChildren: () => import('./pages/public/public.module').then((m) => m.PublicModule)},
-  { path: 'user', loadChildren: () => import('./pages/user/user.module').then((m) => m.UserModule)},
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', loadChildren: () => import('./pages/public/public.module').then((m) => m.PublicModule)},
   { path: 'admin', loadChildren: () => import('./pages/admin/admin.module').then((m) => m.AdminModule), canActivate: [AdminGuard], },
+  { path: '**',  redirectTo: 'public/home' }
 ];
 
 @NgModule({

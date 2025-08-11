@@ -1,21 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-export interface PaymentMethod {
-  id: string;
-  name: string;
-  icon: string;
-  installments?: number[];
-}
-
-export interface OrderSummary {
-  subtotal: number;
-  shipping: number;
-  discount: number;
-  total: number;
-  items: any[];
-}
+import { PaymentService, PaymentResponse, CheckoutPayload} from 'src/app/core/services/paymentService/payment-service.service';
 
 @Component({
   selector: 'app-payment',
@@ -27,32 +13,18 @@ export class PaymentComponent implements OnInit {
   selectedPaymentMethod: string = 'credit';
   selectedInstallments: number = 1;
   isProcessing: boolean = false;
-  
-  paymentMethods: PaymentMethod[] = [
-    {
-      id: 'credit',
-      name: 'Cartão de Crédito',
-      icon: '💳',
-      installments: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-    },
-    {
-      id: 'debit',
-      name: 'Cartão de Débito',
-      icon: '💳'
-    },
-    {
-      id: 'pix',
-      name: 'PIX',
-      icon: '📱'
-    },
-    {
-      id: 'boleto',
-      name: 'Boleto Bancário',
-      icon: '🧾'
-    }
+  pixModalOpen = false;
+  pixQrBase64 = '';
+  pixCopiaCola = '';
+
+  paymentMethods = [
+    { id: 'credit', name: 'Cartão de Crédito', icon: '💳', installments: [1,2,3,4,5,6,7,8,9,10,11,12] },
+    { id: 'debit', name: 'Cartão de Débito', icon: '💳' },
+    { id: 'pix', name: 'PIX', icon: '📱' },
+    { id: 'boleto', name: 'Boleto Bancário', icon: '🧾' }
   ];
 
-  orderSummary: OrderSummary = {
+  orderSummary = {
     subtotal: 293.60,
     shipping: 15.90,
     discount: 29.36,
@@ -66,25 +38,20 @@ export class PaymentComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private paymentService: PaymentService
   ) {
     this.checkoutForm = this.createForm();
   }
 
-  ngOnInit(): void {
-    // Carregar dados do carrinho se necessário
-    // this.loadOrderSummary();
-  }
+  ngOnInit(): void {}
 
   private createForm(): FormGroup {
     return this.fb.group({
-      // Dados pessoais
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\)\s\d{4,5}-\d{4}$/)]],
       cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
-      
-      // Endereço
       cep: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
       street: ['', Validators.required],
       number: ['', Validators.required],
@@ -92,8 +59,6 @@ export class PaymentComponent implements OnInit {
       neighborhood: ['', Validators.required],
       city: ['', Validators.required],
       state: ['', Validators.required],
-      
-      // Pagamento
       cardNumber: [''],
       cardName: [''],
       cardExpiry: [''],
@@ -101,11 +66,32 @@ export class PaymentComponent implements OnInit {
     });
   }
 
+  isFieldInvalid(fieldName: string): boolean {
+  const field = this.checkoutForm.get(fieldName);
+  return !!field && field.invalid && (field.dirty || field.touched);
+}
+
+
+  getFieldError(fieldName: string): string {
+    const field = this.checkoutForm.get(fieldName);
+    if (field?.errors) {
+      if (field.errors['required']) return 'Campo obrigatório';
+      if (field.errors['email']) return 'Email inválido';
+      if (field.errors['pattern']) return 'Formato inválido';
+      if (field.errors['minlength']) return 'Muito curto';
+    }
+    return '';
+  }
+
+  private markFormGroupTouched(): void {
+    Object.keys(this.checkoutForm.controls).forEach(key => {
+      this.checkoutForm.get(key)?.markAsTouched();
+    });
+  }
+
   selectPaymentMethod(methodId: string): void {
     this.selectedPaymentMethod = methodId;
     this.selectedInstallments = 1;
-    
-    // Atualizar validações do cartão
     if (methodId === 'credit' || methodId === 'debit') {
       this.setCardValidators();
     } else {
@@ -127,24 +113,20 @@ export class PaymentComponent implements OnInit {
       Validators.required,
       Validators.pattern(/^\d{3,4}$/)
     ]);
-    
     this.updateCardValidators();
   }
 
   private removeCardValidators(): void {
-    this.checkoutForm.get('cardNumber')?.clearValidators();
-    this.checkoutForm.get('cardName')?.clearValidators();
-    this.checkoutForm.get('cardExpiry')?.clearValidators();
-    this.checkoutForm.get('cardCvv')?.clearValidators();
-    
-    this.updateCardValidators();
+    ['cardNumber', 'cardName', 'cardExpiry', 'cardCvv'].forEach(field => {
+      this.checkoutForm.get(field)?.clearValidators();
+      this.checkoutForm.get(field)?.updateValueAndValidity();
+    });
   }
 
   private updateCardValidators(): void {
-    this.checkoutForm.get('cardNumber')?.updateValueAndValidity();
-    this.checkoutForm.get('cardName')?.updateValueAndValidity();
-    this.checkoutForm.get('cardExpiry')?.updateValueAndValidity();
-    this.checkoutForm.get('cardCvv')?.updateValueAndValidity();
+    ['cardNumber', 'cardName', 'cardExpiry', 'cardCvv'].forEach(field => {
+      this.checkoutForm.get(field)?.updateValueAndValidity();
+    });
   }
 
   formatPrice(price: number): string {
@@ -155,7 +137,6 @@ export class PaymentComponent implements OnInit {
     return this.orderSummary.total / this.selectedInstallments;
   }
 
-  // Máscaras para inputs
   onPhoneInput(event: any): void {
     let value = event.target.value.replace(/\D/g, '');
     if (value.length <= 11) {
@@ -180,11 +161,7 @@ export class PaymentComponent implements OnInit {
       value = value.replace(/^(\d{5})(\d{3})$/, '$1-$2');
       event.target.value = value;
       this.checkoutForm.get('cep')?.setValue(value);
-      
-      // Buscar endereço por CEP (implementar integração com API)
-      if (value.length === 9) {
-        this.searchAddressByCep(value);
-      }
+      if (value.length === 9) this.searchAddressByCep(value);
     }
   }
 
@@ -207,66 +184,104 @@ export class PaymentComponent implements OnInit {
   }
 
   private searchAddressByCep(cep: string): void {
-    // Implementar busca de endereço por CEP
-    // Exemplo com ViaCEP:
-    /*
-    this.http.get(`https://viacep.com.br/ws/${cep.replace('-', '')}/json/`)
-      .subscribe((address: any) => {
-        if (!address.erro) {
-          this.checkoutForm.patchValue({
-            street: address.logradouro,
-            neighborhood: address.bairro,
-            city: address.localidade,
-            state: address.uf
-          });
-        }
-      });
-    */
+    // Implementar integração com API ViaCEP ou similar
+  }
+
+  showPixModal(qrBase64: string, copiaCola?: string) {
+    this.pixQrBase64 = qrBase64;
+    this.pixCopiaCola = copiaCola || '';
+    this.pixModalOpen = true;
+  }
+
+  closePixModal() {
+    this.pixModalOpen = false;
+  }
+
+  copyPix() {
+    navigator.clipboard.writeText(this.pixCopiaCola);
   }
 
   processPayment(): void {
-    if (this.checkoutForm.valid) {
-      this.isProcessing = true;
-      
-      // Simular processamento
-      setTimeout(() => {
-        this.isProcessing = false;
-        
-        // Redirecionar para página de sucesso
-        this.router.navigate(['/pedido-confirmado']);
-        
-        // Ou mostrar modal de sucesso
-        // this.showSuccessModal();
-      }, 3000);
-    } else {
+    if (!this.checkoutForm.valid) {
       this.markFormGroupTouched();
       alert('Por favor, preencha todos os campos obrigatórios corretamente.');
+      return;
     }
-  }
 
-  private markFormGroupTouched(): void {
-    Object.keys(this.checkoutForm.controls).forEach(key => {
-      this.checkoutForm.get(key)?.markAsTouched();
+    this.isProcessing = true;
+
+    const methodMap: any = {
+      credit: 'CREDIT',
+      debit: 'DEBIT',
+      pix: 'PIX',
+      boleto: 'BOLETO'
+    };
+
+    const payload: CheckoutPayload = {
+      fullName: this.checkoutForm.value.fullName,
+      email: this.checkoutForm.value.email,
+      phone: this.checkoutForm.value.phone,
+      cpf: this.checkoutForm.value.cpf,
+      cep: this.checkoutForm.value.cep,
+      street: this.checkoutForm.value.street,
+      number: this.checkoutForm.value.number,
+      complement: this.checkoutForm.value.complement,
+      neighborhood: this.checkoutForm.value.neighborhood,
+      city: this.checkoutForm.value.city,
+      state: this.checkoutForm.value.state,
+      subtotal: this.orderSummary.subtotal,
+      shipping: this.orderSummary.shipping,
+      discount: this.orderSummary.discount,
+      total: this.orderSummary.total,
+      items: this.orderSummary.items,
+      method: methodMap[this.selectedPaymentMethod],
+      installments: this.selectedPaymentMethod === 'credit' ? this.selectedInstallments : undefined,
+      cardToken: undefined,
+      cardLast4: this.selectedPaymentMethod !== 'pix' && this.selectedPaymentMethod !== 'boleto' ? this.checkoutForm.value.cardNumber.slice(-4) : undefined,
+      cardNumber: this.checkoutForm.value.cardNumber,
+      cardName: this.checkoutForm.value.cardName,
+      cardExpiry: this.checkoutForm.value.cardExpiry,
+      cardCvv: this.checkoutForm.value.cardCvv
+    };
+
+    this.paymentService.checkout(payload).subscribe({
+      next: (resp: PaymentResponse) => {
+        this.isProcessing = false;
+
+        switch (resp.status) {
+          case 'APPROVED':
+            this.router.navigate(['/pedido-confirmado'], { queryParams: { orderId: resp.orderId } });
+            break;
+
+          case 'DECLINED':
+            alert('Pagamento recusado. Verifique os dados ou tente outro método.');
+            break;
+
+          case 'PENDING':
+            if (payload.method === 'PIX' && resp.qrCodeBase64) {
+              this.showPixModal(resp.qrCodeBase64, resp.qrCode);
+            } else if (payload.method === 'BOLETO' && resp.boletoUrl) {
+              window.open(resp.boletoUrl, '_blank');
+              alert('Boleto gerado. Você pode efetuar o pagamento e aguardar a confirmação.');
+            } else {
+              alert('Pagamento pendente. Aguarde confirmação.');
+            }
+            break;
+
+          default:
+            alert(resp.message || 'Erro desconhecido ao processar pagamento.');
+        }
+      },
+      error: (err) => {
+        this.isProcessing = false;
+        alert('Erro ao processar pagamento. Tente novamente.');
+        console.error(err);
+      }
     });
   }
 
   goBack(): void {
-    this.router.navigate(['/carrinho']);
-  }
+  this.router.navigate(['/carrinho']);
+}
 
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.checkoutForm.get(fieldName);
-    return !!(field && field.invalid && field.touched);
-  }
-
-  getFieldError(fieldName: string): string {
-    const field = this.checkoutForm.get(fieldName);
-    if (field?.errors) {
-      if (field.errors['required']) return 'Campo obrigatório';
-      if (field.errors['email']) return 'Email inválido';
-      if (field.errors['pattern']) return 'Formato inválido';
-      if (field.errors['minlength']) return 'Muito curto';
-    }
-    return '';
-  }
 }

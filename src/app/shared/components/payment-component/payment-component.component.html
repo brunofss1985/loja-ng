@@ -344,7 +344,11 @@
   <div class="pix-content">
     <button class="pix-close" (click)="closePixModal()">✖</button>
     <h3>Escaneie o QR Code para pagar</h3>
-    <img [src]="pixQrBase64" alt="QR Code PIX" />
+<img
+  [src]="'data:image/png;base64,' + pixQrBase64"
+  alt="QR Code PIX"
+  style="width: 300px; height: 300px; border: 1px solid #ccc; border-radius: 8px;"
+/>
     <label>Código copia e cola</label>
     <textarea readonly>{{ pixCopiaCola }}</textarea>
     <button (click)="copyPix()">Copiar código</button>

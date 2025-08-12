@@ -7,25 +7,25 @@ import { CartService } from 'src/app/core/services/cartService/cart-service.serv
 @Component({
   selector: 'app-cart',
   templateUrl: './cart-component.component.html',
-  styleUrls: ['./cart-component.component.scss']
+  styleUrls: ['./cart-component.component.scss'],
 })
 export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];
 
   couponCode: string = '';
   appliedDiscount: number = 0;
-  shippingCost: number = 15.90;
+  shippingCost: number = 0;
 
   private validCoupons: { [key: string]: number } = {
-    'PRIMEIRA10': 0.10,
-    'SUPLEMENTO15': 0.15,
-    'FRETE20': 0.20
+    PRIMEIRA10: 0.1,
+    SUPLEMENTO15: 15.0,
+    FRETE20: 0.2,
   };
 
   constructor(private router: Router, private cartService: CartService) {}
 
   ngOnInit(): void {
-    this.cartService.getCartItems().subscribe(items => {
+    this.cartService.getCartItems().subscribe((items) => {
       this.cartItems = items;
       // se remover o último item, zera desconto
       if (this.cartItems.length === 0) this.appliedDiscount = 0;
@@ -33,7 +33,10 @@ export class CartComponent implements OnInit {
   }
 
   get subtotal(): number {
-    return this.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return this.cartItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
   }
 
   get total(): number {
@@ -41,13 +44,14 @@ export class CartComponent implements OnInit {
   }
 
   increaseQuantity(itemId: number): void {
-    const item = this.cartItems.find(i => i.id === itemId);
+    const item = this.cartItems.find((i) => i.id === itemId);
     if (item) this.cartService.updateQuantity(itemId, item.quantity + 1);
   }
 
   decreaseQuantity(itemId: number): void {
-    const item = this.cartItems.find(i => i.id === itemId);
-    if (item && item.quantity > 1) this.cartService.updateQuantity(itemId, item.quantity - 1);
+    const item = this.cartItems.find((i) => i.id === itemId);
+    if (item && item.quantity > 1)
+      this.cartService.updateQuantity(itemId, item.quantity - 1);
   }
 
   updateQuantity(itemId: number, event: any): void {

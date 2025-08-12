@@ -173,7 +173,7 @@
 }
 
 /* Tabs */
-.tabs {
+.tabs-wrap {
   background: var(--branco);
   border: 1px solid var(--borda);
   border-radius: 14px;
@@ -205,41 +205,32 @@
 }
 
 /* Radio invisível */
-.hide {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
+.tabs-header {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  button {
+    background: #eee;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+
+    &.active {
+      background: var(--cor-primaria, #007bff);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(0, 123, 255, 0.25);
+    }
+  }
 }
 
-/* Conteúdos e estados dos tabs */
 .tab-panel {
-  display: none;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   padding: 20px;
-}
-
-#tab1:checked~.tabs .tabs-header label[for="tab1"],
-#tab2:checked~.tabs .tabs-header label[for="tab2"],
-#tab3:checked~.tabs .tabs-header label[for="tab3"],
-#tab4:checked~.tabs .tabs-header label[for="tab4"] {
-  background: var(--cor-primaria);
-  color: #fff;
-  box-shadow: 0 6px 16px rgba(0, 123, 255, .25);
-}
-
-#tab1:checked~.tabs .panel-1 {
-  display: block;
-}
-
-#tab2:checked~.tabs .panel-2 {
-  display: block;
-}
-
-#tab3:checked~.tabs .panel-3 {
-  display: block;
-}
-
-#tab4:checked~.tabs .panel-4 {
-  display: block;
 }
 
 /* Painéis */
@@ -330,6 +321,18 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+h3 {
+  font-size: 1.5rem;
+  color: var(--texto);
+  margin-bottom: 4px;
+}
+
+h4 {
+  font-size: 1.2rem;
+  color: var(--texto);
+  margin-bottom: 8px;
 }
 
 /* Modais (CSS-only) */

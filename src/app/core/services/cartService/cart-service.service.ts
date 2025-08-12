@@ -10,7 +10,7 @@ export class CartService {
   public cartItems$ = this.cartItemsSubject.asObservable();
 
   private appliedDiscount = 0;
-  private shippingCost = 15.90;
+  private shippingCost = 0;
 
   constructor() {}
 

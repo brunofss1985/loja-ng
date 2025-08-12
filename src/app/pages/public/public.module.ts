@@ -11,6 +11,7 @@ import { PublicComponent } from './public.component';
 import { ChatComponent } from './chat/chat.component';
 import { CartComponent } from './cart-component/cart-component.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { OrderStatusComponent } from './order-status/order-status.component';
 
 
 
@@ -22,7 +23,8 @@ import { PerfilComponent } from './perfil/perfil.component';
     RegisterComponent,
     ChatComponent,
     CartComponent,
-    PerfilComponent
+    PerfilComponent,
+    OrderStatusComponent
   ],
   imports: [
     CommonModule,

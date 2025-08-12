@@ -1,5 +1,4 @@
-
-  <!-- Estados globais (CSS-only) -->
+<body>
   <input id="isLoggedIn" type="checkbox" class="hide" checked />
   <input id="logoutOpen" type="checkbox" class="hide" />
   <input id="modalEdit" type="checkbox" class="hide" />
@@ -14,7 +13,6 @@
 
   <div class="container">
     <div class="app-card">
-
       <!-- Topo -->
       <div class="topbar">
         <div class="perfil-mini">
@@ -27,7 +25,9 @@
         <div class="acao-topo">
           <label for="modalEdit" class="btn">
             <span class="ico">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M3 21h4l11-11-4-4L3 17v4z" stroke="currentColor" stroke-width="1.5"/></svg>
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 21h4l11-11-4-4L3 17v4z" stroke="currentColor" stroke-width="1.5" />
+              </svg>
             </span>
             Editar perfil
           </label>
@@ -66,264 +66,170 @@
           </div>
         </aside>
 
-        <!-- Tabs -->
-        <section class="tabs-wrap" style="min-width:0;">
-          <div class="tabs">
-            <div class="tabs-header">
-              <label for="tab1">Visão Geral</label>
-              <label for="tab2">Pedidos</label>
-              <label for="tab3">Endereços</label>
-              <label for="tab4">Segurança</label>
+        <section class="tabs-wrap">
+          <!-- Cabeçalho das abas -->
+          <div class="tabs-header">
+            <button [ngClass]="{'active': activeTab === 'visao-geral'}" (click)="setTab('visao-geral')">Visão
+              Geral</button>
+            <button [ngClass]="{'active': activeTab === 'pedidos'}" (click)="setTab('pedidos')">Pedidos</button>
+            <button [ngClass]="{'active': activeTab === 'enderecos'}" (click)="setTab('enderecos')">Endereços</button>
+            <button [ngClass]="{'active': activeTab === 'seguranca'}" (click)="setTab('seguranca')">Segurança</button>
+          </div>
+
+          <!-- Painel Visão Geral -->
+          <div class="tab-panel" *ngIf="activeTab === 'visao-geral'">
+            <h3>Resumo rápido</h3>
+            <p class="muted">Acompanhe seu progresso e benefícios.</p>
+            <div class="card" *ngIf="lastOrder">
+              <h4>Último pedido</h4>
+              <p class="muted">#{{lastOrder.id}} • {{lastOrder.items.length}} itens • R$ {{lastOrder.total}}</p>
             </div>
+          </div>
 
-            <!-- Visão Geral -->
-            <div class="tab-panel panel-1">
-              <div class="painel-bloco">
-                <div class="row-between">
-                  <div>
-                    <h3 style="margin:0 0 6px;">Resumo rápido</h3>
-                    <p class="muted" style="margin:0;">Acompanhe seu progresso e benefícios.</p>
-                  </div>
-                  <div class="row">
-                    <label for="modalEdit" class="btn">Atualizar dados</label>
-                    <label for="tab2" class="btn-ghost">Ver pedidos</label>
-                  </div>
-                </div>
-              </div>
+          <!-- Painel Pedidos -->
+          <div class="tab-panel" *ngIf="activeTab === 'pedidos'">
+            <h3>Meus pedidos</h3>
+            <!-- Aqui você pode renderizar uma lista de pedidos -->
+          </div>
 
-              <div class="cards">
-                <div class="card">
-                  <h4>Último pedido</h4>
-                  <p class="muted">#45218 • 2 itens • R$ 219,90</p>
-                  <span class="tag">Enviado</span>
-                </div>
-                <div class="card">
-                  <h4>Favoritos</h4>
-                  <p class="muted">Whey Isolado, Creatina Micronizada</p>
-                </div>
-                <div class="card">
-                  <h4>Cupons</h4>
-                  <p class="muted">Você tem 1 cupom ativo</p>
-                </div>
-              </div>
-            </div>
+          <!-- Painel Endereços -->
+          <div class="tab-panel" *ngIf="activeTab === 'enderecos'">
+            <h3>Endereços</h3>
+            <!-- Lista de endereços -->
+          </div>
 
-            <!-- Pedidos -->
-            <div class="tab-panel panel-2">
-              <div class="painel-bloco">
-                <div class="row-between">
-                  <h3 style="margin:0;">Meus pedidos</h3>
-                  <div class="row">
-                    <span class="tag">Últimos 90 dias</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="cards">
-                <div class="card">
-                  <h4>#45218</h4>
-                  <p class="muted">Whey + Creatina • R$ 219,90</p>
-                  <div class="row-between">
-                    <span class="tag">Enviado</span>
-                    <span class="muted">12/06/2025</span>
-                  </div>
-                </div>
-                <div class="card">
-                  <h4>#44791</h4>
-                  <p class="muted">Pré-treino • R$ 89,90</p>
-                  <div class="row-between">
-                    <span class="tag" style="background:#eaf9ee; color:#1c7c3c; border-color:#bfe9c9;">Entregue</span>
-                    <span class="muted">28/05/2025</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Endereços -->
-            <div class="tab-panel panel-3">
-              <div class="painel-bloco row-between">
-                <div>
-                  <h3 style="margin:0 0 6px;">Endereços</h3>
-                  <p class="muted" style="margin:0;">Gerencie onde quer receber seus suplementos.</p>
-                </div>
-                <label for="modalAddress" class="btn">Adicionar endereço</label>
-              </div>
-
-              <div class="cards">
-                <div class="card">
-                  <h4>Casa</h4>
-                  <p class="muted">Rua das Vitaminas, 123 • São Paulo/SP</p>
-                </div>
-                <div class="card">
-                  <h4>Trabalho</h4>
-                  <p class="muted">Av. Proteica, 456 • São Paulo/SP</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Segurança -->
-            <div class="tab-panel panel-4">
-              <div class="painel-bloco">
-                <h3 style="margin:0 0 6px;">Segurança</h3>
-                <p class="muted" style="margin:0 0 12px;">
-                  Proteja sua conta e gerencie acessos.
-                </p>
-                <div class="row" style="margin-top:10px;">
-                  <label for="modalPwdInfo" class="btn">
-                    <span class="ico">
-                      <svg viewBox="0 0 24 24" fill="none"><path d="M12 15v-3m0 6a9 9 0 110-18 9 9 0 010 18z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                    </span>
-                    Trocar senha
-                  </label>
-                  <label for="logoutOpen" class="btn-ghost">Sair da conta</label>
-                </div>
-              </div>
-
-              <div class="painel-bloco">
-                <h4 style="margin:0 0 6px;">Sessões ativas</h4>
-                <p class="muted" style="margin:0 0 8px;">Dispositivos conectados recentemente.</p>
-                <div class="cards">
-                  <div class="card">
-                    <h4>iPhone 14</h4>
-                    <p class="muted">São Paulo • agora mesmo</p>
-                    <span class="tag" style="background:#eaf9ee; color:#1c7c3c; border-color:#bfe9c9;">Atual</span>
-                  </div>
-                  <div class="card">
-                    <h4>Notebook</h4>
-                    <p class="muted">São Paulo • há 2 dias</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+          <!-- Painel Segurança -->
+          <div class="tab-panel" *ngIf="activeTab === 'seguranca'">
+            <h3>Segurança</h3>
+            <!-- Segurança da conta -->
           </div>
         </section>
-      </div>
 
+      </div>
     </div>
   </div>
 
   <!-- Modal Editar perfil -->
   <!-- <div class="modal-edit">
-    <label for="modalEdit" class="modal-backdrop" aria-hidden="true"></label>
-    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editTitle">
-      <div class="modal-card">
-        <div class="modal-head">
-          <h3 id="editTitle">Editar perfil</h3>
-          <label for="modalEdit" class="btn-ghost">Fechar</label>
-        </div>
-        <div class="modal-body">
-          <div class="linha-flex">
-            <div class="campo">
-              <label>Nome</label>
-              <input class="input" type="text" placeholder="Seu nome" value="Alex Lima" />
+        <label for="modalEdit" class="modal-backdrop" aria-hidden="true"></label>
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+            <div class="modal-card">
+                <div class="modal-head">
+                    <h3 id="editTitle">Editar perfil</h3>
+                    <label for="modalEdit" class="btn-ghost">Fechar</label>
+                </div>
+                <div class="modal-body">
+                    <div class="linha-flex">
+                        <div class="campo">
+                            <label>Nome</label>
+                            <input class="input" type="text" placeholder="Seu nome" value="Alex Lima" />
+                        </div>
+                        <div class="campo">
+                            <label>E-mail</label>
+                            <input class="input" type="email" placeholder="Seu e-mail" value="alex.lima@example.com" />
+                        </div>
+                        <div class="campo">
+                            <label>Telefone</label>
+                            <input class="input" type="tel" placeholder="(00) 00000-0000" value="(11) 91234-5678" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <label for="modalEdit" class="btn">Salvar</label>
+                </div>
             </div>
-            <div class="campo">
-              <label>E-mail</label>
-              <input class="input" type="email" placeholder="Seu e-mail" value="alex.lima@example.com" />
-            </div>
-            <div class="campo">
-              <label>Telefone</label>
-              <input class="input" type="tel" placeholder="(00) 00000-0000" value="(11) 91234-5678" />
-            </div>
-          </div>
         </div>
-        <div class="modal-actions">
-          <label for="modalEdit" class="btn">Salvar</label>
-        </div>
-      </div>
-    </div>
-  </div> -->
+    </div> -->
 
   <!-- Modal Adicionar endereço -->
   <!-- <div class="modal-address">
-    <label for="modalAddress" class="modal-backdrop" aria-hidden="true"></label>
-    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="addrTitle">
-      <div class="modal-card">
-        <div class="modal-head">
-          <h3 id="addrTitle">Novo endereço</h3>
-          <label for="modalAddress" class="btn-ghost">Fechar</label>
+        <label for="modalAddress" class="modal-backdrop" aria-hidden="true"></label>
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="addrTitle">
+            <div class="modal-card">
+                <div class="modal-head">
+                    <h3 id="addrTitle">Novo endereço</h3>
+                    <label for="modalAddress" class="btn-ghost">Fechar</label>
+                </div>
+                <div class="modal-body">
+                    <div class="linha-flex">
+                        <div class="campo">
+                            <label>Apelido</label>
+                            <input class="input" type="text" placeholder="Casa, Trabalho..." />
+                        </div>
+                        <div class="campo">
+                            <label>CEP</label>
+                            <input class="input" type="text" placeholder="00000-000" />
+                        </div>
+                        <div class="campo">
+                            <label>Endereço</label>
+                            <input class="input" type="text" placeholder="Rua, número e complemento" />
+                        </div>
+                        <div class="campo">
+                            <label>Cidade</label>
+                            <input class="input" type="text" placeholder="Cidade" />
+                        </div>
+                        <div class="campo">
+                            <label>UF</label>
+                            <input class="input" type="text" placeholder="SP" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <label for="modalAddress" class="btn">Salvar</label>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <div class="linha-flex">
-            <div class="campo">
-              <label>Apelido</label>
-              <input class="input" type="text" placeholder="Casa, Trabalho..." />
-            </div>
-            <div class="campo">
-              <label>CEP</label>
-              <input class="input" type="text" placeholder="00000-000" />
-            </div>
-            <div class="campo">
-              <label>Endereço</label>
-              <input class="input" type="text" placeholder="Rua, número e complemento" />
-            </div>
-            <div class="campo">
-              <label>Cidade</label>
-              <input class="input" type="text" placeholder="Cidade" />
-            </div>
-            <div class="campo">
-              <label>UF</label>
-              <input class="input" type="text" placeholder="SP" />
-            </div>
-          </div>
-        </div>
-        <div class="modal-actions">
-          <label for="modalAddress" class="btn">Salvar</label>
-        </div>
-      </div>
-    </div>
-  </div> -->
+    </div> -->
 
   <!-- Modal INFO trocar senha (sem campos de senha) -->
   <!-- <div class="modal-pwdinfo">
-    <label for="modalPwdInfo" class="modal-backdrop" aria-hidden="true"></label>
-    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="pwdInfoTitle">
-      <div class="modal-card">
-        <div class="modal-head">
-          <h3 id="pwdInfoTitle">Trocar senha</h3>
-          <label for="modalPwdInfo" class="btn-ghost">Fechar</label>
+        <label for="modalPwdInfo" class="modal-backdrop" aria-hidden="true"></label>
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="pwdInfoTitle">
+            <div class="modal-card">
+                <div class="modal-head">
+                    <h3 id="pwdInfoTitle">Trocar senha</h3>
+                    <label for="modalPwdInfo" class="btn-ghost">Fechar</label>
+                </div>
+                <div class="modal-body">
+                    <p class="muted" style="margin:0;">
+                        Aqui vai a área de troca de senha. Para sua segurança, este modelo não inclui campos de senha.
+                        Use seu backend do Angular para implementar a troca de senha real.
+                    </p>
+                </div>
+                <div class="modal-actions">
+                    <label for="modalPwdInfo" class="btn">Entendi</label>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <p class="muted" style="margin:0;">
-            Aqui vai a área de troca de senha. Para sua segurança, este modelo não inclui campos de senha.
-            Use seu backend do Angular para implementar a troca de senha real.
-          </p>
-        </div>
-        <div class="modal-actions">
-          <label for="modalPwdInfo" class="btn">Entendi</label>
-        </div>
-      </div>
-    </div>
-  </div> -->
+    </div> -->
 
   <!-- Modal Logout -->
   <!-- <div class="modal-logout">
-    <label for="logoutOpen" class="modal-backdrop" aria-hidden="true"></label>
-    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
-      <div class="modal-card">
-        <div class="modal-head">
-          <h3 id="logoutTitle">Sair da conta</h3>
+        <label for="logoutOpen" class="modal-backdrop" aria-hidden="true"></label>
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
+            <div class="modal-card">
+                <div class="modal-head">
+                    <h3 id="logoutTitle">Sair da conta</h3>
+                </div>
+                <div class="modal-body">
+                    <p class="muted" style="margin:0;">Tem certeza que deseja sair?</p>
+                </div>
+                <div class="modal-actions">
+                    <label for="logoutOpen" class="btn-ghost">Cancelar</label> -->
+  <!-- Confirmar: desmarca estado logado; o modal some automaticamente -->
+  <!-- <label for="isLoggedIn" class="btn-danger">Confirmar</label>
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <p class="muted" style="margin:0;">Tem certeza que deseja sair?</p>
-        </div>
-        <div class="modal-actions">
-          <label for="logoutOpen" class="btn-ghost">Cancelar</label> -->
-          <!-- Confirmar: desmarca estado logado; o modal some automaticamente -->
-          <!-- <label for="isLoggedIn" class="btn-danger">Confirmar</label>
-        </div>
-      </div>
-    </div>
-  </div> -->
+    </div> -->
 
   <!-- Banner de deslogado (demo) -->
-  <div class="logout-banner" aria-live="polite">
-    <div class="logout-card">
-      <h2>Você saiu (demo)</h2>
-      <p>Como é apenas HTML e CSS, esta saída é uma simulação visual. Para sair de verdade, conecte ao seu backend no Angular.</p>
-      <div class="row" style="justify-content:center;">
-        <label for="isLoggedIn" class="btn">Entrar novamente (demo)</label>
-      </div>
-    </div>
-  </div>
+  <!-- <div class="logout-banner" aria-live="polite">
+        <div class="logout-card">
+            <h2>Você saiu (demo)</h2>
+            <p>Como é apenas HTML e CSS, esta saída é uma simulação visual. Para sair de verdade, conecte ao seu backend no Angular.</p>
+            <div class="row" style="justify-content:center;">
+                <label for="isLoggedIn" class="btn">Entrar novamente (demo)</label>
+            </div>
+        </div>
+    </div> -->

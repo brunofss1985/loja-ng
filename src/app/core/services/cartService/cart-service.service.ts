@@ -1,4 +1,3 @@
-// src/app/core/services/cart.service.ts
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CartItem } from '../../models/cart-item.model';
@@ -10,10 +9,18 @@ export class CartService {
   private cartItemsSubject = new BehaviorSubject<CartItem[]>(this.load());
   public cartItems$ = this.cartItemsSubject.asObservable();
 
+  private appliedDiscount = 0;
+  private shippingCost = 15.90;
+
   constructor() {}
 
+  // 📦 Carrinho
   getCartItems(): Observable<CartItem[]> {
     return this.cartItems$;
+  }
+
+  getCartItemsSnapshot(): CartItem[] {
+    return [...this.cartItemsSubject.value];
   }
 
   addToCart(item: CartItem): void {
@@ -31,6 +38,7 @@ export class CartService {
   removeFromCart(itemId: number): void {
     const updated = this.cartItemsSubject.value.filter(i => i.id !== itemId);
     this.set(updated);
+    if (updated.length === 0) this.appliedDiscount = 0;
   }
 
   updateQuantity(itemId: number, quantity: number): void {
@@ -43,16 +51,46 @@ export class CartService {
 
   clearCart(): void {
     this.set([]);
+    this.appliedDiscount = 0;
   }
 
-  getCartTotal(): number {
+  // 💰 Valores
+  getSubtotal(): number {
     return this.cartItemsSubject.value.reduce(
-      (total, item) => total + item.price * item.quantity,
+      (sum, item) => sum + item.price * item.quantity,
       0
     );
   }
 
-  // Persistência simples no localStorage
+  getShipping(): number {
+    return this.shippingCost;
+  }
+
+  getDiscount(): number {
+    return this.appliedDiscount;
+  }
+
+  getTotal(): number {
+    return this.getSubtotal() + this.getShipping() - this.getDiscount();
+  }
+
+  // 🎟️ Cupom
+  applyCoupon(code: string): boolean {
+    const validCoupons: { [key: string]: number } = {
+      'PRIMEIRA10': 0.10,
+      'SUPLEMENTO15': 0.15,
+      'FRETE20': 0.20
+    };
+
+    const upperCode = code.toUpperCase();
+    if (validCoupons[upperCode]) {
+      this.appliedDiscount = this.getSubtotal() * validCoupons[upperCode];
+      return true;
+    }
+    return false;
+  }
+
+  // 🧠 Persistência
   private set(items: CartItem[]) {
     this.cartItemsSubject.next(items);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));

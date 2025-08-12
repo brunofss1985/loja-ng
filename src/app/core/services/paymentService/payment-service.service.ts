@@ -1,8 +1,16 @@
-// payment.service.ts
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+
+export interface PaymentResponse {
+  status: 'APPROVED' | 'DECLINED' | 'PENDING';
+  orderId?: string;
+  qrCodeBase64?: string;
+  qrCode?: string;
+  boletoUrl?: string;
+  message?: string;
+}
 
 export interface CheckoutPayload {
   fullName: string;
@@ -35,22 +43,13 @@ export interface CheckoutPayload {
   cardCvv?: string;
 }
 
-
-export interface PaymentResponse {
-  status: 'APPROVED' | 'DECLINED' | 'PENDING';
-  orderId?: string;
-  qrCodeBase64?: string;
-  qrCode?: string;
-  boletoUrl?: string;
-  message?: string;
-}
-
-
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
-  private base = `${environment.apiUrl}/checkout`;
+  private apiUrl =  `${environment.apiUrl}`;
+
   constructor(private http: HttpClient) {}
+
   checkout(payload: CheckoutPayload): Observable<PaymentResponse> {
-    return this.http.post<PaymentResponse>(`${this.base}`, payload);
+    return this.http.post<PaymentResponse>(`${this.apiUrl}/checkout`, payload);
   }
 }

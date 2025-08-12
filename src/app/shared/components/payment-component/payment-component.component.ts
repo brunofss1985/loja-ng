@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PaymentService, PaymentResponse, CheckoutPayload} from 'src/app/core/services/paymentService/payment-service.service';
+import {
+  PaymentService,
+  PaymentResponse,
+  CheckoutPayload
+} from 'src/app/core/services/paymentService/payment-service.service';
+import { CartService } from 'src/app/core/services/cartService/cart-service.service';
+import { CartItem } from 'src/app/core/models/cart-item.model';
 
 @Component({
   selector: 'app-payment',
@@ -17,6 +23,14 @@ export class PaymentComponent implements OnInit {
   pixQrBase64 = '';
   pixCopiaCola = '';
 
+  orderSummary = {
+    subtotal: 0,
+    shipping: 0,
+    discount: 0,
+    total: 0,
+    items: [] as CartItem[]
+  };
+
   paymentMethods = [
     { id: 'credit', name: 'Cartão de Crédito', icon: '💳', installments: [1,2,3,4,5,6,7,8,9,10,11,12] },
     { id: 'debit', name: 'Cartão de Débito', icon: '💳' },
@@ -24,27 +38,24 @@ export class PaymentComponent implements OnInit {
     { id: 'boleto', name: 'Boleto Bancário', icon: '🧾' }
   ];
 
-  orderSummary = {
-    subtotal: 293.60,
-    shipping: 15.90,
-    discount: 29.36,
-    total: 280.14,
-    items: [
-      { name: 'Whey Protein Concentrado', quantity: 2, price: 179.80 },
-      { name: 'Creatina Monohidratada', quantity: 1, price: 45.90 },
-      { name: 'Termogênico Extreme', quantity: 1, price: 67.90 }
-    ]
-  };
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private cartService: CartService
   ) {
     this.checkoutForm = this.createForm();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.orderSummary = {
+      subtotal: this.cartService.getSubtotal(),
+      shipping: this.cartService.getShipping(),
+      discount: this.cartService.getDiscount(),
+      total: this.cartService.getTotal(),
+      items: this.cartService.getCartItemsSnapshot()
+    };
+  }
 
   private createForm(): FormGroup {
     return this.fb.group({
@@ -67,10 +78,9 @@ export class PaymentComponent implements OnInit {
   }
 
   isFieldInvalid(fieldName: string): boolean {
-  const field = this.checkoutForm.get(fieldName);
-  return !!field && field.invalid && (field.dirty || field.touched);
-}
-
+    const field = this.checkoutForm.get(fieldName);
+    return !!field && field.invalid && (field.dirty || field.touched);
+  }
 
   getFieldError(fieldName: string): string {
     const field = this.checkoutForm.get(fieldName);
@@ -237,7 +247,9 @@ export class PaymentComponent implements OnInit {
       method: methodMap[this.selectedPaymentMethod],
       installments: this.selectedPaymentMethod === 'credit' ? this.selectedInstallments : undefined,
       cardToken: undefined,
-      cardLast4: this.selectedPaymentMethod !== 'pix' && this.selectedPaymentMethod !== 'boleto' ? this.checkoutForm.value.cardNumber.slice(-4) : undefined,
+      cardLast4: this.selectedPaymentMethod !== 'pix' && this.selectedPaymentMethod !== 'boleto'
+        ? this.checkoutForm.value.cardNumber.slice(-4)
+        : undefined,
       cardNumber: this.checkoutForm.value.cardNumber,
       cardName: this.checkoutForm.value.cardName,
       cardExpiry: this.checkoutForm.value.cardExpiry,
@@ -250,7 +262,9 @@ export class PaymentComponent implements OnInit {
 
         switch (resp.status) {
           case 'APPROVED':
-            this.router.navigate(['/pedido-confirmado'], { queryParams: { orderId: resp.orderId } });
+            this.router.navigate(['/pedido-confirmado'], {
+              queryParams: { orderId: resp.orderId }
+            });
             break;
 
           case 'DECLINED':
@@ -272,7 +286,7 @@ export class PaymentComponent implements OnInit {
             alert(resp.message || 'Erro desconhecido ao processar pagamento.');
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.isProcessing = false;
         alert('Erro ao processar pagamento. Tente novamente.');
         console.error(err);
@@ -281,7 +295,6 @@ export class PaymentComponent implements OnInit {
   }
 
   goBack(): void {
-  this.router.navigate(['/carrinho']);
-}
-
+    this.router.navigate(['/carrinho']);
+  }
 }

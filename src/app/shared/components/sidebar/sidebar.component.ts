@@ -47,8 +47,7 @@ export class SidebarComponent implements OnInit {
     this.toggleSidebar.emit(this.isOpen);
   }
 
-  exit() {
-    localStorage.clear();
-    this.route.navigate(['']);
+exit(): void {
+    this.authServ.clearSession();
   }
 }

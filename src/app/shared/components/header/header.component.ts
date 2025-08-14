@@ -16,7 +16,7 @@ import { AuthService } from 'src/app/core/services/authService/auth.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
-   userType = this.authService.getUserType();
+  userType = this.authService.getUserType();
 
   // Indica se o topo está “afinado” após rolagem
   isScrolled = false;
@@ -29,10 +29,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   // Guarda funções para limpar ouvintes
   private cleanupFns: Array<() => void> = [];
 
-  constructor(private renderer: Renderer2, 
+  constructor(
+    private renderer: Renderer2,
     private host: ElementRef,
     private authService: AuthService,
-    private route: Router,
+    private route: Router
   ) {}
 
   ngOnInit(): void {}
@@ -116,8 +117,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cleanupFns = [];
   }
 
-exit(): void {
-this.authService.clearSession();
-}
-
+  exit(): void {
+    this.authService.clearSession();
+  }
 }

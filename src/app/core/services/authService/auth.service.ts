@@ -1,14 +1,32 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'jwtToken';
   private readonly SESSION_ID_KEY = 'sessionId';
+  private readonly API_URL = 'http://localhost:8080/api/auth'; // ajuste conforme seu backend
 
-  constructor(private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {}
+
+  login(email: string, password: string): void {
+    this.http.post<any>(`${this.API_URL}/login`, { email, password }).subscribe({
+      next: (response) => {
+        this.saveToken(response.jwtToken);
+        this.saveSessionId(response.sessionId);
+        this.router.navigate(['/private/dashboard']);
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+        alert('Credenciais inválidas');
+      }
+    });
+  }
+
+  logout(): void {
+    this.clearSession();
+  }
 
   saveToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);

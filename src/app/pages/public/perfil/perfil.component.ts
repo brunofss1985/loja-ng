@@ -18,7 +18,6 @@ export class PerfilComponent implements OnInit {
   lastOrder?: Order;
   activeTab: string = 'visao-geral';
   user?: User;
-
   profileForm?: FormGroup;
 
   constructor(
@@ -28,32 +27,29 @@ export class PerfilComponent implements OnInit {
     private toast: ToastrService
   ) {}
 
-ngOnInit(): void {
-  const userEmail = this.authService.getUser()?.email;
-
-  // Inicializa o formulário vazio
-  this.initForm({
-    name: '',
-    email: userEmail || '',
-    phone: '',
-    address: '',
-    id: '', // ou null, dependendo do seu modelo
-  });
-
-  if (userEmail) {
-    this.orderService.getLastOrder(userEmail).subscribe((order) => {
-      this.lastOrder = order;
+  ngOnInit(): void {
+    this.initForm({
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      points: 0,
+      credits: 0
     });
 
-    this.userService.getUserByEmail(userEmail).subscribe((user: User) => {
+    this.userService.getCurrentUser().subscribe((user: User) => {
       if (user) {
         this.user = user;
-        this.initForm(user); // atualiza com dados reais
+        this.initForm(user);
+
+        if (user.email) {
+          this.orderService.getLastOrder(user.email).subscribe((order) => {
+            this.lastOrder = order;
+          });
+        }
       }
     });
   }
-}
-
 
   setTab(tabName: string): void {
     this.activeTab = tabName;
@@ -65,30 +61,32 @@ ngOnInit(): void {
       email: new FormControl(user.email),
       phone: new FormControl(user.phone || ''),
       address: new FormControl(user.address || ''),
+      points: new FormControl(user.points || 0),
+      credits: new FormControl(user.credits || 0)
     });
   }
 
-  saveProfile(): void {
-    if (!this.user || !this.profileForm) return;
+saveProfile(): void {
+  if (!this.profileForm) return;
 
-    const updatedUser: User = {
-      ...this.user,
-      ...this.profileForm.value,
-    };
+  const updatedUser: User = {
+    ...this.user,
+    ...this.profileForm.value
+  };
 
-    if (this.user.id) {
-      this.userService.updateUser(this.user.id, updatedUser).subscribe({
-        next: () => {
-          this.toast.success('Perfil atualizado com sucesso!');
-          this.closeModal();
-        },
-        error: (err) => {
-          console.error(err);
-          this.toast.error('Erro ao atualizar perfil.');
-        },
-      });
+  this.userService.updateCurrentUser(updatedUser).subscribe({
+    next: (res: User) => {
+      this.toast.success('Perfil atualizado com sucesso!');
+      this.user = res;
+      this.closeModal();
+    },
+    error: (err: any) => {
+      console.error(err);
+      this.toast.error('Erro ao atualizar perfil.');
     }
-  }
+  });
+}
+
 
   closeModal(): void {
     const modalCheckbox = document.getElementById('modalEdit') as HTMLInputElement;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrderService } from 'src/app/core/services/orderService/order-service';
 import { AuthService } from 'src/app/core/services/authService/auth.service';
 import {
@@ -18,9 +18,10 @@ export class PerfilComponent implements OnInit {
   lastOrder?: Order;
   activeTab: string = 'visao-geral';
   user?: User;
-  profileForm?: FormGroup;
+  profileForm!: FormGroup;
 
   constructor(
+    private fb: FormBuilder,
     private orderService: OrderService,
     private authService: AuthService,
     private userService: UserService,
@@ -56,37 +57,36 @@ export class PerfilComponent implements OnInit {
   }
 
   initForm(user: User): void {
-    this.profileForm = new FormGroup({
-      name: new FormControl(user.name),
-      email: new FormControl(user.email),
-      phone: new FormControl(user.phone || ''),
-      address: new FormControl(user.address || ''),
-      points: new FormControl(user.points || 0),
-      credits: new FormControl(user.credits || 0)
+    this.profileForm = this.fb.group({
+      name: [user.name || '', Validators.required],
+      email: [{ value: user.email || '', disabled: true }, [Validators.required, Validators.email]],
+      phone: [user.phone || ''],
+      address: [user.address || ''],
+      points: [user.points || 0],
+      credits: [user.credits || 0]
     });
   }
 
-saveProfile(): void {
-  if (!this.profileForm) return;
+  saveProfile(): void {
+    if (!this.profileForm) return;
 
-  const updatedUser: User = {
-    ...this.user,
-    ...this.profileForm.value
-  };
+    const updatedUser: User = {
+      ...this.user,
+      ...this.profileForm.getRawValue() // getRawValue inclui campos desabilitados
+    };
 
-  this.userService.updateCurrentUser(updatedUser).subscribe({
-    next: (res: User) => {
-      this.toast.success('Perfil atualizado com sucesso!');
-      this.user = res;
-      this.closeModal();
-    },
-    error: (err: any) => {
-      console.error(err);
-      this.toast.error('Erro ao atualizar perfil.');
-    }
-  });
-}
-
+    this.userService.updateCurrentUser(updatedUser).subscribe({
+      next: (res: User) => {
+        this.toast.success('Perfil atualizado com sucesso!');
+        this.user = res;
+        this.closeModal();
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.toast.error('Erro ao atualizar perfil.');
+      }
+    });
+  }
 
   closeModal(): void {
     const modalCheckbox = document.getElementById('modalEdit') as HTMLInputElement;

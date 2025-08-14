@@ -15,7 +15,7 @@ export class AdminHomeComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.authService.isAuthenticated()) {
-    this.authService.clearToken();
+    this.authService.clearSession();
     this.router.navigate(['/public/default-login/login']);
   }
   }

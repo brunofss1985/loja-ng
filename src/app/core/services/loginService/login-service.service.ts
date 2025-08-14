@@ -9,7 +9,6 @@ import { LoginResponse } from '../../types/login-response.type';
   providedIn: 'root'
 })
 export class LoginService {
-
   private loginUrl = `${environment.apiUrl}/auth/login`;
   private registerUrl = `${environment.apiUrl}/auth/register`;
 
@@ -18,7 +17,9 @@ export class LoginService {
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.loginUrl, { email, password }).pipe(
       tap(response => {
-        this.authService.saveToken(response.token);
+        console.log('Login response:', response); // 👀 útil para debug
+        this.authService.saveToken(response.token);       // ✅ salva JWT
+        this.authService.saveSessionId(response.sessionId); // ✅ salva sessionId
       })
     );
   }

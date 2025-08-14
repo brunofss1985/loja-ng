@@ -23,7 +23,7 @@ export class TokenInterceptor implements HttpInterceptor {
   return next.handle(authReq).pipe(
     catchError(err => {
       if (err.status === 401) {
-        this.authService.clearToken();
+        this.authService.clearSession();
         this.router.navigate(['/public/default-login/login']);
       }
       return throwError(() => err);

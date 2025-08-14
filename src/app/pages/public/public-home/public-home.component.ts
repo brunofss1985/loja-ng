@@ -9,6 +9,6 @@ import { AuthService } from 'src/app/core/services/authService/auth.service';
 export class PublicHomeComponent {
   constructor(private authService: AuthService) {}
   logout() {
-    this.authService.clearToken();
+    this.authService.clearSession();
   }
 }

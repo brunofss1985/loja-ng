@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private renderer: Renderer2, 
     private host: ElementRef,
     private authService: AuthService,
-    private route: Router
+    private route: Router,
   ) {}
 
   ngOnInit(): void {}
@@ -116,8 +116,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cleanupFns = [];
   }
 
-   exit() {
-    localStorage.clear();
-    this.route.navigate(['home']);
-  }
+exit(): void {
+this.authService.clearSession();
+}
+
 }

@@ -58,6 +58,6 @@ export class AuthService {
   clearSession(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.SESSION_ID_KEY);
-    this.router.navigate(['/public/default-login/login']);
+    this.router.navigate(['']);
   }
 }

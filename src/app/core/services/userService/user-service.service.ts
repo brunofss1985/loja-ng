@@ -8,6 +8,11 @@ export interface User {
   name?: string;
   email?: string;
   userType?: 'ADMIN' | 'USER';
+  phone?: string;
+  address?: string;
+  points?: number;
+  credits?: number;
+  createdAt?: string;
 }
 
 @Injectable({
@@ -20,6 +25,19 @@ export class UserService {
 
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);
+  }
+
+  getUserById(id: string): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${id}`);
+  }
+
+  getUserByEmail(email: string): Observable<User> {
+  return this.http.get<User>(`${this.apiUrl}/email/${email}`);
+}
+
+
+  getCurrentUser(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/me`);
   }
 
   createUser(user: User): Observable<User> {

@@ -1,148 +1,161 @@
-<body>
-  <input id="isLoggedIn" type="checkbox" class="hide" checked />
-  <input id="logoutOpen" type="checkbox" class="hide" />
-  <input id="modalEdit" type="checkbox" class="hide" />
-  <input id="modalAddress" type="checkbox" class="hide" />
-  <input id="modalPwdInfo" type="checkbox" class="hide" />
+<!-- Inputs de controle -->
+<input id="isLoggedIn" type="checkbox" class="hide" checked />
+<input id="logoutOpen" type="checkbox" class="hide" />
+<input id="modalEdit" type="checkbox" class="hide" />
+<input id="modalAddress" type="checkbox" class="hide" />
+<input id="modalPwdInfo" type="checkbox" class="hide" />
 
-  <!-- Tabs radios -->
-  <input id="tab1" name="tabs" type="radio" class="hide" checked />
-  <input id="tab2" name="tabs" type="radio" class="hide" />
-  <input id="tab3" name="tabs" type="radio" class="hide" />
-  <input id="tab4" name="tabs" type="radio" class="hide" />
+<!-- Tabs radios -->
+<input id="tab1" name="tabs" type="radio" class="hide" checked />
+<input id="tab2" name="tabs" type="radio" class="hide" />
+<input id="tab3" name="tabs" type="radio" class="hide" />
+<input id="tab4" name="tabs" type="radio" class="hide" />
 
-  <div class="container">
-    <div class="app-card">
-      <!-- Topo -->
-      <div class="topbar">
-        <div class="perfil-mini">
-          <div class="avatar">AL</div>
-          <div class="perfil-info">
-            <h1>Olá, Alex Lima</h1>
-            <p>Plano: Atleta | Cliente desde 2021</p>
-          </div>
+<div class="container">
+  <div class="app-card">
+    <!-- Topo -->
+    <div class="topbar">
+      <div class="perfil-mini">
+        <div class="avatar">{{ user?.name ? user?.name?.substring(0, 2)?.toUpperCase() : '' }}
         </div>
-        <div class="acao-topo">
-          <label for="modalEdit" class="btn">
-            <span class="ico">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M3 21h4l11-11-4-4L3 17v4z" stroke="currentColor" stroke-width="1.5" />
-              </svg>
-            </span>
-            Editar perfil
-          </label>
+        <div class="perfil-info">
+          <h1>Olá, {{ user?.name }}</h1>
+          <p>Plano: {{ user?.userType || 'N/A' }} | Cliente desde {{ user?.createdAt | date:'yyyy' }}</p>
         </div>
       </div>
+      <div class="acao-topo">
+        <label for="modalEdit" class="btn">
+          <span class="ico">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M3 21h4l11-11-4-4L3 17v4z" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </span>
+          Editar perfil
+        </label>
+      </div>
+    </div>
 
-      <!-- Corpo -->
-      <div class="content">
-        <!-- Side -->
-        <aside class="side">
-          <div class="perfil-bloco">
-            <h3>Seus dados</h3>
-            <div class="dado">
-              <span>Nome</span>
-              <strong>Alex Lima</strong>
-            </div>
-            <div class="dado">
-              <span>E-mail</span>
-              <strong>alex.lima@example.com</strong>
-            </div>
-            <div class="dado">
-              <span>Telefone</span>
-              <strong>(11) 91234-5678</strong>
-            </div>
-            <div class="linha"></div>
-            <div class="mini-stats">
-              <div class="chip">
-                <strong>1.240</strong>
-                <small>Pontos</small>
-              </div>
-              <div class="chip">
-                <strong>R$ 58</strong>
-                <small>Créditos</small>
-              </div>
-            </div>
+    <!-- Corpo -->
+    <div class="content">
+      <!-- Side -->
+      <aside class="side">
+        <div class="perfil-bloco">
+          <h3>Seus dados</h3>
+          <div class="dado">
+            <span>Nome</span>
+            <strong>{{ user?.name }}</strong>
           </div>
-        </aside>
-
-        <section class="tabs-wrap">
-          <!-- Cabeçalho das abas -->
-          <div class="tabs-header">
-            <button [ngClass]="{'active': activeTab === 'visao-geral'}" (click)="setTab('visao-geral')">Visão
-              Geral</button>
-            <button [ngClass]="{'active': activeTab === 'pedidos'}" (click)="setTab('pedidos')">Pedidos</button>
-            <button [ngClass]="{'active': activeTab === 'enderecos'}" (click)="setTab('enderecos')">Endereços</button>
-            <button [ngClass]="{'active': activeTab === 'seguranca'}" (click)="setTab('seguranca')">Segurança</button>
+          <div class="dado">
+            <span>E-mail</span>
+            <strong>{{ user?.email }}</strong>
           </div>
-
-          <!-- Painel Visão Geral -->
-          <div class="tab-panel" *ngIf="activeTab === 'visao-geral'">
-            <h3>Resumo rápido</h3>
-            <p class="muted">Acompanhe seu progresso e benefícios.</p>
-            <div class="card" *ngIf="lastOrder">
-              <h4>Último pedido</h4>
-              <p class="muted">#{{lastOrder.id}} • {{lastOrder.items.length}} itens • R$ {{lastOrder.total}}</p>
+          <div class="dado">
+            <span>Telefone</span>
+            <strong>{{ user?.phone || 'Não informado' }}</strong>
+          </div>
+          <div class="dado">
+            <span>Endereço</span>
+            <strong>{{ user?.address || 'Não informado' }}</strong>
+          </div>
+          <div class="linha"></div>
+          <div class="mini-stats">
+            <div class="chip">
+              <strong>{{ user?.points || 0 }}</strong>
+              <small>Pontos</small>
+            </div>
+            <div class="chip">
+              <strong>R$ {{ user?.credits || 0 }}</strong>
+              <small>Créditos</small>
             </div>
           </div>
+        </div>
+      </aside>
 
-          <!-- Painel Pedidos -->
-          <div class="tab-panel" *ngIf="activeTab === 'pedidos'">
-            <h3>Meus pedidos</h3>
-            <!-- Aqui você pode renderizar uma lista de pedidos -->
+      <section class="tabs-wrap">
+        <!-- Cabeçalho das abas -->
+        <div class="tabs-header">
+          <button [ngClass]="{'active': activeTab === 'visao-geral'}" (click)="setTab('visao-geral')">Visão
+            Geral</button>
+          <button [ngClass]="{'active': activeTab === 'pedidos'}" (click)="setTab('pedidos')">Pedidos</button>
+          <button [ngClass]="{'active': activeTab === 'enderecos'}" (click)="setTab('enderecos')">Endereços</button>
+          <button [ngClass]="{'active': activeTab === 'seguranca'}" (click)="setTab('seguranca')">Segurança</button>
+        </div>
+
+        <!-- Painel Visão Geral -->
+        <div class="tab-panel" *ngIf="activeTab === 'visao-geral'">
+          <h3>Resumo rápido</h3>
+          <p class="muted">Acompanhe seu progresso e benefícios.</p>
+          <div class="card" *ngIf="lastOrder">
+            <h4>Último pedido</h4>
+            <p class="muted">#{{ lastOrder.id }} • {{ lastOrder.items.length }} itens • R$ {{ lastOrder.total }}</p>
           </div>
+        </div>
 
-          <!-- Painel Endereços -->
-          <div class="tab-panel" *ngIf="activeTab === 'enderecos'">
-            <h3>Endereços</h3>
-            <!-- Lista de endereços -->
+        <!-- Painel Pedidos -->
+        <div class="tab-panel" *ngIf="activeTab === 'pedidos'">
+          <h3>Meus pedidos</h3>
+          <!-- Lista de pedidos futura -->
+        </div>
+
+        <!-- Painel Endereços -->
+        <div class="tab-panel" *ngIf="activeTab === 'enderecos'">
+          <h3>Endereços</h3>
+          <!-- Lista de endereços futura -->
+        </div>
+
+        <!-- Painel Segurança -->
+        <div class="tab-panel" *ngIf="activeTab === 'seguranca'">
+          <h3>Segurança</h3>
+          <!-- Segurança da conta futura -->
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar perfil -->
+
+<div class="modal-edit">
+  <label for="modalEdit" class="modal-backdrop" aria-hidden="true"></label>
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="editTitle">Editar perfil</h3>
+        <label for="modalEdit" class="btn-ghost" style="color: black;">Fechar</label>
+      </div>
+      <form *ngIf="profileForm" [formGroup]="profileForm" class="modal-body">
+        <div class="linha-flex">
+          <div class="campo">
+            <label>Nome</label>
+            <input class="input" type="text" formControlName="name" />
           </div>
-
-          <!-- Painel Segurança -->
-          <div class="tab-panel" *ngIf="activeTab === 'seguranca'">
-            <h3>Segurança</h3>
-            <!-- Segurança da conta -->
+          <div class="campo">
+            <label>E-mail</label>
+            <input class="input" type="email" formControlName="email" />
           </div>
-        </section>
+          <div class="campo">
+            <label>Telefone</label>
+            <input class="input" type="tel" formControlName="phone" />
+          </div>
+          <div class="campo">
+            <label>Endereço</label>
+            <input class="input" type="text" formControlName="address" />
+          </div>
+        </div>
+      </form>
 
+      <div class="modal-actions">
+        <label for="modalEdit" class="btn" (click)="saveProfile()">Salvar</label>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Modal Editar perfil -->
-  <!-- <div class="modal-edit">
-        <label for="modalEdit" class="modal-backdrop" aria-hidden="true"></label>
-        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editTitle">
-            <div class="modal-card">
-                <div class="modal-head">
-                    <h3 id="editTitle">Editar perfil</h3>
-                    <label for="modalEdit" class="btn-ghost">Fechar</label>
-                </div>
-                <div class="modal-body">
-                    <div class="linha-flex">
-                        <div class="campo">
-                            <label>Nome</label>
-                            <input class="input" type="text" placeholder="Seu nome" value="Alex Lima" />
-                        </div>
-                        <div class="campo">
-                            <label>E-mail</label>
-                            <input class="input" type="email" placeholder="Seu e-mail" value="alex.lima@example.com" />
-                        </div>
-                        <div class="campo">
-                            <label>Telefone</label>
-                            <input class="input" type="tel" placeholder="(00) 00000-0000" value="(11) 91234-5678" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <label for="modalEdit" class="btn">Salvar</label>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
-  <!-- Modal Adicionar endereço -->
-  <!-- <div class="modal-address">
+
+
+<!-- Modal Adicionar endereço -->
+<!-- <div class="modal-address">
         <label for="modalAddress" class="modal-backdrop" aria-hidden="true"></label>
         <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="addrTitle">
             <div class="modal-card">
@@ -181,8 +194,8 @@
         </div>
     </div> -->
 
-  <!-- Modal INFO trocar senha (sem campos de senha) -->
-  <!-- <div class="modal-pwdinfo">
+<!-- Modal INFO trocar senha (sem campos de senha) -->
+<!-- <div class="modal-pwdinfo">
         <label for="modalPwdInfo" class="modal-backdrop" aria-hidden="true"></label>
         <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="pwdInfoTitle">
             <div class="modal-card">
@@ -203,8 +216,8 @@
         </div>
     </div> -->
 
-  <!-- Modal Logout -->
-  <!-- <div class="modal-logout">
+<!-- Modal Logout -->
+<!-- <div class="modal-logout">
         <label for="logoutOpen" class="modal-backdrop" aria-hidden="true"></label>
         <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
             <div class="modal-card">
@@ -216,15 +229,15 @@
                 </div>
                 <div class="modal-actions">
                     <label for="logoutOpen" class="btn-ghost">Cancelar</label> -->
-  <!-- Confirmar: desmarca estado logado; o modal some automaticamente -->
-  <!-- <label for="isLoggedIn" class="btn-danger">Confirmar</label>
+<!-- Confirmar: desmarca estado logado; o modal some automaticamente -->
+<!-- <label for="isLoggedIn" class="btn-danger">Confirmar</label>
                 </div>
             </div>
         </div>
     </div> -->
 
-  <!-- Banner de deslogado (demo) -->
-  <!-- <div class="logout-banner" aria-live="polite">
+<!-- Banner de deslogado (demo) -->
+<!-- <div class="logout-banner" aria-live="polite">
         <div class="logout-card">
             <h2>Você saiu (demo)</h2>
             <p>Como é apenas HTML e CSS, esta saída é uma simulação visual. Para sair de verdade, conecte ao seu backend no Angular.</p>

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private readonly TOKEN_KEY = 'jwtToken';
   private readonly SESSION_ID_KEY = 'sessionId';
-  private readonly API_URL = 'http://localhost:8080/api/auth'; // ajuste conforme seu backend
+  private readonly API_URL = 'http://localhost:8080/api/auth';
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -69,6 +69,30 @@ export class AuthService {
       return decodedPayload.userType || null;
     } catch (e) {
       console.error('Erro ao decodificar token:', e);
+      return null;
+    }
+  }
+
+  getUser(): any | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const payload = token.split('.')[1];
+    try {
+      const decodedPayload = JSON.parse(atob(payload));
+      return {
+        id: decodedPayload.id,
+        name: decodedPayload.name,
+        email: decodedPayload.email,
+        userType: decodedPayload.userType,
+        createdAt: decodedPayload.createdAt,
+        phone: decodedPayload.phone,
+        address: decodedPayload.address,
+        points: decodedPayload.points,
+        credits: decodedPayload.credits
+      };
+    } catch (e) {
+      console.error('Erro ao extrair dados do usuário:', e);
       return null;
     }
   }

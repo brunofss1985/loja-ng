@@ -336,6 +336,12 @@ h4 {
 }
 
 /* Modais (CSS-only) */
+.modal-edit .modal-backdrop,
+.modal-edit .modal-content {
+  display: none;
+}
+
+
 .modal-backdrop,
 .modal-content {
   display: none;
@@ -381,6 +387,7 @@ h4 {
 
 .modal-content {
   position: fixed;
+  padding-top: 202px;
   inset: 0;
   display: grid;
   place-items: center;

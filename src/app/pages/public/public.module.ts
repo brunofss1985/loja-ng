@@ -38,7 +38,8 @@ import { OrderStatusComponent } from './order-status/order-status.component';
   ],
   exports: [
     RegisterComponent,
-    ChatComponent
+    ChatComponent,
+    
   ]
 })
 export class PublicModule { }

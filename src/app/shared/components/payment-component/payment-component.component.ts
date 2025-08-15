@@ -4,15 +4,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   PaymentService,
   PaymentResponse,
-  CheckoutPayload
+  CheckoutPayload,
 } from 'src/app/core/services/paymentService/payment-service.service';
 import { CartService } from 'src/app/core/services/cartService/cart-service.service';
 import { CartItem } from 'src/app/core/models/cart-item.model';
+import { AuthService } from 'src/app/core/services/authService/auth.service';
 
 @Component({
   selector: 'app-payment',
   templateUrl: './payment-component.component.html',
-  styleUrls: ['./payment-component.component.scss']
+  styleUrls: ['./payment-component.component.scss'],
 })
 export class PaymentComponent implements OnInit {
   checkoutForm: FormGroup;
@@ -22,38 +23,49 @@ export class PaymentComponent implements OnInit {
   pixModalOpen = false;
   pixQrBase64 = '';
   pixCopiaCola = '';
+  userId = '';
 
   orderSummary = {
     subtotal: 0,
     shipping: 0,
     discount: 0,
     total: 0,
-    items: [] as CartItem[]
+    items: [] as CartItem[],
   };
 
   paymentMethods = [
-    { id: 'credit', name: 'Cartão de Crédito', icon: '💳', installments: [1,2,3,4,5,6,7,8,9,10,11,12] },
+    {
+      id: 'credit',
+      name: 'Cartão de Crédito',
+      icon: '💳',
+      installments: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    },
     { id: 'debit', name: 'Cartão de Débito', icon: '💳' },
     { id: 'pix', name: 'PIX', icon: '📱' },
-    { id: 'boleto', name: 'Boleto Bancário', icon: '🧾' }
+    { id: 'boleto', name: 'Boleto Bancário', icon: '🧾' },
   ];
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private paymentService: PaymentService,
-    private cartService: CartService
+    private cartService: CartService,
+    private auth: AuthService
   ) {
     this.checkoutForm = this.createForm();
   }
 
   ngOnInit(): void {
+    const user = this.auth.getUser(); // não precisa de subscribe
+    this.userId = user.email;
+    console.log('fsdsffds', user.email);
+
     this.orderSummary = {
       subtotal: this.cartService.getSubtotal(),
       shipping: this.cartService.getShipping(),
       discount: this.cartService.getDiscount(),
       total: this.cartService.getTotal(),
-      items: this.cartService.getCartItemsSnapshot()
+      items: this.cartService.getCartItemsSnapshot(),
     };
   }
 
@@ -61,8 +73,17 @@ export class PaymentComponent implements OnInit {
     return this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern(/^\(\d{2}\)\s\d{4,5}-\d{4}$/)]],
-      cpf: ['', [Validators.required, Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)]],
+      phone: [
+        '',
+        [Validators.required, Validators.pattern(/^\(\d{2}\)\s\d{4,5}-\d{4}$/)],
+      ],
+      cpf: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/),
+        ],
+      ],
       cep: ['', [Validators.required, Validators.pattern(/^\d{5}-\d{3}$/)]],
       street: ['', Validators.required],
       number: ['', Validators.required],
@@ -73,7 +94,7 @@ export class PaymentComponent implements OnInit {
       cardNumber: [''],
       cardName: [''],
       cardExpiry: [''],
-      cardCvv: ['']
+      cardCvv: [''],
     });
   }
 
@@ -94,7 +115,7 @@ export class PaymentComponent implements OnInit {
   }
 
   private markFormGroupTouched(): void {
-    Object.keys(this.checkoutForm.controls).forEach(key => {
+    Object.keys(this.checkoutForm.controls).forEach((key) => {
       this.checkoutForm.get(key)?.markAsTouched();
     });
   }
@@ -110,31 +131,34 @@ export class PaymentComponent implements OnInit {
   }
 
   private setCardValidators(): void {
-    this.checkoutForm.get('cardNumber')?.setValidators([
-      Validators.required,
-      Validators.pattern(/^\d{4}\s\d{4}\s\d{4}\s\d{4}$/)
-    ]);
+    this.checkoutForm
+      .get('cardNumber')
+      ?.setValidators([
+        Validators.required,
+        Validators.pattern(/^\d{4}\s\d{4}\s\d{4}\s\d{4}$/),
+      ]);
     this.checkoutForm.get('cardName')?.setValidators([Validators.required]);
-    this.checkoutForm.get('cardExpiry')?.setValidators([
-      Validators.required,
-      Validators.pattern(/^\d{2}\/\d{2}$/)
-    ]);
-    this.checkoutForm.get('cardCvv')?.setValidators([
-      Validators.required,
-      Validators.pattern(/^\d{3,4}$/)
-    ]);
+    this.checkoutForm
+      .get('cardExpiry')
+      ?.setValidators([
+        Validators.required,
+        Validators.pattern(/^\d{2}\/\d{2}$/),
+      ]);
+    this.checkoutForm
+      .get('cardCvv')
+      ?.setValidators([Validators.required, Validators.pattern(/^\d{3,4}$/)]);
     this.updateCardValidators();
   }
 
   private removeCardValidators(): void {
-    ['cardNumber', 'cardName', 'cardExpiry', 'cardCvv'].forEach(field => {
+    ['cardNumber', 'cardName', 'cardExpiry', 'cardCvv'].forEach((field) => {
       this.checkoutForm.get(field)?.clearValidators();
       this.checkoutForm.get(field)?.updateValueAndValidity();
     });
   }
 
   private updateCardValidators(): void {
-    ['cardNumber', 'cardName', 'cardExpiry', 'cardCvv'].forEach(field => {
+    ['cardNumber', 'cardName', 'cardExpiry', 'cardCvv'].forEach((field) => {
       this.checkoutForm.get(field)?.updateValueAndValidity();
     });
   }
@@ -224,7 +248,7 @@ export class PaymentComponent implements OnInit {
       credit: 'CREDIT',
       debit: 'DEBIT',
       pix: 'PIX',
-      boleto: 'BOLETO'
+      boleto: 'BOLETO',
     };
 
     const payload: CheckoutPayload = {
@@ -245,30 +269,37 @@ export class PaymentComponent implements OnInit {
       total: this.orderSummary.total,
       items: this.orderSummary.items,
       method: methodMap[this.selectedPaymentMethod],
-      installments: this.selectedPaymentMethod === 'credit' ? this.selectedInstallments : undefined,
+      installments:
+        this.selectedPaymentMethod === 'credit'
+          ? this.selectedInstallments
+          : undefined,
       cardToken: undefined,
-      cardLast4: this.selectedPaymentMethod !== 'pix' && this.selectedPaymentMethod !== 'boleto'
-        ? this.checkoutForm.value.cardNumber.slice(-4)
-        : undefined,
+      cardLast4:
+        this.selectedPaymentMethod !== 'pix' &&
+        this.selectedPaymentMethod !== 'boleto'
+          ? this.checkoutForm.value.cardNumber.slice(-4)
+          : undefined,
       cardNumber: this.checkoutForm.value.cardNumber,
       cardName: this.checkoutForm.value.cardName,
       cardExpiry: this.checkoutForm.value.cardExpiry,
-      cardCvv: this.checkoutForm.value.cardCvv
+      cardCvv: this.checkoutForm.value.cardCvv,
     };
 
     this.paymentService.checkout(payload).subscribe({
       next: (resp: PaymentResponse) => {
+        this.cartService.clearCartBack(this.userId).subscribe();
         this.isProcessing = false;
-
         switch (resp.status) {
           case 'APPROVED':
             this.router.navigate(['/pedido-confirmado'], {
-              queryParams: { orderId: resp.orderId }
+              queryParams: { orderId: resp.orderId },
             });
             break;
 
           case 'DECLINED':
-            alert('Pagamento recusado. Verifique os dados ou tente outro método.');
+            alert(
+              'Pagamento recusado. Verifique os dados ou tente outro método.'
+            );
             break;
 
           case 'PENDING':
@@ -276,7 +307,9 @@ export class PaymentComponent implements OnInit {
               this.showPixModal(resp.qrCodeBase64, resp.qrCode);
             } else if (payload.method === 'BOLETO' && resp.boletoUrl) {
               window.open(resp.boletoUrl, '_blank');
-              alert('Boleto gerado. Você pode efetuar o pagamento e aguardar a confirmação.');
+              alert(
+                'Boleto gerado. Você pode efetuar o pagamento e aguardar a confirmação.'
+              );
             } else {
               alert('Pagamento pendente. Aguarde confirmação.');
             }
@@ -290,7 +323,7 @@ export class PaymentComponent implements OnInit {
         this.isProcessing = false;
         alert('Erro ao processar pagamento. Tente novamente.');
         console.error(err);
-      }
+      },
     });
   }
 

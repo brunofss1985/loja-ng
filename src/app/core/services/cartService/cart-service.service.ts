@@ -161,6 +161,11 @@ export class CartService {
     this.appliedDiscount = 0;
   }
 
+  clearCartBack(userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${userId}`);
+  }
+  
+
   // 💰 CÁLCULOS
 
   getSubtotal(): number {

@@ -86,7 +86,7 @@
           <h3>Resumo rápido</h3>
           <p class="muted">Acompanhe seu progresso e benefícios.</p>
           <div class="card" *ngIf="lastOrder">
-            <h4>Último pedido</h4>
+            <h4>Último pedido <app-order-status [status]="lastOrder.status"></app-order-status></h4>
             <p class="muted">#{{ lastOrder.id }} • {{ lastOrder.items.length }} itens • R$ {{ lastOrder.total }}</p>
           </div>
         </div>
@@ -97,9 +97,10 @@
 
           <div *ngIf="orders.length > 0; else noOrders">
             <div class="card" *ngFor="let order of orders">
-              <h4>Pedido #{{ order.id }}</h4>
+              <h4>Pedido #{{ order.id }} <app-order-status [status]="order.status"></app-order-status></h4>
               <p class="muted">{{ order.items.length }} itens • R$ {{ order.total }}</p>
               <p class="muted">Feito em {{ order.createdAt | date:'short' }}</p>
+
             </div>
           </div>
 

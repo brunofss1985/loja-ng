@@ -38,7 +38,12 @@ export class PerfilComponent implements OnInit {
       points: 0,
       credits: 0
     });
+        this.user = this.authService.getUser();
 
+    if (this.user?.email) {
+      this.loadOrders(this.user.email);
+    }
+  
     this.userService.getCurrentUser().subscribe((user: User) => {
       if (user) {
         this.user = user;
@@ -49,6 +54,19 @@ export class PerfilComponent implements OnInit {
             this.lastOrder = order;
           });
         }
+      }
+    });
+  }
+private loadOrders(userId: string): void {
+    this.orderService.getLastOrder(userId).subscribe({
+      next: (order) => {
+        if (order) {
+          // Se o backend retornar apenas 1 pedido
+          this.orders = [order];
+        }
+      },
+      error: (err) => {
+        console.error('❌ Erro ao buscar pedidos:', err);
       }
     });
   }

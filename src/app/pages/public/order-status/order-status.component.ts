@@ -1,12 +1,9 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-order-status',
-  template: `
-    <span class="tag" [ngClass]="statusColor">
-      {{ statusLabel }}
-    </span>
-  `
+  templateUrl: './order-status.component.html',
+  styleUrls: ['./order-status.component.scss'],
 })
 export class OrderStatusComponent implements OnInit {
   @Input() status!: string;
@@ -15,11 +12,11 @@ export class OrderStatusComponent implements OnInit {
 
   ngOnInit() {
     const map: Record<string, { label: string; color: string }> = {
-      CREATED:   { label: 'Criado', color: 'text-neutral' },
-      PENDING:   { label: 'Aguardando pagamento', color: 'text-warning' },
-      PAID:      { label: 'Pagamento confirmado', color: 'text-success' },
-      CANCELED:  { label: 'Pedido cancelado', color: 'text-danger' },
-      SENT:      { label: 'Enviado', color: 'text-info' },
+      CREATED: { label: 'Criado', color: 'text-neutral' },
+      PENDING: { label: 'Aguardando pagamento', color: 'text-warning' },
+      PAID: { label: 'Pagamento confirmado', color: 'text-success' },
+      CANCELED: { label: 'Pedido cancelado', color: 'text-danger' },
+      SENT: { label: 'Enviado', color: 'text-info' },
       DELIVERED: { label: 'Entregue', color: 'text-success' },
     };
 

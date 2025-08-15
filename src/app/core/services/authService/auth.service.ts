@@ -6,15 +6,19 @@ import { Router } from '@angular/router';
 export class AuthService {
   private readonly TOKEN_KEY = 'jwtToken';
   private readonly SESSION_ID_KEY = 'sessionId';
-  private readonly API_URL = 'http://localhost:8080/api/auth';
+  private readonly API_URL = 'http://localhost:8080/auth';
 
   constructor(private http: HttpClient, private router: Router) {}
 
   login(email: string, password: string): void {
     this.http.post<any>(`${this.API_URL}/login`, { email, password }).subscribe({
       next: (response) => {
-        this.saveToken(response.jwtToken);
-        this.saveSessionId(response.sessionId);
+        this.saveToken(response.token);
+        this.saveSessionId(response.sessionId.toString());
+        
+        // 🔄 Dispara evento para sincronizar carrinho
+        window.dispatchEvent(new CustomEvent('auth:login'));
+        
         this.router.navigate(['/private/dashboard']);
       },
       error: (err) => {
@@ -24,8 +28,40 @@ export class AuthService {
     });
   }
 
+  register(name: string, email: string, password: string, userType: string): void {
+    this.http.post<any>(`${this.API_URL}/register`, { 
+      name, email, password, userType 
+    }).subscribe({
+      next: (response) => {
+        this.saveToken(response.token);
+        this.saveSessionId(response.sessionId.toString());
+        
+        // 🔄 Dispara evento para sincronizar carrinho
+        window.dispatchEvent(new CustomEvent('auth:login'));
+        
+        this.router.navigate(['/private/dashboard']);
+      },
+      error: (err) => {
+        console.error('Register failed:', err);
+        alert('Erro ao criar conta');
+      }
+    });
+  }
+
   logout(): void {
-    this.clearSession();
+    const token = this.getToken();
+    
+    if (token) {
+      // 🔄 Dispara evento para limpar carrinho
+      window.dispatchEvent(new CustomEvent('auth:logout'));
+      
+      // Chama endpoint de logout
+      this.http.post(`${this.API_URL}/logout`, {}).subscribe({
+        complete: () => this.clearSession()
+      });
+    } else {
+      this.clearSession();
+    }
   }
 
   saveToken(token: string): void {
@@ -48,10 +84,9 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return false;
 
-    const payload = token.split('.')[1];
     try {
-      const decoded = JSON.parse(atob(payload));
-      const exp = decoded.exp;
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp;
       const now = Math.floor(Date.now() / 1000);
       return exp && exp > now;
     } catch {
@@ -63,10 +98,9 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return null;
 
-    const payload = token.split('.')[1];
     try {
-      const decodedPayload = JSON.parse(atob(payload));
-      return decodedPayload.userType || null;
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.userType || null;
     } catch (e) {
       console.error('Erro ao decodificar token:', e);
       return null;
@@ -77,19 +111,14 @@ export class AuthService {
     const token = this.getToken();
     if (!token) return null;
 
-    const payload = token.split('.')[1];
     try {
-      const decodedPayload = JSON.parse(atob(payload));
+      const payload = JSON.parse(atob(token.split('.')[1]));
       return {
-        id: decodedPayload.id,
-        name: decodedPayload.name,
-        email: decodedPayload.email,
-        userType: decodedPayload.userType,
-        createdAt: decodedPayload.createdAt,
-        phone: decodedPayload.phone,
-        address: decodedPayload.address,
-        points: decodedPayload.points,
-        credits: decodedPayload.credits
+        id: payload.sub, // Email como ID único
+        name: payload.name,
+        email: payload.sub,
+        userType: payload.userType,
+        exp: payload.exp
       };
     } catch (e) {
       console.error('Erro ao extrair dados do usuário:', e);

@@ -94,7 +94,18 @@
         <!-- Painel Pedidos -->
         <div class="tab-panel" *ngIf="activeTab === 'pedidos'">
           <h3>Meus pedidos</h3>
-          <!-- Lista de pedidos futura -->
+
+          <div *ngIf="orders.length > 0; else noOrders">
+            <div class="card" *ngFor="let order of orders">
+              <h4>Pedido #{{ order.id }}</h4>
+              <p class="muted">{{ order.items.length }} itens • R$ {{ order.total }}</p>
+              <p class="muted">Feito em {{ order.createdAt | date:'short' }}</p>
+            </div>
+          </div>
+
+          <ng-template #noOrders>
+            <p class="muted">Você ainda não fez nenhum pedido.</p>
+          </ng-template>
         </div>
 
         <!-- Painel Endereços -->

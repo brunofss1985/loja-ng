@@ -13,7 +13,12 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   // ✅ Busca o último pedido do usuário
-  getLastOrder(userId: string): Observable<Order> {
-    return this.http.get<Order>(`${this.apiUrl}/user/${userId}`);
+  getLastOrder(email: string): Observable<Order> {
+    return this.http.get<Order>(`${this.apiUrl}/user/${email}`);
+  }
+
+  // ✅ Busca todos os pedidos do usuário
+  getAllOrders(email: string): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiUrl}/user/${email}/all`);
   }
 }

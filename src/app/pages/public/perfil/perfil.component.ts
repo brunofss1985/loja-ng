@@ -19,6 +19,7 @@ export class PerfilComponent implements OnInit {
   activeTab: string = 'visao-geral';
   user?: User;
   profileForm!: FormGroup;
+  orders: Order[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -52,8 +53,21 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  setTab(tabName: string): void {
+ setTab(tabName: string): void {
     this.activeTab = tabName;
+
+    // ✅ Carrega os pedidos ao abrir a aba "pedidos"
+    if (tabName === 'pedidos' && this.user?.email) {
+      this.orderService.getAllOrders(this.user.email).subscribe({
+        next: (orders: Order[]) => {
+          this.orders = orders;
+        },
+        error: (err) => {
+          console.error('Erro ao carregar pedidos:', err);
+          this.toast.error('Não foi possível carregar seus pedidos.');
+        }
+      });
+    }
   }
 
   initForm(user: User): void {

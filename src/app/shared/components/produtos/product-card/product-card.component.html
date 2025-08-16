@@ -5,8 +5,8 @@
       <a [routerLink]="['/produto', productId]">
         <img [src]="productImage" alt="{{ productNome }}" class="product-image" loading="lazy" />
       </a>
-      <p class="modelo">{{ productModelo }}</p>
-      <h6>{{ productPeso }}</h6>
+      <!-- <p class="modelo">{{ productModelo }}</p> -->
+      <h6>{{ productModelo }}</h6>
       <div class="footerCard">
         <h6 class="preco" style="color: black;">R$ {{ productPreco }}</h6>
         <a [routerLink]="['/produto', productId]">

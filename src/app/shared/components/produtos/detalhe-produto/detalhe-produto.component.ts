@@ -1,6 +1,7 @@
 // src/app/pages/public/detalhe-produto/detalhe-produto.component.ts
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { CartItem } from 'src/app/core/models/cart-item.model';
 import { CartService } from 'src/app/core/services/cartService/cart-service.service';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
@@ -17,7 +18,9 @@ export class DetalheProdutoComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private produtoService: ProdutosService,
-    private cartService: CartService
+    private cartService: CartService,
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -63,27 +66,34 @@ export class DetalheProdutoComponent implements OnInit {
   addToCart(): void {
     if (!this.produto) return;
 
-    // Defina o preço atual do produto. Aqui uso produto.preco (como no seu template).
     const price = Number(this.produto.preco) || 0;
 
-    // Use imagemSelecionada se existir; caso contrário, a principal; fallback emoji
     const icon =
       this.imagemSelecionada ||
       (this.produto.imagem && this.produto.imagemMimeType
         ? `data:${this.produto.imagemMimeType};base64,${this.produto.imagem}`
-        : 'https://via.placeholder.com/64'); // ou imagem padrão caso falte
+        : 'https://via.placeholder.com/64');
 
     const item: CartItem = {
       id: Number(this.produto.id),
       name: this.produto.nome,
       description: this.produto.descricaoCurta || this.produto.marca || '',
-      price: Number(this.produto.preco),
+      price,
       quantity: 1,
-      icon, // ← agora com imagem real do produto
+      icon,
     };
 
     this.cartService.addToCart(item);
-    // Feedback simples (troque por toast/snackbar)
-    alert('Produto adicionado ao carrinho!');
+
+    // ✅ Toast com ngx-toastr
+    this.toastr.success('Produto adicionado ao carrinho!', 'Sucesso', {
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+    });
+  }
+
+  addTocartAndNavigte(){
+    this.addToCart()
+    this.router.navigate(['/cart']);
   }
 }

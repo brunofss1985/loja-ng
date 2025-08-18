@@ -1,6 +1,9 @@
+// src/app/core/services/authService/auth.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Observable, tap, catchError, of } from 'rxjs'; // 🎯 Importe 'Observable', 'tap', 'catchError' e 'of'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -10,58 +13,43 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  login(email: string, password: string): void {
-    this.http.post<any>(`${this.API_URL}/login`, { email, password }).subscribe({
-      next: (response) => {
+  // 🎯 O 'login' agora retorna um Observable.
+  login(email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/login`, { email, password }).pipe(
+      tap(response => {
         this.saveToken(response.token);
         this.saveSessionId(response.sessionId.toString());
-        
-        // 🔄 Dispara evento para sincronizar carrinho
-        window.dispatchEvent(new CustomEvent('auth:login'));
-        
-        this.router.navigate(['/private/dashboard']);
-      },
-      error: (err) => {
-        console.error('Login failed:', err);
-        alert('Credenciais inválidas');
-      }
-    });
+        // ❌ A navegação não deve estar aqui. Ela deve ser feita no componente.
+        // Assim, garantimos que o loginService retorne o Observable completo.
+      }),
+      catchError(error => {
+        console.error('Login failed:', error);
+        return of(null); // Retorna um Observable com um valor nulo em caso de erro
+      })
+    );
   }
 
   register(name: string, email: string, password: string, userType: string): void {
-    this.http.post<any>(`${this.API_URL}/register`, { 
-      name, email, password, userType 
+    this.http.post<any>(`${this.API_URL}/register`, {
+      name,
+      email,
+      password,
+      userType,
     }).subscribe({
       next: (response) => {
         this.saveToken(response.token);
         this.saveSessionId(response.sessionId.toString());
-        
-        // 🔄 Dispara evento para sincronizar carrinho
-        window.dispatchEvent(new CustomEvent('auth:login'));
-        
         this.router.navigate(['/private/dashboard']);
       },
       error: (err) => {
         console.error('Register failed:', err);
         alert('Erro ao criar conta');
-      }
+      },
     });
   }
 
   logout(): void {
-    const token = this.getToken();
-    
-    if (token) {
-      // 🔄 Dispara evento para limpar carrinho
-      window.dispatchEvent(new CustomEvent('auth:logout'));
-      
-      // Chama endpoint de logout
-      this.http.post(`${this.API_URL}/logout`, {}).subscribe({
-        complete: () => this.clearSession()
-      });
-    } else {
-      this.clearSession();
-    }
+    this.clearSession();
   }
 
   saveToken(token: string): void {
@@ -83,7 +71,6 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = this.getToken();
     if (!token) return false;
-
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const exp = payload.exp;
@@ -97,7 +84,6 @@ export class AuthService {
   getUserType(): string | null {
     const token = this.getToken();
     if (!token) return null;
-
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       return payload.userType || null;
@@ -110,15 +96,14 @@ export class AuthService {
   getUser(): any | null {
     const token = this.getToken();
     if (!token) return null;
-
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       return {
-        id: payload.sub, // Email como ID único
+        id: payload.sub,
         name: payload.name,
         email: payload.sub,
         userType: payload.userType,
-        exp: payload.exp
+        exp: payload.exp,
       };
     } catch (e) {
       console.error('Erro ao extrair dados do usuário:', e);

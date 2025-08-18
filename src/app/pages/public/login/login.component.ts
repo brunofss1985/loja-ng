@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/authService/auth.service';
-import { LoginService } from 'src/app/core/services/loginService/login-service.service';
+import { CartService } from 'src/app/core/services/cartService/cart-service.service';
 
 @Component({
   selector: 'app-login',
@@ -20,28 +19,33 @@ export class LoginComponent {
   errorMessage: string = '';
   
   constructor(
-    private loginService: LoginService,
     private router: Router,
     private toastService: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cartService: CartService
   ) {}
   
   submit() {
     const { email, password } = this.loginForm.value;
     
-    const loginObservable = this.loginService.login(email, password);
-    
-    loginObservable.subscribe({
+    this.authService.login(email, password).subscribe({
       next: (res) => {
-        this.toastService.success("Login feito com sucesso");
-        const userType = this.authService.getUserType();
-        
-        if (userType === 'ADMIN') {
-          this.router.navigate(['/admin']);
-        } else if (userType === 'USER') {
-          this.router.navigate(['']);
+        if (res) {
+          this.toastService.success("Login feito com sucesso");
+          
+          this.cartService.promptAndSyncOnLogin();
+          
+          const userType = this.authService.getUserType();
+          
+          if (userType === 'ADMIN') {
+            this.router.navigate(['/admin']);
+          } else if (userType === 'USER') {
+            this.router.navigate(['']);
+          } else {
+            this.router.navigate(['/']);
+          }
         } else {
-          this.router.navigate(['/']);
+          this.toastService.error("Credenciais inválidas");
         }
       },
       error: (err) => {

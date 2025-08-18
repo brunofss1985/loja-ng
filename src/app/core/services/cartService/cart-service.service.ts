@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, switchMap, map } from 'rxjs/operators';
 import { CartItem } from '../../models/cart-item.model';
 import { AuthService } from '../authService/auth.service';
 
 const STORAGE_KEY = 'cart_items';
 
 @Injectable({ providedIn: 'root' })
-export class CartService {
+export class CartService implements OnDestroy {
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
   public cartItems$ = this.cartItemsSubject.asObservable();
-
+  
   private appliedDiscount = 0;
   private shippingCost = 0;
   private readonly API_URL = 'http://localhost:8080/api/cart';
@@ -21,107 +21,104 @@ export class CartService {
 
   constructor(private http: HttpClient, private authService: AuthService) {
     this.initializeCart();
-    this.setupAuthListeners();
   }
 
-  // 🎧 Escuta eventos de autenticação
-  private setupAuthListeners(): void {
-    window.addEventListener('auth:login', () => {
-      console.log('🎧 Evento auth:login recebido');
-      setTimeout(() => this.syncCartOnLogin(), 300);
-    });
+  ngOnDestroy(): void {} 
 
-    window.addEventListener('auth:logout', () => {
-      console.log('🎧 Evento auth:logout recebido');
-      this.clearCartOnLogout();
-    });
-  }
-
-  // 🚀 Inicialização do carrinho
   private initializeCart(): void {
-    if (this.authService.isAuthenticated()) {
-      const sessionId = this.authService.getSessionId();
-      const user = this.authService.getUser();
-
-      this.currentSessionId = sessionId;
-      this.currentUserId = user?.email || user?.id;
-
-      if (this.currentSessionId && this.currentUserId) {
-        console.log('🔑 Usuário logado:', {
-          sessionId: this.currentSessionId,
-          userId: this.currentUserId,
-        });
-
-        setTimeout(() => {
-          this.loadCartFromBackend().subscribe();
-        }, 100);
-      } else {
-        console.warn('⚠️ Dados de autenticação incompletos');
-        this.loadCartFromStorage();
-      }
-    } else {
+    if (!this.authService.isAuthenticated()) {
       console.log('👤 Usuário deslogado - usando localStorage');
       this.currentSessionId = null;
       this.currentUserId = null;
       this.loadCartFromStorage();
+    } else {
+      console.log('🔑 Usuário já logado. Carregando dados...');
+      const sessionId = this.authService.getSessionId();
+      const user = this.authService.getUser();
+      this.currentSessionId = sessionId;
+      this.currentUserId = user?.email || user?.id;
+      this.loadCartFromBackend().subscribe(
+        (items) => {
+          this.cartItemsSubject.next(items);
+          console.log('✅ Carrinho inicial carregado do backend. Itens:', items.length);
+        },
+        (error) => {
+          console.error('❌ Erro no carregamento inicial do carrinho:', error);
+          this.cartItemsSubject.next([]);
+        }
+      );
     }
   }
 
-  // 🔄 Sincronização no login
-  public syncCartOnLogin(): void {
-    const sessionId = this.authService.getSessionId();
-    const user = this.authService.getUser();
-    const userId = user?.email || user?.id;
+  public promptAndSyncOnLogin(): void {
+    const localItems = this.getLocalStorageItems();
+    console.log('🔍 Itens no localStorage antes do login:', localItems.length);
 
-    if (!sessionId || !userId) {
-      console.warn('⚠️ Login sem dados válidos:', { sessionId, userId });
+    if (localItems.length === 0) {
+      console.log('📦 Sem itens locais, carregando carrinho do backend diretamente.');
+      this.loadCartFromBackend().subscribe(items => this.cartItemsSubject.next(items));
       return;
     }
 
-    console.log('🔄 Sincronizando carrinho para:', userId);
-
-    if (
-      (this.currentSessionId && this.currentSessionId !== sessionId) ||
-      (this.currentUserId && this.currentUserId !== userId)
-    ) {
-      console.log('🔄 Usuário diferente, limpando carrinho');
-      this.cartItemsSubject.next([]);
+    const user = this.authService.getUser();
+    if (!user) {
+      console.log('⚠️ Usuário não autenticado após login.');
+      return;
     }
 
-    this.currentSessionId = sessionId;
-    this.currentUserId = userId;
+    const merge = confirm(
+      `Você está logado como ${user.email}. Deseja adicionar os ${localItems.length} itens do seu carrinho atual à sua conta?`
+    );
 
-    const localItems = this.getLocalStorageItems();
+    if (merge) {
+      // 🚀 AQUI ESTÁ A LÓGICA SIMPLIFICADA E DIRETA
+      console.log('✅ Usuário confirmou a mesclagem. Enviando itens locais para o backend...');
 
-    if (localItems.length > 0) {
-      console.log('📦 Mesclando', localItems.length, 'itens do localStorage');
-      this.loadCartFromBackend().subscribe(() => {
-        const backendItems = this.getCartItemsSnapshot();
-        const mergedItems = this.mergeCartItems(localItems, backendItems);
-        this.updateCartInBackend(mergedItems);
-        this.clearStorage();
-      });
+      const userId = user?.email || user?.id;
+      if (!userId) {
+        console.error('❌ Falha na sincronização: userId inválido.');
+        return;
+      }
+      
+      const cartData = {
+        userId: userId,
+        items: localItems,
+        discount: this.appliedDiscount,
+        shipping: this.shippingCost,
+      };
+
+      this.http.put<any>(`${this.API_URL}/${encodeURIComponent(userId)}`, cartData).pipe(
+        tap(() => {
+          console.log('✅ PUT Success - Carrinho salvo no backend.');
+          this.clearStorage();
+          this.loadCartFromBackend().subscribe(items => {
+            this.cartItemsSubject.next(items);
+            console.log('✅ Carrinho atualizado com sucesso do backend.');
+          });
+        }),
+        catchError(error => {
+          console.error('❌ PUT Error - Falha ao sincronizar o carrinho:', error);
+          return of(null);
+        })
+      ).subscribe();
+
     } else {
-      console.log('📦 Carregando carrinho do backend');
-      this.loadCartFromBackend().subscribe();
+      console.log('❌ Usuário cancelou a mesclagem. Limpando o carrinho local e carregando do backend.');
+      this.clearStorage();
+      this.loadCartFromBackend().subscribe(items => this.cartItemsSubject.next(items));
     }
   }
-
-  // 🔄 Limpeza no logout
+  
   public clearCartOnLogout(): void {
     console.log('🚪 LOGOUT: Limpando carrinho completamente');
-
     this.currentSessionId = null;
     this.currentUserId = null;
     this.cartItemsSubject.next([]);
     this.appliedDiscount = 0;
     this.shippingCost = 0;
     this.clearStorage();
-
     console.log('✅ Carrinho limpo - deve ficar vazio até próximo login');
   }
-
-  // 📦 OPERAÇÕES DO CARRINHO
 
   getCartItems(): Observable<CartItem[]> {
     return this.cartItems$;
@@ -134,13 +131,11 @@ export class CartService {
   addToCart(item: CartItem): void {
     const currentItems = [...this.cartItemsSubject.value];
     const existing = currentItems.find((ci) => ci.id === item.id);
-
     if (existing) {
       existing.quantity += item.quantity;
     } else {
       currentItems.push(item);
     }
-
     this.updateCart(currentItems);
   }
 
@@ -162,53 +157,33 @@ export class CartService {
     this.appliedDiscount = 0;
   }
 
-  /**
-   * ✅ ADICIONADO: Limpa o carrinho no backend de forma robusta.
-   * Se o carrinho não existir, a API retorna 404 e o método retorna `of(null)` sem erro.
-   */
   clearCartBack(userId: string): Observable<void> {
     if (!userId) {
       console.error('❌ Falha ao limpar carrinho no backend: userId inválido.');
       return of(undefined);
     }
-
     return this.http.delete<void>(`${this.API_URL}/${userId}`).pipe(
       tap(() => console.log(`✅ Carrinho do usuário ${userId} limpo no backend.`)),
       catchError((error) => {
         if (error.status === 404) {
-          console.warn(
-            `⚠️ Carrinho para o usuário ${userId} não encontrado no backend (OK).`
-          );
-          // Retornamos um Observable de sucesso para que a cadeia de chamadas continue
+          console.warn(`⚠️ Carrinho para o usuário ${userId} não encontrado no backend (OK).`);
           return of(undefined);
         } else {
-          console.error(
-            `❌ Erro ao limpar carrinho do usuário ${userId} no backend.`,
-            error
-          );
-          // Lançamos o erro para ser tratado no componente, se necessário
+          console.error(`❌ Erro ao limpar carrinho do usuário ${userId} no backend.`, error);
           return of(undefined);
         }
       })
     );
   }
 
-  /**
-   * ✅ ADICIONADO: Limpa o carrinho do localStorage para usuários deslogados.
-   */
   clearCartLocal(): void {
     this.clearStorage();
     this.cartItemsSubject.next([]);
     console.log('🗑️ Carrinho local limpo');
   }
 
-  // 💰 CÁLCULOS
-
   getSubtotal(): number {
-    return this.cartItemsSubject.value.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    return this.cartItemsSubject.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
 
   getShipping(): number {
@@ -223,15 +198,12 @@ export class CartService {
     return this.getSubtotal() + this.getShipping() - this.getDiscount();
   }
 
-  // 🎟️ CUPONS
-
   applyCoupon(code: string): boolean {
     const validCoupons: { [key: string]: number } = {
       PRIMEIRA10: 0.1,
       SUPLEMENTO15: 0.15,
       FRETE20: 0.2,
     };
-
     const upperCode = code.toUpperCase();
     if (validCoupons[upperCode]) {
       this.appliedDiscount = this.getSubtotal() * validCoupons[upperCode];
@@ -241,132 +213,58 @@ export class CartService {
     return false;
   }
 
-  // 🌐 BACKEND OPERATIONS
-
-  private loadCartFromBackend(): Observable<any> {
+  private loadCartFromBackend(): Observable<CartItem[]> {
     if (!this.currentUserId) {
       console.warn('⚠️ Sem userId para carregar carrinho');
-      this.cartItemsSubject.next([]);
-      return of({ items: [], discount: 0, shipping: 0 });
+      return of([]);
     }
-
-    console.log('🔄 Buscando carrinho para:', this.currentUserId);
-
-    return this.http
-      .get<any>(`${this.API_URL}/${encodeURIComponent(this.currentUserId)}`)
-      .pipe(
-        tap((response) => {
-          console.log('✅ Resposta do backend:', response);
-
-          let items: CartItem[] = [];
-
-          if (response && response.items && Array.isArray(response.items)) {
-            items = response.items;
-            console.log('📦 Itens encontrados:', items);
-          } else {
-            console.log('📦 Carrinho vazio (sem itens)');
-          }
-
-          this.cartItemsSubject.next(items);
-          this.appliedDiscount = response?.discount || 0;
-          this.shippingCost = response?.shipping || 0;
-
-          console.log('✅ Carrinho sincronizado:', {
-            items: items.length,
-            discount: this.appliedDiscount,
-            shipping: this.shippingCost,
-          });
-        }),
-        catchError((error) => {
-          console.error('❌ ERRO no GET carrinho:', {
-            status: error.status,
-            message: error.error?.message || error.message,
-            userId: this.currentUserId,
-          });
-
-          this.cartItemsSubject.next([]);
-          return of({ items: [], discount: 0, shipping: 0 });
-        })
-      );
+    return this.http.get<any>(`${this.API_URL}/${encodeURIComponent(this.currentUserId)}`).pipe(
+      tap((response) => {
+        this.appliedDiscount = response?.discount || 0;
+        this.shippingCost = response?.shipping || 0;
+      }),
+      map((response) => response?.items || []),
+      tap((items) => console.log('✅ Itens carregados do backend:', items.length)),
+      catchError((error) => {
+        console.error('❌ ERRO no GET carrinho:', { status: error.status, message: error.message });
+        return of([]);
+      })
+    );
   }
 
-  private updateCartInBackend(items: CartItem[]): void {
-    if (!this.backendEnabled) {
-      console.log('⚠️ Backend desabilitado - não salvando');
-      return;
+  private updateCartInBackend(items: CartItem[]): Observable<any> {
+    if (!this.backendEnabled || !this.currentUserId) {
+      console.warn('⚠️ Backend desabilitado ou sem userId - não salvando');
+      return of(null);
     }
-
-    if (!this.currentUserId) {
-      console.warn('⚠️ Sem userId para salvar carrinho');
-      return;
-    }
-
+    
     const cartData = {
       userId: this.currentUserId,
       items: items,
       discount: this.appliedDiscount,
       shipping: this.shippingCost,
     };
-
+    
     console.log('🔄 PUT Request Details:', {
       url: `${this.API_URL}/${encodeURIComponent(this.currentUserId)}`,
       method: 'PUT',
-      userId: this.currentUserId,
       itemCount: items.length,
-      items: items,
-      discount: this.appliedDiscount,
-      shipping: this.shippingCost,
-      fullPayload: cartData,
     });
-
-    this.http
-      .put<any>(
-        `${this.API_URL}/${encodeURIComponent(this.currentUserId)}`,
-        cartData
-      )
-      .pipe(
-        tap((response) => {
-          console.log('✅ PUT Success - Carrinho salvo:', response);
-          this.cartItemsSubject.next(items);
-        }),
-        catchError((error) => {
-          console.error('❌ PUT Error Details:', {
-            status: error.status,
-            statusText: error.statusText,
-            message: error.message,
-            errorBody: error.error,
-            url: error.url,
-            headers: error.headers,
-            sentPayload: cartData,
-            userId: this.currentUserId,
-          });
-
-          // 🔍 Log específico da mensagem de erro do backend
-          if (error.error && error.error.message) {
-            console.error('🚨 Backend Error Message:', error.error.message);
-          }
-
-          if (error.error && error.error.trace) {
-            console.error('🚨 Backend Stack Trace:', error.error.trace);
-          }
-
-          // 🚨 Se der erro no PUT, mantém no estado local
-          console.log('⚠️ PUT falhou - mantendo carrinho apenas localmente');
-          this.cartItemsSubject.next(items);
-
-          return of(null);
-        })
-      )
-      .subscribe();
+    
+    return this.http.put<any>(`${this.API_URL}/${encodeURIComponent(this.currentUserId)}`, cartData).pipe(
+      tap(() => console.log('✅ PUT Success - Carrinho salvo no backend.')),
+      catchError((error) => {
+        console.error('❌ PUT Error:', error);
+        return of(null);
+      })
+    );
   }
 
   private syncCartWithBackend(): void {
     if (this.currentUserId && this.currentSessionId) {
-      this.updateCartInBackend(this.getCartItemsSnapshot());
+      this.updateCartInBackend(this.getCartItemsSnapshot()).subscribe();
     }
   }
-
-  // 🧠 STORAGE LOCAL
 
   private loadCartFromStorage(): void {
     try {
@@ -402,26 +300,21 @@ export class CartService {
     console.log('🗑️ localStorage limpo');
   }
 
-  // 🔄 HELPERS
-
   private updateCart(items: CartItem[]): void {
-    this.cartItemsSubject.next(items); // Atualiza o estado local primeiro
-
     if (this.currentUserId && this.currentSessionId && this.backendEnabled) {
       console.log('👤 Usuário logado - salvando no backend');
-      this.updateCartInBackend(items);
+      this.updateCartInBackend(items).subscribe(() => {
+        this.cartItemsSubject.next(items);
+      });
     } else {
       console.log('👤 Salvando no localStorage');
+      this.cartItemsSubject.next(items);
       this.saveToStorage(items);
     }
   }
 
-  private mergeCartItems(
-    localItems: CartItem[],
-    backendItems: CartItem[]
-  ): CartItem[] {
+  private mergeCartItems(localItems: CartItem[], backendItems: CartItem[]): CartItem[] {
     const merged = [...backendItems];
-
     localItems.forEach((localItem) => {
       const existing = merged.find((item) => item.id === localItem.id);
       if (existing) {
@@ -430,13 +323,11 @@ export class CartService {
         merged.push(localItem);
       }
     });
-
     console.log('🔄 Mesclagem concluída:', {
       localStorage: localItems.length,
       backend: backendItems.length,
       final: merged.length,
     });
-
     return merged;
   }
 }

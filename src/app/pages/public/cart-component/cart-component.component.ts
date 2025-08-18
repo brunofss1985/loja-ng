@@ -1,4 +1,3 @@
-// src/app/pages/public/cart-component/cart-component.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartItem } from 'src/app/core/models/cart-item.model';
@@ -16,6 +15,10 @@ export class CartComponent implements OnInit {
   constructor(private router: Router, private cartService: CartService) {}
 
   ngOnInit(): void {
+    // 🎯 Remova a chamada para this.cartService.initializeCart();
+    // A lógica de inicialização e sincronização agora é totalmente tratada
+    // pelo CartService, que se inscreve no AuthService.
+
     this.cartService.getCartItems().subscribe((items) => {
       this.cartItems = items;
     });

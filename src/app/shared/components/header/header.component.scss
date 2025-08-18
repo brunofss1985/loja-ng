@@ -126,6 +126,22 @@ ul {
   gap: 10px;
 }
 
+.cart-link {
+  position: relative; /* Essencial para o posicionamento do badge */
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;      
+  right: -5px;    
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%; 
+  padding: 3px 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
 .user-ul a {
   display: inline-flex;
   align-items: center;

@@ -8,7 +8,10 @@ import {
   HostListener,
 } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/services/authService/auth.service';
+import { CartService } from 'src/app/core/services/cartService/cart-service.service';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +19,14 @@ import { AuthService } from 'src/app/core/services/authService/auth.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
+  // Variável para exibir o tipo de usuário logado
   userType = this.authService.getUserType();
+
+  // Observable que guarda a contagem de itens no carrinho
+  // Agora inicializado na própria declaração para resolver o erro de compilação
+  public cartItemCount$: Observable<number> = this.cartService.cartItems$.pipe(
+    map(items => items.length)
+  );
 
   // Indica se o topo está “afinado” após rolagem
   isScrolled = false;
@@ -33,10 +43,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     private renderer: Renderer2,
     private host: ElementRef,
     private authService: AuthService,
-    private route: Router
+    private route: Router,
+    private cartService: CartService // Adicionando o CartService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // A lógica de inicialização do cartItemCount$ foi movida para a declaração
+    // da propriedade, então não precisamos mais dela aqui.
+  }
 
   ngAfterViewInit(): void {
     const root = this.host.nativeElement;

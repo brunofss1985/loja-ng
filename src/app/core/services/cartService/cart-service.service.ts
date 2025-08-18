@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, forkJoin } from 'rxjs'; // Adicionando forkJoin
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap, switchMap, map } from 'rxjs/operators';
 import { CartItem } from '../../models/cart-item.model';
@@ -11,7 +11,7 @@ const STORAGE_KEY = 'cart_items';
 export class CartService implements OnDestroy {
   private cartItemsSubject = new BehaviorSubject<CartItem[]>([]);
   public cartItems$ = this.cartItemsSubject.asObservable();
-  
+
   private appliedDiscount = 0;
   private shippingCost = 0;
   private readonly API_URL = 'http://localhost:8080/api/cart';
@@ -23,7 +23,7 @@ export class CartService implements OnDestroy {
     this.initializeCart();
   }
 
-  ngOnDestroy(): void {} 
+  ngOnDestroy(): void {}
 
   private initializeCart(): void {
     if (!this.authService.isAuthenticated()) {
@@ -40,7 +40,10 @@ export class CartService implements OnDestroy {
       this.loadCartFromBackend().subscribe(
         (items) => {
           this.cartItemsSubject.next(items);
-          console.log('✅ Carrinho inicial carregado do backend. Itens:', items.length);
+          console.log(
+            '✅ Carrinho inicial carregado do backend. Itens:',
+            items.length
+          );
         },
         (error) => {
           console.error('❌ Erro no carregamento inicial do carrinho:', error);
@@ -55,15 +58,20 @@ export class CartService implements OnDestroy {
     console.log('🔍 Itens no localStorage antes do login:', localItems.length);
 
     if (localItems.length === 0) {
-      console.log('📦 Sem itens locais, carregando carrinho do backend diretamente.');
-      this.loadCartFromBackend().subscribe(items => this.cartItemsSubject.next(items));
+      console.log(
+        '📦 Sem itens locais, carregando carrinho do backend diretamente.'
+      );
+      this.loadCartFromBackend().subscribe((items) =>
+        this.cartItemsSubject.next(items)
+      );
       return;
     }
 
-    // 🚀 ATUALIZAÇÃO CRÍTICA: GARANTE QUE O USERID ESTEJA DISPONÍVEL
     const user = this.authService.getUser();
     if (!user || !user.id) {
-      console.log('⚠️ Usuário não autenticado ou ID de usuário não disponível. Sincronização cancelada.');
+      console.log(
+        '⚠️ Usuário não autenticado ou ID de usuário não disponível. Sincronização cancelada.'
+      );
       return;
     }
     this.currentUserId = user.id;
@@ -73,43 +81,52 @@ export class CartService implements OnDestroy {
     );
 
     if (merge) {
-      console.log('✅ Usuário confirmou a mesclagem. Buscando dados do backend para mesclar...');
+      console.log(
+        '✅ Usuário confirmou a mesclagem. Buscando dados do backend para mesclar...'
+      );
       const userId = user?.email || user?.id;
-      
-      this.loadCartFromBackend().pipe(
-        // 1. Pega os itens do backend
-        map(backendItems => {
-          // 2. Mescla os itens locais com os do backend
-          const mergedItems = this.mergeCartItems(localItems, backendItems);
-          console.log('🔄 Mesclagem concluída:', {
-            localStorage: localItems.length,
-            backend: backendItems.length,
-            final: mergedItems.length
-          });
-          return mergedItems;
-        }),
-        // 3. Envia os itens mesclados para o backend (PUT)
-        switchMap(mergedItems => this.updateCartInBackend(mergedItems).pipe(
-          // 4. Retorna a lista mesclada para o subscribe
-          map(() => mergedItems)
-        ))
-      ).subscribe({
-        next: (finalItems) => {
-          // 5. Se tudo deu certo, atualiza o BehaviorSubject com a lista final.
-          this.cartItemsSubject.next(finalItems);
-          this.clearStorage();
-          console.log('✅ Sincronização e mesclagem concluídas. Carrinho agora tem', finalItems.length, 'itens.');
-        },
-        error: (error) => {
-          console.error('❌ Falha na mesclagem. Mantendo carrinho local.', error);
-          this.cartItemsSubject.next(localItems);
-        }
-      });
 
+      // 🚀 FLUXO CORRIGIDO COM forkJoin
+      forkJoin({
+        backendItems: this.loadCartFromBackend(),
+      })
+        .pipe(
+          map(({ backendItems }) => {
+            const mergedItems = this.mergeCartItems(localItems, backendItems);
+            console.log('🔄 Mesclagem concluída:', {
+              localStorage: localItems.length,
+              backend: backendItems.length,
+              final: mergedItems.length,
+            });
+            return mergedItems;
+          }),
+          switchMap((mergedItems) =>
+            this.updateCartInBackend(mergedItems).pipe(map(() => mergedItems))
+          )
+        )
+        .subscribe({
+          next: (finalItems) => {
+            this.cartItemsSubject.next(finalItems);
+            this.clearStorage();
+            console.log(
+              '✅ Sincronização e mesclagem concluídas. Carrinho agora tem',
+              finalItems.length,
+              'itens.'
+            );
+          },
+          error: (error) => {
+            console.error('❌ Falha na mesclagem. Mantendo carrinho local.', error);
+            this.cartItemsSubject.next(localItems);
+          },
+        });
     } else {
-      console.log('❌ Usuário cancelou a mesclagem. Limpando o carrinho local e carregando do backend.');
+      console.log(
+        '❌ Usuário cancelou a mesclagem. Limpando o carrinho local e carregando do backend.'
+      );
       this.clearStorage();
-      this.loadCartFromBackend().subscribe(items => this.cartItemsSubject.next(items));
+      this.loadCartFromBackend().subscribe((items) =>
+        this.cartItemsSubject.next(items)
+      );
     }
   }
 
@@ -167,13 +184,20 @@ export class CartService implements OnDestroy {
       return of(undefined);
     }
     return this.http.delete<void>(`${this.API_URL}/${userId}`).pipe(
-      tap(() => console.log(`✅ Carrinho do usuário ${userId} limpo no backend.`)),
+      tap(() =>
+        console.log(`✅ Carrinho do usuário ${userId} limpo no backend.`)
+      ),
       catchError((error) => {
         if (error.status === 404) {
-          console.warn(`⚠️ Carrinho para o usuário ${userId} não encontrado no backend (OK).`);
+          console.warn(
+            `⚠️ Carrinho para o usuário ${userId} não encontrado no backend (OK).`
+          );
           return of(undefined);
         } else {
-          console.error(`❌ Erro ao limpar carrinho do usuário ${userId} no backend.`, error);
+          console.error(
+            `❌ Erro ao limpar carrinho do usuário ${userId} no backend.`,
+            error
+          );
           return of(undefined);
         }
       })
@@ -187,7 +211,10 @@ export class CartService implements OnDestroy {
   }
 
   getSubtotal(): number {
-    return this.cartItemsSubject.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    return this.cartItemsSubject.value.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
   }
 
   getShipping(): number {
@@ -222,18 +249,25 @@ export class CartService implements OnDestroy {
       console.warn('⚠️ Sem userId para carregar carrinho');
       return of([]);
     }
-    return this.http.get<any>(`${this.API_URL}/${encodeURIComponent(this.currentUserId)}`).pipe(
-      tap((response) => {
-        this.appliedDiscount = response?.discount || 0;
-        this.shippingCost = response?.shipping || 0;
-      }),
-      map((response) => response?.items || []),
-      tap((items) => console.log('✅ Itens carregados do backend:', items.length)),
-      catchError((error) => {
-        console.error('❌ ERRO no GET carrinho:', { status: error.status, message: error.message });
-        return of([]);
-      })
-    );
+    return this.http
+      .get<any>(`${this.API_URL}/${encodeURIComponent(this.currentUserId)}`)
+      .pipe(
+        tap((response) => {
+          this.appliedDiscount = response?.discount || 0;
+          this.shippingCost = response?.shipping || 0;
+        }),
+        map((response) => response?.items || []),
+        tap((items) =>
+          console.log('✅ Itens carregados do backend:', items.length)
+        ),
+        catchError((error) => {
+          console.error('❌ ERRO no GET carrinho:', {
+            status: error.status,
+            message: error.message,
+          });
+          return of([]);
+        })
+      );
   }
 
   private updateCartInBackend(items: CartItem[]): Observable<any> {
@@ -241,27 +275,32 @@ export class CartService implements OnDestroy {
       console.warn('⚠️ Backend desabilitado ou sem userId - não salvando');
       return of(null);
     }
-    
+
     const cartData = {
       userId: this.currentUserId,
       items: items,
       discount: this.appliedDiscount,
       shipping: this.shippingCost,
     };
-    
+
     console.log('🔄 PUT Request Details:', {
       url: `${this.API_URL}/${encodeURIComponent(this.currentUserId)}`,
       method: 'PUT',
       itemCount: items.length,
     });
-    
-    return this.http.put<any>(`${this.API_URL}/${encodeURIComponent(this.currentUserId)}`, cartData).pipe(
-      tap(() => console.log('✅ PUT Success - Carrinho salvo no backend.')),
-      catchError((error) => {
-        console.error('❌ PUT Error:', error);
-        return of(null);
-      })
-    );
+
+    return this.http
+      .put<any>(
+        `${this.API_URL}/${encodeURIComponent(this.currentUserId)}`,
+        cartData
+      )
+      .pipe(
+        tap(() => console.log('✅ PUT Success - Carrinho salvo no backend.')),
+        catchError((error) => {
+          console.error('❌ PUT Error:', error);
+          return of(null);
+        })
+      );
   }
 
   private syncCartWithBackend(): void {
@@ -316,8 +355,11 @@ export class CartService implements OnDestroy {
       this.saveToStorage(items);
     }
   }
-  
-  private mergeCartItems(localItems: CartItem[], backendItems: CartItem[]): CartItem[] {
+
+  private mergeCartItems(
+    localItems: CartItem[],
+    backendItems: CartItem[]
+  ): CartItem[] {
     const merged = [...backendItems];
     localItems.forEach((localItem) => {
       const existing = merged.find((item) => item.id === localItem.id);

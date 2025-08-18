@@ -42,16 +42,16 @@ export class CartService {
     if (this.authService.isAuthenticated()) {
       const sessionId = this.authService.getSessionId();
       const user = this.authService.getUser();
-      
+
       this.currentSessionId = sessionId;
       this.currentUserId = user?.email || user?.id;
-      
+
       if (this.currentSessionId && this.currentUserId) {
         console.log('🔑 Usuário logado:', {
           sessionId: this.currentSessionId,
-          userId: this.currentUserId
+          userId: this.currentUserId,
         });
-        
+
         setTimeout(() => {
           this.loadCartFromBackend().subscribe();
         }, 100);
@@ -72,7 +72,7 @@ export class CartService {
     const sessionId = this.authService.getSessionId();
     const user = this.authService.getUser();
     const userId = user?.email || user?.id;
-    
+
     if (!sessionId || !userId) {
       console.warn('⚠️ Login sem dados válidos:', { sessionId, userId });
       return;
@@ -80,17 +80,19 @@ export class CartService {
 
     console.log('🔄 Sincronizando carrinho para:', userId);
 
-    if ((this.currentSessionId && this.currentSessionId !== sessionId) || 
-        (this.currentUserId && this.currentUserId !== userId)) {
+    if (
+      (this.currentSessionId && this.currentSessionId !== sessionId) ||
+      (this.currentUserId && this.currentUserId !== userId)
+    ) {
       console.log('🔄 Usuário diferente, limpando carrinho');
       this.cartItemsSubject.next([]);
     }
-    
+
     this.currentSessionId = sessionId;
     this.currentUserId = userId;
-    
+
     const localItems = this.getLocalStorageItems();
-    
+
     if (localItems.length > 0) {
       console.log('📦 Mesclando', localItems.length, 'itens do localStorage');
       this.loadCartFromBackend().subscribe(() => {
@@ -108,14 +110,14 @@ export class CartService {
   // 🔄 Limpeza no logout
   public clearCartOnLogout(): void {
     console.log('🚪 LOGOUT: Limpando carrinho completamente');
-    
+
     this.currentSessionId = null;
     this.currentUserId = null;
     this.cartItemsSubject.next([]);
     this.appliedDiscount = 0;
     this.shippingCost = 0;
     this.clearStorage();
-    
+
     console.log('✅ Carrinho limpo - deve ficar vazio até próximo login');
   }
 
@@ -131,7 +133,7 @@ export class CartService {
 
   addToCart(item: CartItem): void {
     const currentItems = [...this.cartItemsSubject.value];
-    const existing = currentItems.find(ci => ci.id === item.id);
+    const existing = currentItems.find((ci) => ci.id === item.id);
 
     if (existing) {
       existing.quantity += item.quantity;
@@ -143,14 +145,13 @@ export class CartService {
   }
 
   removeFromCart(itemId: number): void {
-    const updated = this.cartItemsSubject.value.filter(i => i.id !== itemId);
+    const updated = this.cartItemsSubject.value.filter((i) => i.id !== itemId);
     this.updateCart(updated);
-    if (updated.length === 0) this.appliedDiscount = 0;
   }
 
   updateQuantity(itemId: number, quantity: number): void {
     if (quantity < 1) return;
-    const updated = this.cartItemsSubject.value.map(i =>
+    const updated = this.cartItemsSubject.value.map((i) =>
       i.id === itemId ? { ...i, quantity } : i
     );
     this.updateCart(updated);
@@ -161,10 +162,45 @@ export class CartService {
     this.appliedDiscount = 0;
   }
 
+  /**
+   * ✅ ADICIONADO: Limpa o carrinho no backend de forma robusta.
+   * Se o carrinho não existir, a API retorna 404 e o método retorna `of(null)` sem erro.
+   */
   clearCartBack(userId: string): Observable<void> {
-    return this.http.delete<void>(`${this.API_URL}/${userId}`);
+    if (!userId) {
+      console.error('❌ Falha ao limpar carrinho no backend: userId inválido.');
+      return of(undefined);
+    }
+
+    return this.http.delete<void>(`${this.API_URL}/${userId}`).pipe(
+      tap(() => console.log(`✅ Carrinho do usuário ${userId} limpo no backend.`)),
+      catchError((error) => {
+        if (error.status === 404) {
+          console.warn(
+            `⚠️ Carrinho para o usuário ${userId} não encontrado no backend (OK).`
+          );
+          // Retornamos um Observable de sucesso para que a cadeia de chamadas continue
+          return of(undefined);
+        } else {
+          console.error(
+            `❌ Erro ao limpar carrinho do usuário ${userId} no backend.`,
+            error
+          );
+          // Lançamos o erro para ser tratado no componente, se necessário
+          return of(undefined);
+        }
+      })
+    );
   }
-  
+
+  /**
+   * ✅ ADICIONADO: Limpa o carrinho do localStorage para usuários deslogados.
+   */
+  clearCartLocal(): void {
+    this.clearStorage();
+    this.cartItemsSubject.next([]);
+    console.log('🗑️ Carrinho local limpo');
+  }
 
   // 💰 CÁLCULOS
 
@@ -191,9 +227,9 @@ export class CartService {
 
   applyCoupon(code: string): boolean {
     const validCoupons: { [key: string]: number } = {
-      'PRIMEIRA10': 0.10,
-      'SUPLEMENTO15': 0.15,
-      'FRETE20': 0.20
+      PRIMEIRA10: 0.1,
+      SUPLEMENTO15: 0.15,
+      FRETE20: 0.2,
     };
 
     const upperCode = code.toUpperCase();
@@ -215,41 +251,43 @@ export class CartService {
     }
 
     console.log('🔄 Buscando carrinho para:', this.currentUserId);
-    
-    return this.http.get<any>(`${this.API_URL}/${encodeURIComponent(this.currentUserId)}`).pipe(
-      tap(response => {
-        console.log('✅ Resposta do backend:', response);
-        
-        let items: CartItem[] = [];
-        
-        if (response && response.items && Array.isArray(response.items)) {
-          items = response.items;
-          console.log('📦 Itens encontrados:', items);
-        } else {
-          console.log('📦 Carrinho vazio (sem itens)');
-        }
-        
-        this.cartItemsSubject.next(items);
-        this.appliedDiscount = response?.discount || 0;
-        this.shippingCost = response?.shipping || 0;
-        
-        console.log('✅ Carrinho sincronizado:', {
-          items: items.length,
-          discount: this.appliedDiscount,
-          shipping: this.shippingCost
-        });
-      }),
-      catchError(error => {
-        console.error('❌ ERRO no GET carrinho:', {
-          status: error.status,
-          message: error.error?.message || error.message,
-          userId: this.currentUserId
-        });
-        
-        this.cartItemsSubject.next([]);
-        return of({ items: [], discount: 0, shipping: 0 });
-      })
-    );
+
+    return this.http
+      .get<any>(`${this.API_URL}/${encodeURIComponent(this.currentUserId)}`)
+      .pipe(
+        tap((response) => {
+          console.log('✅ Resposta do backend:', response);
+
+          let items: CartItem[] = [];
+
+          if (response && response.items && Array.isArray(response.items)) {
+            items = response.items;
+            console.log('📦 Itens encontrados:', items);
+          } else {
+            console.log('📦 Carrinho vazio (sem itens)');
+          }
+
+          this.cartItemsSubject.next(items);
+          this.appliedDiscount = response?.discount || 0;
+          this.shippingCost = response?.shipping || 0;
+
+          console.log('✅ Carrinho sincronizado:', {
+            items: items.length,
+            discount: this.appliedDiscount,
+            shipping: this.shippingCost,
+          });
+        }),
+        catchError((error) => {
+          console.error('❌ ERRO no GET carrinho:', {
+            status: error.status,
+            message: error.error?.message || error.message,
+            userId: this.currentUserId,
+          });
+
+          this.cartItemsSubject.next([]);
+          return of({ items: [], discount: 0, shipping: 0 });
+        })
+      );
   }
 
   private updateCartInBackend(items: CartItem[]): void {
@@ -267,7 +305,7 @@ export class CartService {
       userId: this.currentUserId,
       items: items,
       discount: this.appliedDiscount,
-      shipping: this.shippingCost
+      shipping: this.shippingCost,
     };
 
     console.log('🔄 PUT Request Details:', {
@@ -278,45 +316,48 @@ export class CartService {
       items: items,
       discount: this.appliedDiscount,
       shipping: this.shippingCost,
-      fullPayload: cartData
+      fullPayload: cartData,
     });
 
-    this.http.put<any>(`${this.API_URL}/${encodeURIComponent(this.currentUserId)}`, cartData).pipe(
-      tap((response) => {
-        console.log('✅ PUT Success - Carrinho salvo:', response);
-        this.cartItemsSubject.next(items);
-      }),
-      catchError(error => {
-        console.error('❌ PUT Error Details:', {
-          status: error.status,
-          statusText: error.statusText,
-          message: error.message,
-          errorBody: error.error,
-          url: error.url,
-          headers: error.headers,
-          sentPayload: cartData,
-          userId: this.currentUserId
-        });
-        
-        // 🔍 Log específico da mensagem de erro do backend
-        if (error.error && error.error.message) {
-          console.error('🚨 Backend Error Message:', error.error.message);
-        }
-        
-        if (error.error && error.error.trace) {
-          console.error('🚨 Backend Stack Trace:', error.error.trace);
-        }
-        
-        // Log do erro completo para debug
-        console.error('❌ Full Error Object:', error);
-        
-        // 🚨 Se der erro no PUT, mantém no estado local
-        console.log('⚠️ PUT falhou - mantendo carrinho apenas localmente');
-        this.cartItemsSubject.next(items);
-        
-        return of(null);
-      })
-    ).subscribe();
+    this.http
+      .put<any>(
+        `${this.API_URL}/${encodeURIComponent(this.currentUserId)}`,
+        cartData
+      )
+      .pipe(
+        tap((response) => {
+          console.log('✅ PUT Success - Carrinho salvo:', response);
+          this.cartItemsSubject.next(items);
+        }),
+        catchError((error) => {
+          console.error('❌ PUT Error Details:', {
+            status: error.status,
+            statusText: error.statusText,
+            message: error.message,
+            errorBody: error.error,
+            url: error.url,
+            headers: error.headers,
+            sentPayload: cartData,
+            userId: this.currentUserId,
+          });
+
+          // 🔍 Log específico da mensagem de erro do backend
+          if (error.error && error.error.message) {
+            console.error('🚨 Backend Error Message:', error.error.message);
+          }
+
+          if (error.error && error.error.trace) {
+            console.error('🚨 Backend Stack Trace:', error.error.trace);
+          }
+
+          // 🚨 Se der erro no PUT, mantém no estado local
+          console.log('⚠️ PUT falhou - mantendo carrinho apenas localmente');
+          this.cartItemsSubject.next(items);
+
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   private syncCartWithBackend(): void {
@@ -364,34 +405,38 @@ export class CartService {
   // 🔄 HELPERS
 
   private updateCart(items: CartItem[]): void {
+    this.cartItemsSubject.next(items); // Atualiza o estado local primeiro
+
     if (this.currentUserId && this.currentSessionId && this.backendEnabled) {
       console.log('👤 Usuário logado - salvando no backend');
       this.updateCartInBackend(items);
     } else {
       console.log('👤 Salvando no localStorage');
-      this.cartItemsSubject.next(items);
       this.saveToStorage(items);
     }
   }
 
-  private mergeCartItems(localItems: CartItem[], backendItems: CartItem[]): CartItem[] {
+  private mergeCartItems(
+    localItems: CartItem[],
+    backendItems: CartItem[]
+  ): CartItem[] {
     const merged = [...backendItems];
-    
-    localItems.forEach(localItem => {
-      const existing = merged.find(item => item.id === localItem.id);
+
+    localItems.forEach((localItem) => {
+      const existing = merged.find((item) => item.id === localItem.id);
       if (existing) {
         existing.quantity += localItem.quantity;
       } else {
         merged.push(localItem);
       }
     });
-    
+
     console.log('🔄 Mesclagem concluída:', {
       localStorage: localItems.length,
       backend: backendItems.length,
-      final: merged.length
+      final: merged.length,
     });
-    
+
     return merged;
   }
 }

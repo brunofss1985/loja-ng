@@ -11,36 +11,30 @@ import { CartService } from 'src/app/core/services/cartService/cart-service.serv
 })
 export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];
-
   couponCode: string = '';
-  appliedDiscount: number = 0;
-  shippingCost: number = 0;
-
-  private validCoupons: { [key: string]: number } = {
-    PRIMEIRA10: 0.1,
-    SUPLEMENTO15: 15.0,
-    FRETE20: 0.2,
-  };
 
   constructor(private router: Router, private cartService: CartService) {}
 
   ngOnInit(): void {
     this.cartService.getCartItems().subscribe((items) => {
       this.cartItems = items;
-      // se remover o último item, zera desconto
-      if (this.cartItems.length === 0) this.appliedDiscount = 0;
     });
   }
 
   get subtotal(): number {
-    return this.cartItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    return this.cartService.getSubtotal();
+  }
+
+  get shippingCost(): number {
+    return this.cartService.getShipping();
+  }
+
+  get appliedDiscount(): number {
+    return this.cartService.getDiscount();
   }
 
   get total(): number {
-    return this.subtotal + this.shippingCost - this.appliedDiscount;
+    return this.cartService.getTotal();
   }
 
   increaseQuantity(itemId: number): void {
@@ -65,14 +59,12 @@ export class CartComponent implements OnInit {
 
   applyCoupon(): void {
     const code = (this.couponCode || '').toUpperCase();
-    if (this.validCoupons[code]) {
-      this.appliedDiscount = this.subtotal * this.validCoupons[code];
-      const discountPercent = this.validCoupons[code] * 100;
-      alert(`Cupom aplicado! Desconto de ${discountPercent}%`);
-      this.couponCode = '';
+    if (this.cartService.applyCoupon(code)) {
+      alert(`Cupom aplicado!`);
     } else {
-      alert('Cupom inválido. Tente: PRIMEIRA10, SUPLEMENTO15 ou FRETE20');
+      alert('Cupom inválido. Tente: PRIMEIRA10 ou SUPLEMENTO15');
     }
+    this.couponCode = '';
   }
 
   formatPrice(price: number): string {

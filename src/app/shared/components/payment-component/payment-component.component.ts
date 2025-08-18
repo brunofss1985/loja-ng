@@ -24,6 +24,7 @@ export class PaymentComponent implements OnInit {
   pixQrBase64 = '';
   pixCopiaCola = '';
   userId = '';
+  isLoggedIn: boolean = false;
 
   orderSummary = {
     subtotal: 0,
@@ -56,9 +57,16 @@ export class PaymentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const user = this.auth.getUser(); // não precisa de subscribe
-    this.userId = user.email;
-    console.log('fsdsffds', user.email);
+    const user = this.auth.getUser();
+    this.isLoggedIn = !!user;
+
+    if (this.isLoggedIn) {
+      this.userId = user.email;
+      this.checkoutForm.patchValue({
+        fullName: user.name,
+        email: user.email,
+      });
+    }
 
     this.orderSummary = {
       subtotal: this.cartService.getSubtotal(),
@@ -243,6 +251,10 @@ export class PaymentComponent implements OnInit {
     }
 
     this.isProcessing = true;
+    const user = this.auth.getUser();
+    
+    // Obtém o email do formulário para o payload, para que o backend possa criar o cliente
+    const userEmail = this.checkoutForm.value.email;
 
     const methodMap: any = {
       credit: 'CREDIT',
@@ -253,7 +265,7 @@ export class PaymentComponent implements OnInit {
 
     const payload: CheckoutPayload = {
       fullName: this.checkoutForm.value.fullName,
-      email: this.checkoutForm.value.email,
+      email: userEmail,
       phone: this.checkoutForm.value.phone,
       cpf: this.checkoutForm.value.cpf,
       cep: this.checkoutForm.value.cep,
@@ -284,10 +296,22 @@ export class PaymentComponent implements OnInit {
       cardExpiry: this.checkoutForm.value.cardExpiry,
       cardCvv: this.checkoutForm.value.cardCvv,
     };
-
+    
     this.paymentService.checkout(payload).subscribe({
       next: (resp: PaymentResponse) => {
-        this.cartService.clearCartBack(this.userId).subscribe();
+        
+        // Limpa o carrinho localmente para todos os usuários
+        this.cartService.clearCartLocal(); 
+
+        // Se o usuário estiver logado, também limpa o carrinho no backend
+        // Apenas neste caso a chamada é feita, para evitar o erro 
+        if (user) {
+          this.cartService.clearCartBack(user.email).subscribe({
+            next: () => console.log('Carrinho no backend limpo com sucesso!'),
+            error: (err: any) => console.error('Erro ao limpar o carrinho no backend:', err)
+          });
+        }
+
         this.isProcessing = false;
         switch (resp.status) {
           case 'APPROVED':
@@ -295,26 +319,19 @@ export class PaymentComponent implements OnInit {
               queryParams: { orderId: resp.orderId },
             });
             break;
-
           case 'DECLINED':
-            alert(
-              'Pagamento recusado. Verifique os dados ou tente outro método.'
-            );
+            alert('Pagamento recusado. Verifique os dados ou tente outro método.');
             break;
-
           case 'PENDING':
             if (payload.method === 'PIX' && resp.qrCodeBase64) {
               this.showPixModal(resp.qrCodeBase64, resp.qrCode);
             } else if (payload.method === 'BOLETO' && resp.boletoUrl) {
               window.open(resp.boletoUrl, '_blank');
-              alert(
-                'Boleto gerado. Você pode efetuar o pagamento e aguardar a confirmação.'
-              );
+              alert('Boleto gerado. Você pode efetuar o pagamento e aguardar a confirmação.');
             } else {
               alert('Pagamento pendente. Aguarde confirmação.');
             }
             break;
-
           default:
             alert(resp.message || 'Erro desconhecido ao processar pagamento.');
         }

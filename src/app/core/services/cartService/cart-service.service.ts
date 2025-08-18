@@ -60,47 +60,51 @@ export class CartService implements OnDestroy {
       return;
     }
 
+    // 🚀 ATUALIZAÇÃO CRÍTICA: GARANTE QUE O USERID ESTEJA DISPONÍVEL
     const user = this.authService.getUser();
-    if (!user) {
-      console.log('⚠️ Usuário não autenticado após login.');
+    if (!user || !user.id) {
+      console.log('⚠️ Usuário não autenticado ou ID de usuário não disponível. Sincronização cancelada.');
       return;
     }
+    this.currentUserId = user.id;
 
     const merge = confirm(
-      `Você está logado como ${user.email}. Deseja adicionar os ${localItems.length} itens do seu carrinho atual à sua conta?`
+      `Você está logado como ${user.email}. Deseja mesclar os ${localItems.length} itens do seu carrinho atual com sua conta?`
     );
 
     if (merge) {
-      // 🚀 AQUI ESTÁ A LÓGICA SIMPLIFICADA E DIRETA
-      console.log('✅ Usuário confirmou a mesclagem. Enviando itens locais para o backend...');
-
+      console.log('✅ Usuário confirmou a mesclagem. Buscando dados do backend para mesclar...');
       const userId = user?.email || user?.id;
-      if (!userId) {
-        console.error('❌ Falha na sincronização: userId inválido.');
-        return;
-      }
       
-      const cartData = {
-        userId: userId,
-        items: localItems,
-        discount: this.appliedDiscount,
-        shipping: this.shippingCost,
-      };
-
-      this.http.put<any>(`${this.API_URL}/${encodeURIComponent(userId)}`, cartData).pipe(
-        tap(() => {
-          console.log('✅ PUT Success - Carrinho salvo no backend.');
-          this.clearStorage();
-          this.loadCartFromBackend().subscribe(items => {
-            this.cartItemsSubject.next(items);
-            console.log('✅ Carrinho atualizado com sucesso do backend.');
+      this.loadCartFromBackend().pipe(
+        // 1. Pega os itens do backend
+        map(backendItems => {
+          // 2. Mescla os itens locais com os do backend
+          const mergedItems = this.mergeCartItems(localItems, backendItems);
+          console.log('🔄 Mesclagem concluída:', {
+            localStorage: localItems.length,
+            backend: backendItems.length,
+            final: mergedItems.length
           });
+          return mergedItems;
         }),
-        catchError(error => {
-          console.error('❌ PUT Error - Falha ao sincronizar o carrinho:', error);
-          return of(null);
-        })
-      ).subscribe();
+        // 3. Envia os itens mesclados para o backend (PUT)
+        switchMap(mergedItems => this.updateCartInBackend(mergedItems).pipe(
+          // 4. Retorna a lista mesclada para o subscribe
+          map(() => mergedItems)
+        ))
+      ).subscribe({
+        next: (finalItems) => {
+          // 5. Se tudo deu certo, atualiza o BehaviorSubject com a lista final.
+          this.cartItemsSubject.next(finalItems);
+          this.clearStorage();
+          console.log('✅ Sincronização e mesclagem concluídas. Carrinho agora tem', finalItems.length, 'itens.');
+        },
+        error: (error) => {
+          console.error('❌ Falha na mesclagem. Mantendo carrinho local.', error);
+          this.cartItemsSubject.next(localItems);
+        }
+      });
 
     } else {
       console.log('❌ Usuário cancelou a mesclagem. Limpando o carrinho local e carregando do backend.');
@@ -108,7 +112,7 @@ export class CartService implements OnDestroy {
       this.loadCartFromBackend().subscribe(items => this.cartItemsSubject.next(items));
     }
   }
-  
+
   public clearCartOnLogout(): void {
     console.log('🚪 LOGOUT: Limpando carrinho completamente');
     this.currentSessionId = null;
@@ -312,7 +316,7 @@ export class CartService implements OnDestroy {
       this.saveToStorage(items);
     }
   }
-
+  
   private mergeCartItems(localItems: CartItem[], backendItems: CartItem[]): CartItem[] {
     const merged = [...backendItems];
     localItems.forEach((localItem) => {
@@ -322,11 +326,6 @@ export class CartService implements OnDestroy {
       } else {
         merged.push(localItem);
       }
-    });
-    console.log('🔄 Mesclagem concluída:', {
-      localStorage: localItems.length,
-      backend: backendItems.length,
-      final: merged.length,
     });
     return merged;
   }

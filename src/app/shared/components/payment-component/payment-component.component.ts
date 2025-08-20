@@ -272,6 +272,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
 
     const paymentMethod = this.selectedPaymentMethod;
     let cardToken = '';
+    let paymentMethodId = ''; // Adicionada a nova variável
 
     if (paymentMethod === 'credit' || paymentMethod === 'debit') {
       try {
@@ -287,7 +288,24 @@ export class PaymentComponent implements OnInit, AfterViewInit {
             5
           ),
           securityCode: this.checkoutForm.value.cardCvv,
-        };
+        }; // Obtém a bandeira do cartão (paymentMethodId)
+
+        const cardBin = cardData.cardNumber.substring(0, 6);
+        const paymentMethods = await this.mp.getPaymentMethods({
+          bin: cardBin,
+        });
+
+        if (
+          paymentMethods &&
+          paymentMethods.results &&
+          paymentMethods.results.length > 0
+        ) {
+          paymentMethodId = paymentMethods.results[0].id;
+        } else {
+          this.isProcessing = false;
+          alert('Bandeira do cartão não encontrada.');
+          return;
+        }
 
         const tokenResult = await this.mp.createCardToken(cardData);
         cardToken = tokenResult.id;
@@ -320,6 +338,7 @@ export class PaymentComponent implements OnInit, AfterViewInit {
       installments:
         paymentMethod === 'credit' ? this.selectedInstallments : undefined,
       cardToken: cardToken,
+      paymentMethodId: paymentMethodId, // Adicionando o campo ao payload
     };
 
     this.paymentService.checkout(payload).subscribe({
@@ -347,12 +366,15 @@ export class PaymentComponent implements OnInit, AfterViewInit {
             );
             break;
           case 'PENDING':
-            if (paymentMethod === 'PIX' && resp.qrCodeBase64) {
+            if (this.selectedPaymentMethod === 'pix' && resp.qrCodeBase64) {
               this.showPixModal(resp.qrCodeBase64, resp.qrCode);
-            } else if (paymentMethod === 'BOLETO' && resp.boletoUrl) {
+            } else if (
+              this.selectedPaymentMethod === 'boleto' &&
+              resp.boletoUrl
+            ) {
               window.open(resp.boletoUrl, '_blank');
               alert(
-                'Boleto gerado. Você pode efetuar o pagamento e aguardar a confirmação.'
+                'Boleto gerado! Efetue o pagamento e aguarde a confirmação.'
               );
             } else {
               alert('Pagamento pendente. Aguarde confirmação.');

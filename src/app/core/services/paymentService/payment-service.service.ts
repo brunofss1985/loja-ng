@@ -41,6 +41,7 @@ export interface CheckoutPayload {
   cardName?: string;
   cardExpiry?: string;
   cardCvv?: string;
+  paymentMethodId?: string;
 }
 
 @Injectable({ providedIn: 'root' })

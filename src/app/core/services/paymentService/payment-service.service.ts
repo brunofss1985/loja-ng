@@ -36,17 +36,12 @@ export interface CheckoutPayload {
   method: 'CREDIT' | 'DEBIT' | 'PIX' | 'BOLETO';
   installments?: number;
   cardToken?: string;
-  cardLast4?: string;
-  cardNumber?: string;
-  cardName?: string;
-  cardExpiry?: string;
-  cardCvv?: string;
-  paymentMethodId?: string;
+  paymentMethodId?: string; // Adicionado aqui
 }
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
-  private apiUrl =  `${environment.apiUrl}`;
+  private apiUrl = `${environment.apiUrl}`;
 
   constructor(private http: HttpClient) {}
 

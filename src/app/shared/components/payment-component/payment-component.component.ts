@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -9,13 +9,16 @@ import {
 import { CartService } from 'src/app/core/services/cartService/cart-service.service';
 import { CartItem } from 'src/app/core/models/cart-item.model';
 import { AuthService } from 'src/app/core/services/authService/auth.service';
+import { environment } from 'src/environments/environment';
+
+declare var MercadoPago: any;
 
 @Component({
   selector: 'app-payment',
   templateUrl: './payment-component.component.html',
   styleUrls: ['./payment-component.component.scss'],
 })
-export class PaymentComponent implements OnInit {
+export class PaymentComponent implements OnInit, AfterViewInit {
   checkoutForm: FormGroup;
   selectedPaymentMethod: string = 'credit';
   selectedInstallments: number = 1;
@@ -46,6 +49,8 @@ export class PaymentComponent implements OnInit {
     { id: 'boleto', name: 'Boleto Bancário', icon: '🧾' },
   ];
 
+  private mp: any;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -75,6 +80,12 @@ export class PaymentComponent implements OnInit {
       total: this.cartService.getTotal(),
       items: this.cartService.getCartItemsSnapshot(),
     };
+  }
+
+  ngAfterViewInit(): void {
+    this.mp = new MercadoPago(environment.mercadoPagoPublicKey, {
+      locale: 'pt-BR',
+    });
   }
 
   private createForm(): FormGroup {
@@ -225,9 +236,7 @@ export class PaymentComponent implements OnInit {
     }
   }
 
-  private searchAddressByCep(cep: string): void {
-    // Implementar integração com API ViaCEP ou similar
-  }
+  private searchAddressByCep(cep: string): void {}
 
   showPixModal(qrBase64: string, copiaCola?: string) {
     this.pixQrBase64 = qrBase64;
@@ -243,7 +252,7 @@ export class PaymentComponent implements OnInit {
     navigator.clipboard.writeText(this.pixCopiaCola);
   }
 
-  processPayment(): void {
+  async processPayment(): Promise<void> {
     if (!this.checkoutForm.valid) {
       this.markFormGroupTouched();
       alert('Por favor, preencha todos os campos obrigatórios corretamente.');
@@ -252,8 +261,6 @@ export class PaymentComponent implements OnInit {
 
     this.isProcessing = true;
     const user = this.auth.getUser();
-    
-    // Obtém o email do formulário para o payload, para que o backend possa criar o cliente
     const userEmail = this.checkoutForm.value.email;
 
     const methodMap: any = {
@@ -263,12 +270,41 @@ export class PaymentComponent implements OnInit {
       boleto: 'BOLETO',
     };
 
+    const paymentMethod = this.selectedPaymentMethod;
+    let cardToken = '';
+
+    if (paymentMethod === 'credit' || paymentMethod === 'debit') {
+      try {
+        const cardData = {
+          cardNumber: this.checkoutForm.value.cardNumber.replace(/\s/g, ''),
+          cardholderName: this.checkoutForm.value.cardName,
+          cardExpirationMonth: this.checkoutForm.value.cardExpiry.substring(
+            0,
+            2
+          ),
+          cardExpirationYear: this.checkoutForm.value.cardExpiry.substring(
+            3,
+            5
+          ),
+          securityCode: this.checkoutForm.value.cardCvv,
+        };
+
+        const tokenResult = await this.mp.createCardToken(cardData);
+        cardToken = tokenResult.id;
+      } catch (err: any) {
+        this.isProcessing = false;
+        alert('Erro ao gerar token do cartão. Verifique os dados.');
+        console.error('Erro ao criar token do cartão:', err);
+        return;
+      }
+    }
+
     const payload: CheckoutPayload = {
       fullName: this.checkoutForm.value.fullName,
       email: userEmail,
       phone: this.checkoutForm.value.phone,
-      cpf: this.checkoutForm.value.cpf,
-      cep: this.checkoutForm.value.cep,
+      cpf: this.checkoutForm.value.cpf.replace(/\D/g, ''),
+      cep: this.checkoutForm.value.cep.replace(/\D/g, ''),
       street: this.checkoutForm.value.street,
       number: this.checkoutForm.value.number,
       complement: this.checkoutForm.value.complement,
@@ -280,35 +316,20 @@ export class PaymentComponent implements OnInit {
       discount: this.orderSummary.discount,
       total: this.orderSummary.total,
       items: this.orderSummary.items,
-      method: methodMap[this.selectedPaymentMethod],
+      method: methodMap[paymentMethod],
       installments:
-        this.selectedPaymentMethod === 'credit'
-          ? this.selectedInstallments
-          : undefined,
-      cardToken: undefined,
-      cardLast4:
-        this.selectedPaymentMethod !== 'pix' &&
-        this.selectedPaymentMethod !== 'boleto'
-          ? this.checkoutForm.value.cardNumber.slice(-4)
-          : undefined,
-      cardNumber: this.checkoutForm.value.cardNumber,
-      cardName: this.checkoutForm.value.cardName,
-      cardExpiry: this.checkoutForm.value.cardExpiry,
-      cardCvv: this.checkoutForm.value.cardCvv,
+        paymentMethod === 'credit' ? this.selectedInstallments : undefined,
+      cardToken: cardToken,
     };
-    
+
     this.paymentService.checkout(payload).subscribe({
       next: (resp: PaymentResponse) => {
-        
-        // Limpa o carrinho localmente para todos os usuários
-        this.cartService.clearCartLocal(); 
-
-        // Se o usuário estiver logado, também limpa o carrinho no backend
-        // Apenas neste caso a chamada é feita, para evitar o erro 
+        this.cartService.clearCartLocal();
         if (user) {
           this.cartService.clearCartBack(user.email).subscribe({
             next: () => console.log('Carrinho no backend limpo com sucesso!'),
-            error: (err: any) => console.error('Erro ao limpar o carrinho no backend:', err)
+            error: (err: any) =>
+              console.error('Erro ao limpar o carrinho no backend:', err),
           });
         }
 
@@ -320,14 +341,19 @@ export class PaymentComponent implements OnInit {
             });
             break;
           case 'DECLINED':
-            alert('Pagamento recusado. Verifique os dados ou tente outro método.');
+            alert(
+              resp.message ||
+                'Pagamento recusado. Verifique os dados ou tente outro método.'
+            );
             break;
           case 'PENDING':
-            if (payload.method === 'PIX' && resp.qrCodeBase64) {
+            if (paymentMethod === 'PIX' && resp.qrCodeBase64) {
               this.showPixModal(resp.qrCodeBase64, resp.qrCode);
-            } else if (payload.method === 'BOLETO' && resp.boletoUrl) {
+            } else if (paymentMethod === 'BOLETO' && resp.boletoUrl) {
               window.open(resp.boletoUrl, '_blank');
-              alert('Boleto gerado. Você pode efetuar o pagamento e aguardar a confirmação.');
+              alert(
+                'Boleto gerado. Você pode efetuar o pagamento e aguardar a confirmação.'
+              );
             } else {
               alert('Pagamento pendente. Aguarde confirmação.');
             }

@@ -1,70 +1,78 @@
-.confirmation-container {
-margin-top: 120px;
-  display: flex;
-  justify-content: center;
-  padding: 40px;
-  background: #f4f6f8;
+.order-confirmation-container {
+    margin-top: 120px !important;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.confirmation-card {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  max-width: 600px;
-  width: 100%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  text-align: center;
-  animation: fadeIn 0.6s ease-in-out;
+.order-confirmation-header {
+    background: linear-gradient(to right, #0077cc, #00bfff);
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+.order-confirmation-summary,
+.order-confirmation-delivery,
+.order-confirmation-payment,
+.order-confirmation-gift {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
 }
 
-.icon-success {
-  font-size: 48px;
-  margin-bottom: 10px;
+.order-confirmation-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
 
-.order-details {
-  margin-top: 20px;
-  text-align: left;
+.order-confirmation-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+    img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    .item-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
 }
 
-.order-details ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+.order-confirmation-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
 
-.order-details li {
-  margin-bottom: 8px;
-}
+    .btn {
+        background: #0077cc;
+        color: white;
+        border: none;
+        padding: 0.8rem 1.2rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
 
-.next-actions {
-  margin-top: 30px;
-}
-
-.next-actions button {
-  margin: 10px;
-  padding: 10px 20px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.next-actions button:hover {
-  background: #0056b3;
-}
-
-.loyalty-message {
-  margin-top: 20px;
-  background: #e0ffe0;
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: bold;
+        &:hover {
+            background: #005fa3;
+        }
+    }
 }

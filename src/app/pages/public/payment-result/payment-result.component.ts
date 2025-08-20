@@ -1,45 +1,65 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CartItem } from 'src/app/core/models/cart-item.model';
+import { ActivatedRoute } from '@angular/router';
+import { OrderService } from 'src/app/core/services/orderService/order-service';
+import { AuthService } from 'src/app/core/services/authService/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { Order } from 'src/app/core/models/order.model ';
 
 @Component({
   selector: 'app-payment-result',
   templateUrl: './payment-result.component.html',
-  styleUrls: ['./payment-result.component.scss']
+  styleUrls: ['./payment-result.component.scss'],
 })
 export class PaymentResultComponent implements OnInit {
-  orderId: string = '';
-  fullName: string = 'Cliente';
-  orderSummary = {
-    items: [] as CartItem[],
-    total: 0
-  };
+  orders: Order[] = [];
+  lastOrder?: Order;
+  showAll: boolean = false;
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private orderService: OrderService,
+    private authService: AuthService,
+    private toast: ToastrService
+  ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.orderId = params['orderId'] || '000000';
-    });
+    const user = this.authService.getUser();
 
-    // Simulação de dados — substitua com dados reais se necessário
-    this.fullName = 'Bruno';
-    this.orderSummary = {
-      items: [
-      ],
-      total: 309.70
-    };
+    if (!user?.email) {
+      this.toast.error('Usuário não autenticado.');
+      return;
+    }
+
+    this.loadOrders(user.email);
   }
 
-  formatPrice(price: number): string {
-    return `R$ ${price.toFixed(2).replace('.', ',')}`;
+  private loadOrders(email: string): void {
+    this.orderService.getAllOrders(email).subscribe({
+      next: (orders) => {
+        this.orders = orders;
+        this.lastOrder = orders?.[0] ?? undefined;
+      },
+      error: () => {
+        this.toast.error('Erro ao carregar pedidos.');
+      },
+    });
   }
 
   goToTracking(): void {
-    this.router.navigate(['/rastreamento'], { queryParams: { orderId: this.orderId } });
+    // lógica para redirecionar ou abrir rastreio
+    this.toast.info('Funcionalidade de rastreio em desenvolvimento.');
   }
 
   goToStore(): void {
-    this.router.navigate(['/produtos']);
+    // lógica para voltar à loja ou página inicial
+    window.location.href = '/';
+  }
+
+  shareOnWhatsApp(): void {
+    if (!this.lastOrder) return;
+
+    const message = `Acabei de fazer um pedido na loja! Pedido #${this.lastOrder.id} com total de R$ ${this.lastOrder.total}. Confira você também!`;
+    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
   }
 }

@@ -12,6 +12,7 @@ import { ChatComponent } from './chat/chat.component';
 import { CartComponent } from './cart-component/cart-component.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { OrderStatusComponent } from './order-status/order-status.component';
+import { PaymentResultComponent } from './payment-result/payment-result.component';
 
 
 
@@ -24,7 +25,8 @@ import { OrderStatusComponent } from './order-status/order-status.component';
     ChatComponent,
     CartComponent,
     PerfilComponent,
-    OrderStatusComponent
+    OrderStatusComponent,
+    PaymentResultComponent
   ],
   imports: [
     CommonModule,

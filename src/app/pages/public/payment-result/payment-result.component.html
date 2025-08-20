@@ -1,0 +1,27 @@
+<div class="confirmation-container">
+  <div class="confirmation-card">
+    <div class="icon-success">✅</div>
+    <h1>Pedido Confirmado!</h1>
+    <p>Obrigado, {{ fullName }}! 💪</p>
+    <p>Seu pedido <strong>#{{ orderId }}</strong> foi recebido com sucesso.</p>
+
+    <div class="order-details">
+      <h3>📦 Resumo do Pedido</h3>
+      <ul>
+        <li *ngFor="let item of orderSummary.items">
+          {{ item.quantity }}x {{ item.name }} — {{ formatPrice(item.price) }}
+        </li>
+      </ul>
+      <p><strong>Total:</strong> {{ formatPrice(orderSummary.total) }}</p>
+    </div>
+
+    <div class="next-actions">
+      <button (click)="goToTracking()">🚚 Acompanhar Entrega</button>
+      <button (click)="goToStore()">🛒 Continuar Comprando</button>
+    </div>
+
+    <div class="loyalty-message">
+      🎁 Você ganhou <strong>10% de desconto</strong> na próxima compra! Use o cupom: <code>SUPLE10</code>
+    </div>
+  </div>
+</div>

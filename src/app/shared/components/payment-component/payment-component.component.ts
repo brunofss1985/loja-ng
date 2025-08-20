@@ -238,11 +238,12 @@ export class PaymentComponent implements OnInit, AfterViewInit {
 
   private searchAddressByCep(cep: string): void {}
 
-  showPixModal(qrBase64: string, copiaCola?: string) {
-    this.pixQrBase64 = qrBase64;
-    this.pixCopiaCola = copiaCola || '';
-    this.pixModalOpen = true;
-  }
+showPixModal(qrBase64: string, copiaCola?: string) {
+  if (!qrBase64) return;
+  this.pixQrBase64 = qrBase64;
+  this.pixCopiaCola = copiaCola || '';
+  this.pixModalOpen = true;
+}
 
   closePixModal() {
     this.pixModalOpen = false;

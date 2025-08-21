@@ -1,50 +1,66 @@
-<div class="order-confirmation-container" *ngIf="lastOrder as order">
-  <div class="order-confirmation-header">
-    <h1>🎉 Pedido confirmado com sucesso!</h1>
-    <p>Obrigado, {{ order.customer?.fullName }}! Seu pedido está sendo preparado.</p>
-  </div>
-
-  <div class="order-confirmation-summary">
-    <h2>Resumo do Pedido</h2>
-    <p><strong>ID:</strong> #{{ order.id }}</p>
-    <p><strong>Status:</strong> {{ order.status }}</p>
-    <p><strong>Total:</strong> R$ {{ order.total }}</p>
-    <p><strong>Data:</strong> {{ order.createdAt | date: 'fullDate' }}</p>
-  </div>
-
-  <div class="order-confirmation-items" *ngIf="order.items?.length">
-    <h3>Itens Comprados</h3>
-    <div class="order-confirmation-item" *ngFor="let item of order.items ?? []">
-      <img *ngIf="item.imageUrl" [src]="item.imageUrl" alt="{{ item.name }}" />
-      <div class="item-info">
-        <p><strong>{{ item.name }}</strong></p>
-        <p>{{ item.quantity }}x - R$ {{ item.price }}</p>
-        <p *ngIf="item.variation">Variação: {{ item.variation }}</p>
-      </div>
+<div class="page" *ngIf="lastOrder as order">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="pill">💪 Loja de Suplementos</span>
+      <span class="muted">Pedido confirmado</span>
     </div>
   </div>
 
-  <div class="order-confirmation-delivery">
-    <h3>Entrega</h3>
-    <p><strong>Método:</strong> {{ order.deliveryMethod || 'Não informado' }}</p>
-    <p><strong>Previsão:</strong> {{ order.estimatedDelivery || 'A definir' }}</p>
-    <p *ngIf="order.trackingCode"><strong>Rastreio:</strong> {{ order.trackingCode }}</p>
-  </div>
+  <main class="order-confirmation-container" id="app">
+    <div class="order-confirmation-header">
+      <h1>🎉 Pedido confirmado com sucesso!</h1>
+      <p id="saudacao">Obrigado, {{ order.customer?.fullName }}! Seu pedido está sendo preparado.</p>
+    </div>
 
-  <div class="order-confirmation-payment">
-    <h3>Pagamento</h3>
-    <p><strong>Forma:</strong> {{ order.paymentMethod || 'Não informado' }}</p>
-    <p><strong>Status:</strong> {{ order.status }}</p>
-  </div>
+    <section class="order-confirmation-summary card">
+      <h2>Resumo do Pedido</h2>
+      <div class="keyline"><strong>ID:</strong> <span>#{{ order.id }}</span></div>
+      <div class="keyline"><strong>Status:</strong> <span>{{ order.status }}</span></div>
+      <div class="keyline"><strong>Total:</strong> <span>R$ {{ order.total }}</span></div>
+      <div class="keyline"><strong>Data:</strong> <span>{{ order.createdAt | date: 'fullDate' }}</span></div>
+      <div class="note">
+        📌 Dica: Guarde o ID do pedido para qualquer atendimento.
+      </div>
+    </section>
 
-  <div class="order-confirmation-gift" *ngIf="order.isGift">
-    <h3>🎁 Este pedido é um presente</h3>
-    <p *ngIf="order.giftMessage"><em>"{{ order.giftMessage }}"</em></p>
-  </div>
+    <section class="order-confirmation-items" *ngIf="order.items?.length">
+      <h3>Itens Comprados</h3>
+      <div id="items">
+        <div class="order-confirmation-item" *ngFor="let item of order.items ?? []">
+          <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.name" />
+          <div class="item-info">
+            <p><strong>{{ item.name }}</strong></p>
+            <p>{{ item.quantity }}x - R$ {{ item.price }}</p>
+            <p *ngIf="item.variation" class="muted">Variação: {{ item.variation }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <div class="order-confirmation-actions">
-    <button class="btn" (click)="goToTracking()">🚚 Acompanhar entrega</button>
-    <button class="btn" (click)="goToStore()">🛒 Continuar comprando</button>
-    <button class="btn" (click)="shareOnWhatsApp()">📲 Compartilhar</button>
-  </div>
+    <section class="order-confirmation-delivery card">
+      <h3>Entrega</h3>
+      <p class="keyline"><strong>Método:</strong> <span>{{ order.deliveryMethod || 'Não informado' }}</span></p>
+      <p class="keyline"><strong>Previsão:</strong> <span>{{ order.estimatedDelivery || 'A definir' }}</span></p>
+      <p class="keyline" *ngIf="order.trackingCode">
+        <strong>Rastreio:</strong> <span>{{ order.trackingCode }}</span>
+      </p>
+    </section>
+
+    <section class="order-confirmation-payment card">
+      <h3>Pagamento</h3>
+      <p class="keyline"><strong>Forma:</strong> <span>{{ order.paymentMethod || 'Não informado' }}</span></p>
+      <p class="keyline"><strong>Status:</strong> <span>{{ order.status }}</span></p>
+    </section>
+
+    <section class="order-confirmation-gift card" *ngIf="order.isGift">
+      <h3>🎁 Este pedido é um presente</h3>
+      <p *ngIf="order.giftMessage" class="muted"><em>"{{ order.giftMessage }}"</em></p>
+    </section>
+
+    <div class="order-confirmation-actions">
+      <button class="btn" (click)="goToTracking()">🚚 Acompanhar entrega</button>
+      <button class="btn secondary" (click)="goToStore()">🛒 Continuar comprando</button>
+      <button class="btn whatsapp" (click)="shareOnWhatsApp()">📲 Compartilhar</button>
+    </div>
+  </main>
 </div>

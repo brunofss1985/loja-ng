@@ -182,6 +182,19 @@ export class PaymentComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // Novo método para limpar o formulário completo
+  private resetForm(): void {
+    this.checkoutForm.reset();
+    // Re-inicia o formulário com o estado inicial e as validações
+    this.checkoutForm = this.createForm();
+    if (this.isLoggedIn) {
+        this.checkoutForm.patchValue({
+          fullName: this.auth.getUser().name,
+          email: this.auth.getUser().email,
+        });
+    }
+  }
+
   formatPrice(price: number): string {
     return `R$ ${price.toFixed(2).replace('.', ',')}`;
   }
@@ -238,19 +251,30 @@ export class PaymentComponent implements OnInit, AfterViewInit {
 
   private searchAddressByCep(cep: string): void {}
 
-showPixModal(qrBase64: string, copiaCola?: string) {
-  if (!qrBase64) return;
-  this.pixQrBase64 = qrBase64;
-  this.pixCopiaCola = copiaCola || '';
-  this.pixModalOpen = true;
-}
+  showPixModal(qrBase64: string, copiaCola?: string) {
+    if (!qrBase64) return;
+    this.pixQrBase64 = qrBase64;
+    this.pixCopiaCola = copiaCola || '';
+    this.pixModalOpen = true;
+  }
 
+  // Atualizado para navegar para a tela de resultado ao fechar o modal
   closePixModal() {
     this.pixModalOpen = false;
+    this.router.navigate(['/payment-result'], {
+      // Você pode adicionar queryParams aqui, se necessário
+      queryParams: { paymentMethod: 'pix' },
+    });
   }
 
   copyPix() {
-    navigator.clipboard.writeText(this.pixCopiaCola);
+    // Implementação para copiar o código PIX para a área de transferência
+    const textarea = document.createElement('textarea');
+    textarea.value = this.pixCopiaCola;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
   }
 
   async processPayment(): Promise<void> {
@@ -273,7 +297,7 @@ showPixModal(qrBase64: string, copiaCola?: string) {
 
     const paymentMethod = this.selectedPaymentMethod;
     let cardToken = '';
-    let paymentMethodId = ''; // Nova variável para a bandeira do cartão
+    let paymentMethodId = '';
 
     if (paymentMethod === 'credit' || paymentMethod === 'debit') {
       try {
@@ -344,7 +368,8 @@ showPixModal(qrBase64: string, copiaCola?: string) {
         this.isProcessing = false;
         switch (resp.status) {
           case 'APPROVED':
-            this.router.navigate(['/pedido-confirmado'], {
+            this.resetForm();
+            this.router.navigate(['/payment-result'], {
               queryParams: { orderId: resp.orderId },
             });
             break;
@@ -355,13 +380,18 @@ showPixModal(qrBase64: string, copiaCola?: string) {
             );
             break;
           case 'PENDING':
+            this.resetForm();
             if (this.selectedPaymentMethod === 'pix' && resp.qrCodeBase64) {
               this.showPixModal(resp.qrCodeBase64, resp.qrCode);
+              // A navegação agora acontece ao fechar o modal ou por webhook
             } else if (this.selectedPaymentMethod === 'boleto' && resp.boletoUrl) {
               window.open(resp.boletoUrl, '_blank');
               alert(
                 'Boleto gerado! Efetue o pagamento e aguarde a confirmação.'
               );
+              this.router.navigate(['/payment-result'], {
+                queryParams: { orderId: resp.orderId, paymentMethod: 'boleto' },
+              });
             } else {
               alert('Pagamento pendente. Aguarde confirmação.');
             }

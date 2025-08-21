@@ -15,7 +15,8 @@
     <section class="order-confirmation-summary card">
       <h2>Resumo do Pedido</h2>
       <div class="keyline"><strong>ID:</strong> <span>#{{ order.id }}</span></div>
-      <div class="keyline"><strong>Status:</strong> <span>{{ order.status }}</span></div>
+      <div class="keyline"><strong>Status:</strong> <span><app-order-status
+            [status]="order.status"></app-order-status></span></div>
       <div class="keyline"><strong>Total:</strong> <span>R$ {{ order.total }}</span></div>
       <div class="keyline"><strong>Data:</strong> <span>{{ order.createdAt | date: 'fullDate' }}</span></div>
       <div class="note">
@@ -23,7 +24,14 @@
       </div>
     </section>
 
-    <section class="order-confirmation-items" *ngIf="order.items?.length">
+    <section class="order-confirmation-payment card">
+      <h3>Pagamento</h3>
+      <p class="keyline"><strong>Forma:</strong> <span>{{ order.paymentMethod || 'Não informado' }}</span></p>
+      <p class="keyline"><strong>Status:</strong> <span><app-order-status
+            [status]="order.status"></app-order-status></span></p>
+    </section>
+
+    <section class="order-confirmation-items card" *ngIf="order.items?.length">
       <h3>Itens Comprados</h3>
       <div id="items">
         <div class="order-confirmation-item" *ngFor="let item of order.items ?? []">
@@ -44,12 +52,6 @@
       <p class="keyline" *ngIf="order.trackingCode">
         <strong>Rastreio:</strong> <span>{{ order.trackingCode }}</span>
       </p>
-    </section>
-
-    <section class="order-confirmation-payment card">
-      <h3>Pagamento</h3>
-      <p class="keyline"><strong>Forma:</strong> <span>{{ order.paymentMethod || 'Não informado' }}</span></p>
-      <p class="keyline"><strong>Status:</strong> <span>{{ order.status }}</span></p>
     </section>
 
     <section class="order-confirmation-gift card" *ngIf="order.isGift">

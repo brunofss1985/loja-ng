@@ -23,16 +23,6 @@
           <p>Plano: {{ user?.userType || 'N/A' }} | Cliente desde {{ user?.createdAt | date:'yyyy' }}</p>
         </div>
       </div>
-      <div class="acao-topo">
-        <label for="modalEdit" class="btn">
-          <span class="ico">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path d="M3 21h4l11-11-4-4L3 17v4z" stroke="currentColor" stroke-width="1.5" />
-            </svg>
-          </span>
-          Editar perfil
-        </label>
-      </div>
     </div>
 
     <!-- Corpo -->
@@ -58,7 +48,17 @@
             <strong>{{ user?.address || 'Não informado' }}</strong>
           </div>
           <div class="linha"></div>
-          <div class="mini-stats">
+          <div class="acao-topo">
+            <label for="modalEdit" class="btn">
+              <span class="ico">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M3 21h4l11-11-4-4L3 17v4z" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              </span>
+              Editar perfil
+            </label>
+          </div>
+          <!-- <div class="mini-stats">
             <div class="chip">
               <strong>{{ user?.points || 0 }}</strong>
               <small>Pontos</small>
@@ -67,7 +67,7 @@
               <strong>R$ {{ user?.credits || 0 }}</strong>
               <small>Créditos</small>
             </div>
-          </div>
+          </div> -->
         </div>
       </aside>
 

@@ -1,14 +1,26 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
 
 @Component({
   selector: 'app-filtro',
   templateUrl: './filtro.component.html',
-  styleUrls: ['./filtro.component.scss']
+  styleUrls: ['./filtro.component.scss'],
 })
 export class FiltroComponent implements OnInit, OnChanges {
   @Input() currentCategory: string | undefined;
-  @Output() filtersChanged = new EventEmitter<{ marcas: string[], minPreco: number, maxPreco: number }>();
+  @Output() filtersChanged = new EventEmitter<{
+    marcas: string[];
+    minPreco: number;
+    maxPreco: number;
+  }>();
 
   marcas: string[] = [];
   selectedBrands: string[] = [];
@@ -16,10 +28,10 @@ export class FiltroComponent implements OnInit, OnChanges {
   maxPrice: number = 999999;
   selectedCategory: string = 'todos';
 
-  constructor(private produtoService: ProdutosService) { }
+  constructor(private produtoService: ProdutosService) {}
 
   ngOnInit(): void {
-    this.produtoService.buscarMarcas().subscribe(marcas => {
+    this.produtoService.buscarMarcas().subscribe((marcas) => {
       this.marcas = marcas;
     });
   }
@@ -54,7 +66,35 @@ export class FiltroComponent implements OnInit, OnChanges {
     this.filtersChanged.emit({
       marcas: this.selectedBrands,
       minPreco: this.minPrice,
-      maxPreco: this.maxPrice
+      maxPreco: this.maxPrice,
     });
   }
+
+  toggleSection(event: Event): void {
+    const header = event.currentTarget as HTMLElement;
+    const section = header.parentElement;
+
+    if (section) {
+      const isExpanded = section.classList.contains('expanded');
+
+      if (isExpanded) {
+        section.classList.remove('expanded');
+        section.classList.add('collapsed');
+      } else {
+        section.classList.remove('collapsed');
+        section.classList.add('expanded');
+      }
+    }
+  }
+
+  clearFilters(): void {
+    
+  this.selectedCategory = 'todos';
+  this.selectedBrands = [];
+  this.minPrice = 0;
+  this.maxPrice = 999999;
+  
+  // Chame seu método de aplicar filtros ou emita evento
+  this.applyFilters();
+}
 }

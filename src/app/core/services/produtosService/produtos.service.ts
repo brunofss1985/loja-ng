@@ -22,22 +22,33 @@ export class ProdutosService {
     return headers;
   }
 
-  // Novo método para listar todos os produtos com paginação
-  getAllProdutosPaginado(page: number, size: number = 10): Observable<any> {
+  // Novo método que centraliza a busca com todos os filtros
+  buscarComFiltros(categoria: string | undefined, marcas: string[], minPreco: number, maxPreco: number, page: number, size: number = 10): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('size', size.toString());
+      .set('size', size.toString())
+      .set('minPreco', minPreco.toString())
+      .set('maxPreco', maxPreco.toString());
+
+    if (categoria && categoria !== 'todos') {
+      params = params.set('categoria', categoria);
+    }
+    
+    if (marcas && marcas.length > 0) {
+      marcas.forEach(marca => {
+        params = params.append('marcas', marca);
+      });
+    }
+
     return this.http.get<any>(this.apiUrl, { params });
   }
-
-  // Novo método para buscar produtos por categoria com paginação
-  buscarPorCategoriaPaginado(categoria: string, page: number, size: number = 10): Observable<any> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-    return this.http.get<any>(`${this.apiUrl}/categoria/${categoria}`, { params });
+  
+  // Novo método para buscar as marcas disponíveis para o filtro
+  buscarMarcas(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/marcas`);
   }
 
+  // Os métodos antigos de paginação foram removidos para evitar redundância e centralizar a lógica no novo método.
 
   // ----------------------------
   // Produtos sem imagem (puro JSON)

@@ -1,0 +1,66 @@
+<div class="filter-card">
+  <h4>Filtros</h4>
+  
+  <div class="filter-section">
+    <h5>Categoria</h5>
+    <ul>
+      <li 
+        (click)="selectCategory('todos')" 
+        [ngClass]="{'active': selectedCategory === 'todos'}"
+      >
+        <a href="/produtos">Todos os produtos</a>
+      </li>
+      <li 
+        (click)="selectCategory('creatina')" 
+        [ngClass]="{'active': selectedCategory === 'creatina'}"
+      >
+        <a href="/produtos/creatina">Creatina</a>
+      </li>
+      <li 
+        (click)="selectCategory('whey')" 
+        [ngClass]="{'active': selectedCategory === 'whey'}"
+      >
+        <a href="/produtos/whey protein">Whey Protein</a>
+      </li>
+      <li 
+        (click)="selectCategory('pre treino')" 
+        [ngClass]="{'active': selectedCategory === 'pre treino'}"
+      >
+        <a href="/produtos/pre treino">Pre Treino</a>
+      </li>
+    </ul>
+  </div>
+  
+  <hr>
+
+  <div class="filter-section">
+    <h5>Marca</h5>
+    <div *ngIf="marcas.length > 0; else noBrands">
+      <div *ngFor="let marca of marcas">
+        <label>
+          <input 
+            type="checkbox" 
+            [checked]="selectedBrands.includes(marca)" 
+            (change)="toggleBrand(marca)"
+          >
+          {{ marca }}
+        </label>
+      </div>
+    </div>
+    <ng-template #noBrands>
+      <p>Nenhuma marca disponível.</p>
+    </ng-template>
+  </div>
+  
+  <hr>
+
+  <div class="filter-section">
+    <h5>Preço</h5>
+    <div class="price-range">
+      <input type="number" [(ngModel)]="minPrice" placeholder="Mínimo">
+      <span class="separator">a</span>
+      <input type="number" [(ngModel)]="maxPrice" placeholder="Máximo">
+    </div>
+    <button class="btn-apply" (click)="applyFilters()">Aplicar</button>
+  </div>
+</div>

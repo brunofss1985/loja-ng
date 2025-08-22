@@ -1,0 +1,104 @@
+.filter-card {
+  background-color: var(--branco);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--sombra);
+  position: sticky;
+  top: 120px;
+}
+
+.filter-card h4 {
+  color: var(--texto);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section h5 {
+  font-size: 16px;
+  color: var(--texto);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.filter-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filter-section li {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.filter-section li a {
+  color: var(--texto-suave);
+  text-decoration: none;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.filter-section li a:hover {
+  color: var(--cor-primaria);
+}
+
+.filter-section li.active a {
+  font-weight: bold;
+  color: var(--cor-primaria);
+}
+
+.filter-section hr {
+  border: none;
+  border-top: 1px solid var(--borda);
+  margin: 15px 0;
+}
+
+.filter-section label {
+  display: block;
+  font-size: 14px;
+  color: var(--texto-suave);
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.filter-section input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.price-range {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.price-range input {
+  width: 100px;
+  padding: 8px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.price-range .separator {
+  color: var(--texto-suave);
+}
+
+.btn-apply {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--cor-primaria);
+  color: var(--branco);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-apply:hover {
+  background-color: var(--cor-hover);
+}

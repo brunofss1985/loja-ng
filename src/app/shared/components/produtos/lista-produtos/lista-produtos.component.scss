@@ -1,47 +1,64 @@
-/* Container principal da página (geralmente o body) */
-body {
+.main-container {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  padding: 20px;
+  gap: 30px;
+  margin-top: 100px;
 }
 
-header {
-  /* position: fixed; */
-  /* Removendo fixed para que ele não saia do fluxo do documento */
-  width: 100%;
+.filter-container {
+  width: 250px;
+  min-width: 250px;
 }
 
-.content {
-  /* Removendo position: relative e top para que o flexbox gerencie o espaçamento */
+.products-and-pagination-container {
+  flex-grow: 1;
+  /* Garante que o container de produtos ocupe o espaço restante */
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Faz com que o conteúdo cresça e ocupe o espaço */
-  justify-content: flex-start; /* Alinha o conteúdo ao topo */
-  align-items: center;
-  padding-top: 100px; /* Adiciona o espaçamento do header como padding */
 }
 
 .product-cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  flex-grow: 1; /* Permite que este contêiner se expanda */
+  /* Substituímos a div .row por esta, que usa o grid de forma mais robusta */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px; /* Cria espaçamento entre os cards */
+  justify-content: center; /* Centraliza os cards quando a tela é larga */
+}
+
+/* Opcional: Adicionar uma classe para a col-md-4 para garantir que o card preencha o espaço do grid */
+.product-card-item {
+  width: 100%; /* Garante que o card ocupe 100% do seu espaço no grid */
+  /* Outros estilos para o card, se necessário */
 }
 
 .pagination {
-  margin-top: auto; /* Empurra a paginação para a parte inferior do .content */
-  margin-bottom: 20px;
-}
-
-.empty-list-message {
-  text-align: center;
-  padding: 20px;
-  width: 100%;
+  margin-top: 30px;
+  .btn-primary {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+  }
 }
 
 .full-height-message-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: calc(65vh - 100px - 60px); /* 100vh - header - footer */
+  height: 60vh;
+}
+
+/* 💡 Media Queries para Responsividade */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column; /* Em telas pequenas, a barra de filtro fica acima dos produtos */
+    gap: 20px;
+  }
+  
+  .filter-container {
+    width: 100%; /* O filtro ocupa toda a largura em telas pequenas */
+    min-width: unset;
+  }
+  
+  .product-cards-container {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Reduz o tamanho mínimo do card */
+  }
 }

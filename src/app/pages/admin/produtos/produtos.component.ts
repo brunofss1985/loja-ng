@@ -89,8 +89,8 @@ export class ProdutosComponent implements OnInit {
   }
 
   loadProducts(): void {
-    // Chama o método de paginação para carregar os produtos
-    this.produtoService.getAllProdutosPaginado(this.currentPage, this.pageSize).subscribe({
+    // CORREÇÃO: Usando o novo método 'buscarComFiltros' com filtros vazios
+    this.produtoService.buscarComFiltros(undefined, [], 0, 999999, this.currentPage, this.pageSize).subscribe({
       next: (data: ProdutoResponse) => {
         this.allProducts = data.content;
         this.totalPages = data.totalPages;

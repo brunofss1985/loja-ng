@@ -8,12 +8,16 @@ import { ProdutosService } from 'src/app/core/services/produtosService/produtos.
   styleUrls: ['./lista-produtos.component.scss'],
 })
 export class ListaProdutosComponent implements OnInit {
-  categoria!: any;
+  categoria!: string;
   produtos!: any[];
   currentPage: number = 0;
   totalPages: number = 0;
   totalElements: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 6;
+  
+  filtroMarcas: string[] = [];
+  filtroPrecoMin: number = 0;
+  filtroPrecoMax: number = 999999;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,30 +27,33 @@ export class ListaProdutosComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.categoria = params['categoria'];
-      // Sempre que a rota mudar, recomeça da primeira página
-      this.currentPage = 0; 
+      this.currentPage = 0;
+      this.filtroMarcas = [];
+      this.filtroPrecoMin = 0;
+      this.filtroPrecoMax = 999999;
       this.carregarProdutos();
     });
   }
+  
+  onFiltersChanged(event: { marcas: string[]; minPreco: number; maxPreco: number }): void {
+    this.filtroMarcas = event.marcas;
+    this.filtroPrecoMin = event.minPreco;
+    this.filtroPrecoMax = event.maxPreco;
+    this.currentPage = 0; 
+    this.carregarProdutos();
+  }
 
   carregarProdutos() {
-    if (this.categoria) {
-      this.produtoService
-        .buscarPorCategoriaPaginado(this.categoria, this.currentPage, this.pageSize)
-        .subscribe((response) => {
-          this.produtos = response.content;
-          this.totalPages = response.totalPages;
-          this.totalElements = response.totalElements;
-        });
-    } else {
-      this.produtoService
-        .getAllProdutosPaginado(this.currentPage, this.pageSize)
-        .subscribe((response) => {
-          this.produtos = response.content;
-          this.totalPages = response.totalPages;
-          this.totalElements = response.totalElements;
-        });
-    }
+    // CORREÇÃO: Passa 'undefined' se a categoria não estiver na rota
+    const categoriaParaFiltro = this.categoria === undefined ? undefined : this.categoria;
+
+    this.produtoService
+      .buscarComFiltros(categoriaParaFiltro, this.filtroMarcas, this.filtroPrecoMin, this.filtroPrecoMax, this.currentPage, this.pageSize)
+      .subscribe((response) => {
+        this.produtos = response.content;
+        this.totalPages = response.totalPages;
+        this.totalElements = response.totalElements;
+      });
   }
 
   proximaPagina() {
@@ -74,7 +81,7 @@ export class ListaProdutosComponent implements OnInit {
   goToPage(page: number): void {
     if (page >= 0 && page < this.totalPages) {
       this.currentPage = page;
-      this.carregarProdutos(); // Adicionado aqui a chamada para carregar os produtos
+      this.carregarProdutos();
     }
   }
 }

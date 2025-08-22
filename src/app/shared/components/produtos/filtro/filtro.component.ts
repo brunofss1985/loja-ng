@@ -1,0 +1,60 @@
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
+
+@Component({
+  selector: 'app-filtro',
+  templateUrl: './filtro.component.html',
+  styleUrls: ['./filtro.component.scss']
+})
+export class FiltroComponent implements OnInit, OnChanges {
+  @Input() currentCategory: string | undefined;
+  @Output() filtersChanged = new EventEmitter<{ marcas: string[], minPreco: number, maxPreco: number }>();
+
+  marcas: string[] = [];
+  selectedBrands: string[] = [];
+  minPrice: number = 0;
+  maxPrice: number = 999999;
+  selectedCategory: string = 'todos';
+
+  constructor(private produtoService: ProdutosService) { }
+
+  ngOnInit(): void {
+    this.produtoService.buscarMarcas().subscribe(marcas => {
+      this.marcas = marcas;
+    });
+  }
+
+  // Detecta mudanças na categoria da rota e atualiza o filtro
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentCategory'] && changes['currentCategory'].currentValue) {
+      this.selectedCategory = changes['currentCategory'].currentValue;
+    } else {
+      // Se a rota for '/produtos', a categoria é 'todos'
+      this.selectedCategory = 'todos';
+    }
+    this.applyFilters();
+  }
+
+  toggleBrand(marca: string): void {
+    const index = this.selectedBrands.indexOf(marca);
+    if (index > -1) {
+      this.selectedBrands.splice(index, 1);
+    } else {
+      this.selectedBrands.push(marca);
+    }
+    this.applyFilters();
+  }
+
+  selectCategory(categoria: string): void {
+    this.selectedCategory = categoria;
+    this.applyFilters();
+  }
+
+  applyFilters(): void {
+    this.filtersChanged.emit({
+      marcas: this.selectedBrands,
+      minPreco: this.minPrice,
+      maxPreco: this.maxPrice
+    });
+  }
+}

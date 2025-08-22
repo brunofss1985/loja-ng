@@ -15,6 +15,7 @@ import { DetalheProdutoComponent } from './components/produtos/detalhe-produto/d
 import { ProductCardComponent } from './components/produtos/product-card/product-card.component';
 import { PaymentComponent } from './components/payment-component/payment-component.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FiltroComponent } from './components/produtos/filtro/filtro.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ListaProdutosComponent,
     DetalheProdutoComponent,
     ProductCardComponent,
-    PaymentComponent
+    PaymentComponent,
+    FiltroComponent
   ],
   imports: [
     CommonModule,

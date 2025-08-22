@@ -14,11 +14,20 @@
     --radius: 16px;
 }
 
+html,
 body {
+    height: 100%;
+    padding: 0;
     margin: 0;
     font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     color: var(--texto);
-    background: #f8f9fa
+    background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex-grow: 1;
 }
 
 * {

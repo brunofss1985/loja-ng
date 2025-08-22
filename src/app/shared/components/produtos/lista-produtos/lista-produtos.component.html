@@ -1,13 +1,60 @@
-<div class="content" >
-    <app-product-card
-    *ngFor="let produto of produtos"
-    [productId]="produto.id"
-    [productNome]="produto.nome"
-    [productModelo]="produto.descricaoCurta"
-    [productPeso]="produto.peso + 'g'"
-    [productImage]="'data:' + (produto.imagemMimeType) + ';base64,' + produto.imagem"
-    [productPreco]="produto.preco"
-    [productMarca]="produto.marca"
-    [productPrecoDesconto]="produto.precoDesconto"
-    ></app-product-card>
+<div class="content">
+  <ng-container *ngIf="produtos && produtos.length > 0; else noProducts">
+    <div class="product-cards-container">
+      <app-product-card
+        *ngFor="let produto of produtos"
+        [productId]="produto.id"
+        [productNome]="produto.nome"
+        [productModelo]="produto.descricaoCurta"
+        [productPeso]="produto.peso + 'g'"
+        [productImage]="'data:' + produto.imagemMimeType + ';base64,' + produto.imagem"
+        [productPreco]="produto.preco"
+        [productMarca]="produto.marca"
+        [productPrecoDesconto]="produto.precoDesconto"
+      ></app-product-card>
+    </div>
+
+    <!-- Controles de Paginação -->
+    <div class="pagination">
+      <div class="d-flex justify-content-center align-items-center mt-4">
+        <!-- Botão Anterior -->
+        <button
+          class="btn btn-outline-secondary me-2"
+          (click)="paginaAnterior()"
+          [disabled]="currentPage === 0"
+        >
+          Anterior
+        </button>
+
+        <!-- Botões de página numerados -->
+        <ng-container *ngFor="let page of getPages()">
+          <button
+            class="btn mx-1"
+            [ngClass]="{'btn-primary': currentPage === page, 'btn-outline-secondary': currentPage !== page}"
+            (click)="goToPage(page)"
+          >
+            {{ page + 1 }}
+          </button>
+        </ng-container>
+
+        <!-- Botão Próximo -->
+        <button
+          class="btn btn-outline-secondary ms-2"
+          (click)="proximaPagina()"
+          [disabled]="currentPage >= totalPages - 1"
+        >
+          Próxima
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noProducts>
+    <div class="full-height-message-container">
+      <div class="empty-list-message">
+        <h4>Nenhum produto encontrado.</h4>
+        <p>Verifique o estoque ou adicione novos produtos.</p>
+      </div>
+    </div>
+  </ng-template>
 </div>

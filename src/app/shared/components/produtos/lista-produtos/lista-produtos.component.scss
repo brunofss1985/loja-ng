@@ -1,8 +1,47 @@
+/* Container principal da página (geralmente o body) */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  /* position: fixed; */
+  /* Removendo fixed para que ele não saia do fluxo do documento */
+  width: 100%;
+}
+
 .content {
-  position: relative;
-  top: 100px;
+  /* Removendo position: relative e top para que o flexbox gerencie o espaçamento */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Faz com que o conteúdo cresça e ocupe o espaço */
+  justify-content: flex-start; /* Alinha o conteúdo ao topo */
+  align-items: center;
+  padding-top: 100px; /* Adiciona o espaçamento do header como padding */
+}
+
+.product-cards-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content:  space-evenly ;
+  justify-content: space-evenly;
+  flex-grow: 1; /* Permite que este contêiner se expanda */
+}
+
+.pagination {
+  margin-top: auto; /* Empurra a paginação para a parte inferior do .content */
+  margin-bottom: 20px;
+}
+
+.empty-list-message {
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+}
+
+.full-height-message-container {
+  display: flex;
+  justify-content: center;
   align-items: center;
+  min-height: calc(65vh - 100px - 60px); /* 100vh - header - footer */
 }

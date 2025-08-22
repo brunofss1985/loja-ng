@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Produto } from '../../models/product.model';
@@ -22,23 +22,31 @@ export class ProdutosService {
     return headers;
   }
 
+  // Novo método para listar todos os produtos com paginação
+  getAllProdutosPaginado(page: number, size: number = 10): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<any>(this.apiUrl, { params });
+  }
+
+  // Novo método para buscar produtos por categoria com paginação
+  buscarPorCategoriaPaginado(categoria: string, page: number, size: number = 10): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<any>(`${this.apiUrl}/categoria/${categoria}`, { params });
+  }
+
+
   // ----------------------------
   // Produtos sem imagem (puro JSON)
   // ----------------------------
-
-  getAllProdutos(): Observable<Produto[]> {
-    return this.http.get<Produto[]>(this.apiUrl);
-  }
-
-
+  
+  // Os métodos abaixo não precisam de alteração, mas foram mantidos para completar o arquivo
   buscarPorId(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
-
-buscarPorCategoria(categoria: string): Observable<any[]> {
-  return this.http.get<any[]>(this.apiUrl + `/categoria/${categoria}`);
-}
-
 
   createProduto(produto: Produto): Observable<Produto> {
     return this.http.post<Produto>(this.apiUrl, produto, {

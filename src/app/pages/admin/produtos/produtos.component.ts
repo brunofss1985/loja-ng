@@ -4,6 +4,19 @@ import { Produto } from 'src/app/core/models/product.model';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
 import { ToastrService } from 'ngx-toastr';
 
+// Interface para a resposta da API paginada
+interface ProdutoResponse {
+  content: Produto[];
+  totalPages: number;
+  totalElements: number;
+  // Outros metadados de paginação que a API do Spring envia
+  last: boolean;
+  first: boolean;
+  number: number;
+  size: number;
+  numberOfElements: number;
+}
+
 @Component({
   selector: 'app-produtos',
   templateUrl: './produtos.component.html',
@@ -28,6 +41,11 @@ export class ProdutosComponent implements OnInit {
     categoria: 'Categoria',
     preco: 'Preco',
   };
+  
+  // Variáveis para paginação
+  currentPage: number = 0;
+  totalPages: number = 0;
+  pageSize: number = 10;
 
   ngOnInit(): void {
     this.loadProducts();
@@ -71,11 +89,14 @@ export class ProdutosComponent implements OnInit {
   }
 
   loadProducts(): void {
-    this.produtoService.getAllProdutos().subscribe({
-      next: (data) => {
-        this.allProducts = data;
+    // Chama o método de paginação para carregar os produtos
+    this.produtoService.getAllProdutosPaginado(this.currentPage, this.pageSize).subscribe({
+      next: (data: ProdutoResponse) => {
+        this.allProducts = data.content;
+        this.totalPages = data.totalPages;
+        // As propriedades de paginação agora vêm do objeto de resposta `data`
       },
-      error: (err) => console.error('Erro ao carregar usuários:', err),
+      error: (err: any) => console.error('Erro ao carregar produtos:', err),
     });
   }
 
@@ -90,13 +111,28 @@ export class ProdutosComponent implements OnInit {
 
     this.produtoService.deleteProduto(id).subscribe({
       next: () => {
-        this.toastr.success(`Usuário ${id} deletado com sucesso`);
+        this.toastr.success(`Produto ${id} deletado com sucesso`);
         this.loadProducts(); // Atualiza a lista
       },
-      error: (error) => {
-        this.toastr.error('Erro ao deletar usuário');
-        console.error('Erro ao deletar usuário:', error);
+      error: (error: any) => {
+        this.toastr.error('Erro ao deletar produto');
+        console.error('Erro ao deletar produto:', error);
       },
     });
+  }
+
+  // Métodos de paginação
+  proximaPagina(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.loadProducts();
+    }
+  }
+
+  paginaAnterior(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadProducts();
+    }
   }
 }

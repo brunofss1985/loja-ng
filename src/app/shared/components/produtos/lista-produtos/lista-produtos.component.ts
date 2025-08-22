@@ -10,6 +10,10 @@ import { ProdutosService } from 'src/app/core/services/produtosService/produtos.
 export class ListaProdutosComponent implements OnInit {
   categoria!: any;
   produtos!: any[];
+  currentPage: number = 0;
+  totalPages: number = 0;
+  totalElements: number = 0;
+  pageSize: number = 4;
 
   constructor(
     private route: ActivatedRoute,
@@ -19,25 +23,58 @@ export class ListaProdutosComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.categoria = params['categoria'];
-      if (this.categoria) {
-        this.carregarProdutos();
-      } else {
-        this.allProdutos();
-      }
+      // Sempre que a rota mudar, recomeça da primeira página
+      this.currentPage = 0; 
+      this.carregarProdutos();
     });
   }
 
   carregarProdutos() {
-    this.produtoService
-      .buscarPorCategoria(this.categoria)
-      .subscribe((produtos) => {
-        this.produtos = produtos;
-      });
+    if (this.categoria) {
+      this.produtoService
+        .buscarPorCategoriaPaginado(this.categoria, this.currentPage, this.pageSize)
+        .subscribe((response) => {
+          this.produtos = response.content;
+          this.totalPages = response.totalPages;
+          this.totalElements = response.totalElements;
+        });
+    } else {
+      this.produtoService
+        .getAllProdutosPaginado(this.currentPage, this.pageSize)
+        .subscribe((response) => {
+          this.produtos = response.content;
+          this.totalPages = response.totalPages;
+          this.totalElements = response.totalElements;
+        });
+    }
   }
 
-  allProdutos() {
-    this.produtoService.getAllProdutos().subscribe((res) => {
-      this.produtos = res;
-    });
+  proximaPagina() {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.carregarProdutos();
+    }
+  }
+
+  paginaAnterior() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.carregarProdutos();
+    }
+  }
+
+  getPages(): number[] {
+    const pages = [];
+    for (let i = 0; i < this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.carregarProdutos(); // Adicionado aqui a chamada para carregar os produtos
+    }
   }
 }

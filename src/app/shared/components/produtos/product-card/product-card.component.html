@@ -1,14 +1,61 @@
 <div class="content">
     <div class="product-card">
-      <h3 class="nome">{{ productNome }}</h3>
+      <!-- Mantive seu desconto -->
+      <div class="discount-badge">-15%</div>
+      <!-- Acrescentei um selo de frete grátis (hard-coded) -->
+      <div class="frete-badge">Frete grátis 199+</div>
+
+      <!-- Imagem centralizada (apenas envólucro novo) -->
+      <div class="media">
+        <div class="media-inner">
+          <a [routerLink]="['/produto', productId]">
+            <img [src]="productImage" alt="{{ productNome }}" class="product-image" loading="lazy" />
+          </a>
+        </div>
+      </div>
+
+      <!-- Textos à esquerda (mantidos) -->
+      <h3 class="nome">{{ productNome }} ({{productPeso}})</h3>
       <h4 class="nome">{{ productMarca }}</h4>
-      <a [routerLink]="['/produto', productId]">
-        <img [src]="productImage" alt="{{ productNome }}" class="product-image" loading="lazy" />
-      </a>
-      <!-- <p class="modelo">{{ productModelo }}</p> -->
-      <h6>{{ productModelo }}</h6>
+
+      <!-- Avaliação (hard-coded) -->
+      <div class="rating-row">
+        <span class="stars">★★★★★</span>
+        <small>(4,8 • 320 avaliações)</small>
+      </div>
+
+      <!-- Benefícios (hard-coded) -->
+      <!-- <div class="features">
+        <span class="chip">27g proteína</span>
+        <span class="chip">Sem açúcar</span>
+        <span class="chip">Alta absorção</span>
+      </div> -->
+
+      <!-- Preços (mantidos) -->
+      <div class="prices-container">
+        <h6 class="old-price">de R$ {{productPreco }}</h6>
+        <h6 class="current-price">por R$ {{ productPrecoDesconto }}</h6>
+      </div>
+
+      <!-- Parcelamento (hard-coded) -->
+      <div class="installments">ou 6x de R$ 33,32 sem juros</div>
+
+      <!-- Formas de pagamento (hard-coded) -->
+      <div class="payment-strip">
+        <span class="badge pix">PIX -5%</span>
+        <span class="badge card">Cartão 6x</span>
+        <span class="badge boleto">Boleto</span>
+      </div>
+
+      <!-- Confiança e estoque (hard-coded) -->
+      <div class="stock-row"><span class="dot"></span>Em estoque e envio imediato</div>
+      <!-- <div class="trust">
+        <span>🔒 Compra segura</span>
+        <span>↩️ Devolução 7 dias</span>
+      </div> -->
+
+      <!-- Botão centralizado (mantido) -->
       <div class="footerCard">
-        <h6 class="preco" style="color: black;">R$ {{ productPreco }}</h6>
         <a [routerLink]="['/produto', productId]">
           <button type="button" class="btn btn-warning">Compre Agora</button>
         </a>

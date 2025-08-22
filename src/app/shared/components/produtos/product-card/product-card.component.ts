@@ -14,4 +14,5 @@ export class ProductCardComponent {
   @Input() productImage: string = '';
   @Input() productLink: string = '';
   @Input() productPreco: string = '';
+  @Input() productPrecoDesconto: string = '';
 }

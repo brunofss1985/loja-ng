@@ -13,7 +13,7 @@ export class ListaProdutosComponent implements OnInit {
   currentPage: number = 0;
   totalPages: number = 0;
   totalElements: number = 0;
-  pageSize: number = 4;
+  pageSize: number = 10;
 
   constructor(
     private route: ActivatedRoute,

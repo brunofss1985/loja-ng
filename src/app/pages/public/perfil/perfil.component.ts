@@ -1,3 +1,4 @@
+// perfil.component.ts (mantém o mesmo código da resposta anterior)
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrderService } from 'src/app/core/services/orderService/order-service';
@@ -20,6 +21,8 @@ export class PerfilComponent implements OnInit {
   user?: User;
   profileForm!: FormGroup;
   orders: Order[] = [];
+  
+  isModalOpen: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +41,7 @@ export class PerfilComponent implements OnInit {
       points: 0,
       credits: 0
     });
-        this.user = this.authService.getUser();
+    this.user = this.authService.getUser();
 
     if (this.user?.email) {
       this.loadOrders(this.user.email);
@@ -57,11 +60,11 @@ export class PerfilComponent implements OnInit {
       }
     });
   }
-private loadOrders(userId: string): void {
+
+  private loadOrders(userId: string): void {
     this.orderService.getLastOrder(userId).subscribe({
       next: (order) => {
         if (order) {
-          // Se o backend retornar apenas 1 pedido
           this.orders = [order];
         }
       },
@@ -71,10 +74,9 @@ private loadOrders(userId: string): void {
     });
   }
 
- setTab(tabName: string): void {
+  setTab(tabName: string): void {
     this.activeTab = tabName;
 
-    // ✅ Carrega os pedidos ao abrir a aba "pedidos"
     if (tabName === 'pedidos' && this.user?.email) {
       this.orderService.getAllOrders(this.user.email).subscribe({
         next: (orders: Order[]) => {
@@ -104,14 +106,14 @@ private loadOrders(userId: string): void {
 
     const updatedUser: User = {
       ...this.user,
-      ...this.profileForm.getRawValue() // getRawValue inclui campos desabilitados
+      ...this.profileForm.getRawValue()
     };
 
     this.userService.updateCurrentUser(updatedUser).subscribe({
       next: (res: User) => {
         this.toast.success('Perfil atualizado com sucesso!');
         this.user = res;
-        this.closeModal();
+        this.isModalOpen = false;
       },
       error: (err: any) => {
         console.error(err);
@@ -120,10 +122,7 @@ private loadOrders(userId: string): void {
     });
   }
 
-  closeModal(): void {
-    const modalCheckbox = document.getElementById('modalEdit') as HTMLInputElement;
-    if (modalCheckbox) {
-      modalCheckbox.checked = false;
-    }
+  openModal(): void {
+    this.isModalOpen = true;
   }
 }

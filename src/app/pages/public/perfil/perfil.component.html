@@ -1,12 +1,3 @@
-
-<!-- Inputs de controle -->
-<input id="isLoggedIn" type="checkbox" class="hide" checked />
-<input id="logoutOpen" type="checkbox" class="hide" />
-<input id="modalEdit" type="checkbox" class="hide" />
-<input id="modalAddress" type="checkbox" class="hide" />
-<input id="modalPwdInfo" type="checkbox" class="hide" />
-
-<!-- Tabs radios -->
 <input id="tab1" name="tabs" type="radio" class="hide" checked />
 <input id="tab2" name="tabs" type="radio" class="hide" />
 <input id="tab3" name="tabs" type="radio" class="hide" />
@@ -15,7 +6,6 @@
 <body style="height: 80%;">
 <div class="container">
   <div class="app-card">
-    <!-- Topo -->
     <div class="topbar">
       <div class="perfil-mini">
         <div class="avatar">{{ user?.name ? user?.name?.substring(0, 2)?.toUpperCase() : '' }}
@@ -27,9 +17,7 @@
       </div>
     </div>
 
-    <!-- Corpo -->
     <div class="content">
-      <!-- Side -->
       <aside class="side">
         <div class="perfil-bloco">
           <h3>Seus dados</h3>
@@ -51,30 +39,19 @@
           </div>
           <div class="linha"></div>
           <div class="acao-topo">
-            <label for="modalEdit" class="btn">
+            <button class="btn" (click)="openModal()">
               <span class="ico">
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M3 21h4l11-11-4-4L3 17v4z" stroke="currentColor" stroke-width="1.5" />
                 </svg>
               </span>
               Editar perfil
-            </label>
+            </button>
           </div>
-          <!-- <div class="mini-stats">
-            <div class="chip">
-              <strong>{{ user?.points || 0 }}</strong>
-              <small>Pontos</small>
-            </div>
-            <div class="chip">
-              <strong>R$ {{ user?.credits || 0 }}</strong>
-              <small>Créditos</small>
-            </div>
-          </div> -->
         </div>
       </aside>
 
       <section class="tabs-wrap">
-        <!-- Cabeçalho das abas -->
         <div class="tabs-header">
           <button [ngClass]="{'active': activeTab === 'visao-geral'}" (click)="setTab('visao-geral')">Visão
             Geral</button>
@@ -83,7 +60,6 @@
           <button [ngClass]="{'active': activeTab === 'seguranca'}" (click)="setTab('seguranca')">Segurança</button>
         </div>
 
-        <!-- Painel Visão Geral -->
         <div class="tab-panel" *ngIf="activeTab === 'visao-geral'">
           <h3>Resumo rápido</h3>
           <p class="muted">Acompanhe seu progresso e benefícios.</p>
@@ -93,7 +69,6 @@
           </div>
         </div>
 
-        <!-- Painel Pedidos -->
         <div class="tab-panel" *ngIf="activeTab === 'pedidos'">
           <h3>Meus pedidos</h3>
 
@@ -102,7 +77,6 @@
               <h4>Pedido #{{ order.id }} <app-order-status [status]="order.status"></app-order-status></h4>
               <p class="muted">{{ order.items.length }} itens • R$ {{ order.total }}</p>
               <p class="muted">Feito em {{ order.createdAt | date:'short' }}</p>
-
             </div>
           </div>
 
@@ -111,31 +85,25 @@
           </ng-template>
         </div>
 
-        <!-- Painel Endereços -->
         <div class="tab-panel" *ngIf="activeTab === 'enderecos'">
           <h3>Endereços</h3>
-          <!-- Lista de endereços futura -->
-        </div>
+          </div>
 
-        <!-- Painel Segurança -->
         <div class="tab-panel" *ngIf="activeTab === 'seguranca'">
           <h3>Segurança</h3>
-          <!-- Segurança da conta futura -->
-        </div>
+          </div>
       </section>
     </div>
   </div>
 </div>
 
-<!-- Modal Editar perfil -->
-
-<div class="modal-edit">
-  <label for="modalEdit" class="modal-backdrop" aria-hidden="true"></label>
+<div class="modal-edit" [ngClass]="{'visible': isModalOpen}">
+  <div class="modal-backdrop" (click)="isModalOpen = false" aria-hidden="true"></div>
   <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editTitle">
     <div class="modal-card">
       <div class="modal-head">
         <h3 id="editTitle">Editar perfil</h3>
-        <label for="modalEdit" class="btn-ghost" style="color: black;">Fechar</label>
+        <button class="btn-ghost" style="color: black;" (click)="isModalOpen = false">Fechar</button>
       </div>
 
       <form *ngIf="profileForm" [formGroup]="profileForm" class="modal-body">
@@ -157,112 +125,16 @@
             <input class="input" type="text" formControlName="address" />
           </div>
 
-          <!-- Campos ocultos para manter valores -->
           <input type="hidden" formControlName="points" />
           <input type="hidden" formControlName="credits" />
         </div>
       </form>
 
       <div class="modal-actions">
-        <label for="modalEdit" class="btn" (click)="saveProfile()">Salvar</label>
+        <button class="btn" (click)="saveProfile()">Salvar</button>
       </div>
     </div>
   </div>
 </div>
 
 </body>
-
-
-<!-- Modal Adicionar endereço -->
-<!-- <div class="modal-address">
-        <label for="modalAddress" class="modal-backdrop" aria-hidden="true"></label>
-        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="addrTitle">
-            <div class="modal-card">
-                <div class="modal-head">
-                    <h3 id="addrTitle">Novo endereço</h3>
-                    <label for="modalAddress" class="btn-ghost">Fechar</label>
-                </div>
-                <div class="modal-body">
-                    <div class="linha-flex">
-                        <div class="campo">
-                            <label>Apelido</label>
-                            <input class="input" type="text" placeholder="Casa, Trabalho..." />
-                        </div>
-                        <div class="campo">
-                            <label>CEP</label>
-                            <input class="input" type="text" placeholder="00000-000" />
-                        </div>
-                        <div class="campo">
-                            <label>Endereço</label>
-                            <input class="input" type="text" placeholder="Rua, número e complemento" />
-                        </div>
-                        <div class="campo">
-                            <label>Cidade</label>
-                            <input class="input" type="text" placeholder="Cidade" />
-                        </div>
-                        <div class="campo">
-                            <label>UF</label>
-                            <input class="input" type="text" placeholder="SP" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <label for="modalAddress" class="btn">Salvar</label>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-<!-- Modal INFO trocar senha (sem campos de senha) -->
-<!-- <div class="modal-pwdinfo">
-        <label for="modalPwdInfo" class="modal-backdrop" aria-hidden="true"></label>
-        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="pwdInfoTitle">
-            <div class="modal-card">
-                <div class="modal-head">
-                    <h3 id="pwdInfoTitle">Trocar senha</h3>
-                    <label for="modalPwdInfo" class="btn-ghost">Fechar</label>
-                </div>
-                <div class="modal-body">
-                    <p class="muted" style="margin:0;">
-                        Aqui vai a área de troca de senha. Para sua segurança, este modelo não inclui campos de senha.
-                        Use seu backend do Angular para implementar a troca de senha real.
-                    </p>
-                </div>
-                <div class="modal-actions">
-                    <label for="modalPwdInfo" class="btn">Entendi</label>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-<!-- Modal Logout -->
-<!-- <div class="modal-logout">
-        <label for="logoutOpen" class="modal-backdrop" aria-hidden="true"></label>
-        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
-            <div class="modal-card">
-                <div class="modal-head">
-                    <h3 id="logoutTitle">Sair da conta</h3>
-                </div>
-                <div class="modal-body">
-                    <p class="muted" style="margin:0;">Tem certeza que deseja sair?</p>
-                </div>
-                <div class="modal-actions">
-                    <label for="logoutOpen" class="btn-ghost">Cancelar</label> -->
-<!-- Confirmar: desmarca estado logado; o modal some automaticamente -->
-<!-- <label for="isLoggedIn" class="btn-danger">Confirmar</label>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-<!-- Banner de deslogado (demo) -->
-<div class="logout-banner" aria-live="polite">
-  <div class="logout-card">
-    <h2>Você saiu (demo)</h2>
-    <p>Como é apenas HTML e CSS, esta saída é uma simulação visual. Para sair de verdade, conecte ao seu backend no
-      Angular.</p>
-    <div class="row" style="justify-content:center;">
-      <label for="isLoggedIn" class="btn">Entrar novamente (demo)</label>
-    </div>
-  </div>
-</div>

@@ -1,3 +1,4 @@
+/* Seu CSS original aqui... */
 .container {
   position: relative;
   top: 100px;
@@ -336,50 +337,35 @@ h4 {
   margin-bottom: 8px;
 }
 
-/* Modais (CSS-only) */
-.modal-edit .modal-backdrop,
+/* --- Modais (Ajustado para funcionar com o Angular) --- */
+/* Remove as classes que dependiam do checkbox */
+/* .modal-edit .modal-backdrop,
 .modal-edit .modal-content {
   display: none;
-}
-
+} */
 
 .modal-backdrop,
 .modal-content {
-  display: none;
+  position: fixed;
+  inset: 0;
+  display: grid; /* Use grid para centralizar */
+  place-items: center;
+  z-index: 50;
+  
+  /* Esconde o modal por padrão */
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s ease;
 }
 
-/* Editar Perfil */
-#modalEdit:checked~.modal-edit .modal-backdrop,
-#modalEdit:checked~.modal-edit .modal-content {
-  display: block;
-}
-
-/* Endereço */
-#modalAddress:checked~.modal-address .modal-backdrop,
-#modalAddress:checked~.modal-address .modal-content {
-  display: block;
-}
-
-/* Info Trocar Senha (sem campo de senha) */
-#modalPwdInfo:checked~.modal-pwdinfo .modal-backdrop,
-#modalPwdInfo:checked~.modal-pwdinfo .modal-content {
-  display: block;
-}
-
-/* Logout confirmar: aparece apenas quando logoutOpen e logado */
-#logoutOpen:checked~.modal-logout .modal-backdrop,
-#logoutOpen:checked~.modal-logout .modal-content {
-  display: block;
-}
-
-#isLoggedIn:not(:checked)~.modal-logout .modal-backdrop,
-#isLoggedIn:not(:checked)~.modal-logout .modal-content {
-  display: none;
+/* Mostra o modal quando a classe 'visible' estiver presente no pai */
+.modal-edit.visible .modal-backdrop,
+.modal-edit.visible .modal-content {
+  visibility: visible;
+  opacity: 1;
 }
 
 .modal-backdrop {
-  position: fixed;
-  inset: 0;
   background: rgba(7, 19, 40, .5);
   backdrop-filter: blur(3px);
   z-index: 50;
@@ -387,11 +373,6 @@ h4 {
 }
 
 .modal-content {
-  position: fixed;
-  padding-top: 202px;
-  inset: 0;
-  display: grid;
-  place-items: center;
   z-index: 60;
   animation: fade .2s ease;
 }

@@ -15,6 +15,8 @@ import { ProdutosService } from 'src/app/core/services/produtosService/produtos.
   styleUrls: ['./filtro.component.scss'],
 })
 export class FiltroComponent implements OnInit, OnChanges {
+  isCollapsedAll: boolean = true; // Inicia o filtro expandido
+
   @Input() currentCategory: string | undefined;
   @Output() filtersChanged = new EventEmitter<{
     marcas: string[];
@@ -88,13 +90,16 @@ export class FiltroComponent implements OnInit, OnChanges {
   }
 
   clearFilters(): void {
-    
-  this.selectedCategory = 'todos';
-  this.selectedBrands = [];
-  this.minPrice = 0;
-  this.maxPrice = 999999;
-  
-  // Chame seu método de aplicar filtros ou emita evento
-  this.applyFilters();
-}
+    this.selectedCategory = 'todos';
+    this.selectedBrands = [];
+    this.minPrice = 0;
+    this.maxPrice = 999999;
+
+    // Chame seu método de aplicar filtros ou emita evento
+    this.applyFilters();
+  }
+
+  toggleAllFilters() {
+    this.isCollapsedAll = !this.isCollapsedAll;
+  }
 }

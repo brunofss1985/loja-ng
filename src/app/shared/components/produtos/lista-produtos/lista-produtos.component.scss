@@ -13,26 +13,28 @@
     .main-container {
       display: flex;
       padding: 24px;
+      padding-left: 0;
       gap: 32px;
       margin-top: 100px;
       max-width: 1400px;
-      margin-left: auto;
+      margin-left: 0;
       margin-right: auto;
       min-height: calc(100vh - 140px);
     }
 
     /* Sidebar de filtros com visual moderno */
     .filter-container {
-      width: 280px;
+      width: 300px;
       min-width: 280px;
       background: linear-gradient(180deg, #ffffff, #fafdff);
       border: 1px solid var(--borda);
-      border-radius: 16px;
+      // border-radius: 16px;
       padding: 20px;
+      margin-right: 100px;
       box-shadow: var(--sombra);
       height: fit-content;
       position: sticky;
-      top: 120px;
+      top: 0;
       transition: all 0.3s ease;
     }
 

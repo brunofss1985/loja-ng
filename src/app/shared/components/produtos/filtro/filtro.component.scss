@@ -1,357 +1,368 @@
-    /* FILTRO RECOLHÍVEL */
-    .filter-card {
-        background-color: var(--branco);
-        border-radius: var(--radius);
-        padding: 20px;
-        box-shadow: var(--sombra);
-        position: sticky;
-        top: 120px;
-        transition: all 0.3s ease;
-    }
 
-    .filter-card:hover {
-        box-shadow: var(--sombra-strong);
-    }
+/* FILTRO RECOLHÍVEL */
+.filter-card {
+    background-color: var(--branco);
+    position: sticky;
+    top: 120px;
+    transition: all 0.3s ease;
+    overflow: hidden; /* Garante que o conteúdo escondido não seja visível */
+}
 
-    .filter-card h4 {
-        color: var(--texto);
-        font-weight: 700;
-        margin-bottom: 20px;
-        font-size: 1.1rem;
-        letter-spacing: 0.2px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
 
-    .filter-icon {
-        width: 20px;
-        height: 20px;
-        background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria));
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 12px;
-        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
-    }
+/* Estado recolhido do filtro completo */
+.filter-card.collapsed-all {
+    height: 60px; /* Ajuste a altura para exibir apenas o cabeçalho */
+    padding: 0; /* Remove o padding quando recolhido */
+}
 
-    /* Seção recolhível */
-    .filter-section {
-        margin-bottom: 16px;
-        border: 1px solid var(--borda);
-        border-radius: 12px;
-        overflow: hidden;
-        background: linear-gradient(180deg, #ffffff, #fafdff);
-        transition: all 0.3s ease;
-    }
+/* Esconder o conteúdo interno quando o filtro está recolhido */
+.filter-card.collapsed-all .filter-content,
+.filter-card.collapsed-all .filter-section,
+.filter-card.collapsed-all .price-section {
+    display: none;
+}
 
-    .filter-section:hover {
-        border-color: var(--cor-secundaria);
-        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.08);
-    }
+/* Cabeçalho principal do filtro */
+.filter-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+}
 
-    /* Cabeçalho clicável */
-    .filter-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 16px;
-        cursor: pointer;
-        background: linear-gradient(90deg, #f8fbff, #ffffff);
-        border-bottom: 1px solid transparent;
-        transition: all 0.25s ease;
-        user-select: none;
-    }
+.filter-card-header:hover {
+    background-color: #f8f9fa;
+}
 
-    .filter-header:hover {
-        background: linear-gradient(90deg, #f0f7ff, #f8fbff);
-        border-bottom-color: var(--borda);
-    }
+.filter-card-header h4 {
+    color: var(--texto);
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.1rem;
+    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-    .filter-header h5 {
-        font-size: 15px;
-        color: var(--texto);
-        font-weight: 700;
-        margin: 0;
-        letter-spacing: 0.2px;
-    }
+.filter-icon {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria));
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+}
 
-    /* Ícone de expansão */
-    .expand-icon {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background: var(--texto-suave);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: 800;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(74, 98, 128, 0.2);
-    }
+/* Estilos para os ícones de expansão/recolhimento */
+.filter-card.collapsed-all .expand-icon::before {
+    content: "+";
+}
+.filter-card:not(.collapsed-all) .expand-icon::before {
+    content: "−";
+}
 
-    .filter-section.expanded .expand-icon {
-        background: var(--cor-primaria);
-        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
-    }
+/* Seção recolhível */
+.filter-section {
+    margin-bottom: 16px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #ffffff, #fafdff);
+    transition: all 0.3s ease;
+}
 
-    .filter-section.expanded .expand-icon::before {
-        content: "−";
-    }
+.filter-section:hover {
+    border-color: var(--cor-secundaria);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.08);
+}
 
-    .filter-section.collapsed .expand-icon::before {
-        content: "+";
-    }
+/* Cabeçalho clicável de cada seção */
+.filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #f8fbff, #ffffff);
+    border-bottom: 1px solid transparent;
+    transition: all 0.25s ease;
+    user-select: none;
+}
 
-    /* Conteúdo recolhível */
-    .filter-content {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.4s ease, padding 0.3s ease;
-        padding: 0 16px;
-    }
+.filter-header:hover {
+    background: linear-gradient(90deg, #f0f7ff, #f8fbff);
+    border-bottom-color: var(--borda);
+}
 
-    .filter-section.expanded .filter-content {
-        max-height: 400px;
-        padding: 16px;
-        border-top: 1px solid var(--borda);
-    }
+.filter-header h5 {
+    font-size: 15px;
+    color: var(--texto);
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.2px;
+}
 
-    /* Listas */
-    .filter-section ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+/* Ícone de expansão de cada seção */
+.expand-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--texto-suave);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(74, 98, 128, 0.2);
+}
 
-    .filter-section li {
-        margin-bottom: 8px;
-        font-size: 14px;
-        transition: all 0.2s ease;
-    }
+.filter-section.expanded .expand-icon {
+    background: var(--cor-primaria);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+}
 
-    .filter-section li:hover {
-        transform: translateX(4px);
-    }
+.filter-section.expanded .expand-icon::before {
+    content: "−";
+}
 
-    .filter-section li a {
-        color: var(--texto-suave);
-        text-decoration: none;
-        transition: all 0.25s ease;
-        cursor: pointer;
-        display: block;
-        padding: 6px 8px;
-        border-radius: 8px;
-        font-weight: 500;
-    }
+.filter-section.collapsed .expand-icon::before {
+    content: "+";
+}
 
-    .filter-section li a:hover {
-        color: var(--cor-primaria);
-        background: rgba(0, 123, 255, 0.06);
-    }
+/* Conteúdo recolhível de cada seção */
+.filter-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 16px;
+}
 
-    .filter-section li.active a {
-        font-weight: 700;
-        color: var(--cor-primaria);
-        background: linear-gradient(90deg, rgba(0, 123, 255, 0.1), rgba(83, 163, 255, 0.08));
-        border-left: 3px solid var(--cor-primaria);
-    }
+.filter-section.expanded .filter-content {
+    max-height: 400px;
+    padding: 16px;
+    border-top: 1px solid var(--borda);
+}
 
-    /* Labels e checkboxes */
-    .filter-section label {
-        display: flex;
-        align-items: center;
-        font-size: 14px;
-        color: var(--texto-suave);
-        cursor: pointer;
-        margin-bottom: 8px;
-        padding: 6px 8px;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        font-weight: 500;
-    }
+/* Listas */
+.filter-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-    .filter-section label:hover {
-        background: rgba(0, 123, 255, 0.04);
-        color: var(--texto);
-    }
+.filter-section li {
+    margin-bottom: 8px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
 
-    .filter-section input[type="checkbox"] {
-        margin-right: 10px;
-        width: 16px;
-        height: 16px;
-        accent-color: var(--cor-primaria);
-        cursor: pointer;
-    }
+.filter-section li:hover {
+    transform: translateX(4px);
+}
 
-    /* Scroll na seção de marcas */
-    .filter-content {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.4s ease, padding 0.3s ease;
-        padding: 0 16px;
-    }
+.filter-section li a {
+    color: var(--texto-suave);
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    display: block;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-weight: 500;
+}
 
-    .filter-section.expanded .filter-content {
-        max-height: 200px;
-        /* Altura máxima para ativar scroll */
-        padding: 16px;
-        border-top: 1px solid #e7eef7;
-        overflow-y: auto;
-        /* Scroll vertical */
-    }
+.filter-section li a:hover {
+    color: var(--cor-primaria);
+    background: rgba(0, 123, 255, 0.06);
+}
 
-    /* Scroll personalizado */
-    .filter-content::-webkit-scrollbar {
-        width: 6px;
-    }
+.filter-section li.active a {
+    font-weight: 700;
+    color: var(--cor-primaria);
+    background: linear-gradient(90deg, rgba(0, 123, 255, 0.1), rgba(83, 163, 255, 0.08));
+    border-left: 3px solid var(--cor-primaria);
+}
 
-    .filter-content::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
+/* Labels e checkboxes */
+.filter-section label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: var(--texto-suave);
+    cursor: pointer;
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
 
-    .filter-content::-webkit-scrollbar-thumb {
-        background: #007BFF;
-        border-radius: 10px;
-    }
+.filter-section label:hover {
+    background: rgba(0, 123, 255, 0.04);
+    color: var(--texto);
+}
 
-    .filter-content::-webkit-scrollbar-thumb:hover {
-        background: #0056b3;
-    }
+.filter-section input[type="checkbox"] {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--cor-primaria);
+    cursor: pointer;
+}
 
-    /* Botões lado a lado */
-    .filter-buttons {
-        display: flex;
-        gap: 8px;
-    }
+/* Scroll na seção de marcas */
+.filter-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+    padding: 0 16px;
+}
 
-    .btn-clear {
-        flex: 1;
-        padding: 12px;
-        background: #6c757d;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 14px;
-        letter-spacing: 0.3px;
-        text-transform: uppercase;
-        transition: all 0.25s ease;
-    }
+.filter-section.expanded .filter-content {
+    max-height: 200px;
+    padding: 16px;
+    border-top: 1px solid #e7eef7;
+    overflow-y: auto;
+}
 
-    .btn-clear:hover {
-        background: #5a6268;
-        transform: translateY(-1px);
-    }
+/* Scroll personalizado */
+.filter-content::-webkit-scrollbar {
+    width: 6px;
+}
 
-    .btn-apply {
-        flex: 1;
-    }
+.filter-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
 
-    /* Seção de preço sempre visível */
-    .price-section {
-        margin-top: 20px;
-        padding: 16px;
-        background: linear-gradient(180deg, #ffffff, #fafdff);
-        border: 1px solid var(--borda);
-        border-radius: 12px;
-        transition: all 0.3s ease;
-    }
+.filter-content::-webkit-scrollbar-thumb {
+    background: #007BFF;
+    border-radius: 10px;
+}
 
-    .price-section:hover {
-        border-color: var(--cor-secundaria);
-        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.08);
-    }
+.filter-content::-webkit-scrollbar-thumb:hover {
+    background: #0056b3;
+}
 
-    .price-section h5 {
-        font-size: 15px;
-        color: var(--texto);
-        font-weight: 700;
-        margin: 0 0 12px 0;
-        letter-spacing: 0.2px;
-    }
+/* Botões lado a lado */
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 20px;
+}
 
-    /* Range de preços */
-    .price-range {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-bottom: 16px;
-    }
+.btn-clear {
+    flex: 1;
+    padding: 12px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+}
 
-    .price-range input {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid var(--borda);
-        border-radius: 10px;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--texto);
-        background: white;
-        transition: all 0.25s ease;
-        box-sizing: border-box;
-    }
+.btn-clear:hover {
+    background: #5a6268;
+    transform: translateY(-1px);
+}
 
-    .price-range input:focus {
-        outline: none;
-        border-color: var(--cor-primaria);
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-    }
+.btn-apply {
+    flex: 1;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+    color: var(--branco);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.25);
+}
 
-    .price-range .separator {
-        color: var(--texto-suave);
-        font-weight: 600;
-        font-size: 14px;
-        text-align: center;
-        margin: -6px 0;
-    }
+.btn-apply:hover {
+    background: linear-gradient(90deg, var(--cor-hover), var(--cor-primaria));
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(0, 123, 255, 0.3);
+}
 
-    /* Botão aplicar */
-    .btn-apply {
-        width: 100%;
-        padding: 12px;
-        background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
-        color: var(--branco);
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        font-weight: 700;
-        font-size: 14px;
-        letter-spacing: 0.3px;
-        text-transform: uppercase;
-        transition: all 0.25s ease;
-        box-shadow: 0 8px 20px rgba(0, 123, 255, 0.25);
-    }
+.btn-apply:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 16px rgba(0, 123, 255, 0.2);
+}
 
-    .btn-apply:hover {
-        background: linear-gradient(90deg, var(--cor-hover), var(--cor-primaria));
-        transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(0, 123, 255, 0.3);
-    }
+/* Seção de preço sempre visível */
+.price-section {
+    margin-top: 20px;
+    padding: 16px;
+    background: linear-gradient(180deg, #ffffff, #fafdff);
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
 
-    .btn-apply:active {
-        transform: translateY(0);
-        box-shadow: 0 6px 16px rgba(0, 123, 255, 0.2);
-    }
+.price-section:hover {
+    border-color: var(--cor-secundaria);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.08);
+}
 
-    /* Estado inicial - primeira seção expandida */
-    .filter-section:first-of-type {
-        border-color: var(--cor-secundaria);
-    }
+.price-section h5 {
+    font-size: 15px;
+    color: var(--texto);
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    letter-spacing: 0.2px;
+}
 
-    .demo-note {
-        text-align: center;
-        margin-top: 24px;
-        padding: 16px;
-        background: rgba(0, 123, 255, 0.06);
-        border-radius: 12px;
-        color: var(--texto-suave);
-        font-size: 14px;
-        font-weight: 600;
-    }
+/* Range de preços */
+.price-range {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.price-range input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--texto);
+    background: white;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+}
+
+.price-range input:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.price-range .separator {
+    color: var(--texto-suave);
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    margin: -6px 0;
+}

@@ -7,12 +7,12 @@
       </span>
       Filtros
     </h4>
-    <div class="expand-icon"></div>
+    <div class="expand-icon-main"></div>
   </div>
 
-  <div *ngIf="!isCollapsedAll">
+  <div class="filter-content-wrapper">
   
-    <div class="filter-section expanded">
+    <div class="filter-section collapsed">
       <div class="filter-header" (click)="toggleSection($event)">
         <h5>Categoria</h5>
         <div class="expand-icon"></div>

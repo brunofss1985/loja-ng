@@ -6,6 +6,7 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  HostListener,
 } from '@angular/core';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
 
@@ -15,7 +16,8 @@ import { ProdutosService } from 'src/app/core/services/produtosService/produtos.
   styleUrls: ['./filtro.component.scss'],
 })
 export class FiltroComponent implements OnInit, OnChanges {
-  isCollapsedAll: boolean = true; // Inicia o filtro expandido
+  isCollapsedAll: boolean = false; // Inicia o filtro fechado
+  isMobile: boolean = false;
 
   @Input() currentCategory: string | undefined;
   @Output() filtersChanged = new EventEmitter<{
@@ -36,6 +38,7 @@ export class FiltroComponent implements OnInit, OnChanges {
     this.produtoService.buscarMarcas().subscribe((marcas) => {
       this.marcas = marcas;
     });
+    this.checkScreenSize();
   }
 
   // Detecta mudanças na categoria da rota e atualiza o filtro
@@ -47,6 +50,13 @@ export class FiltroComponent implements OnInit, OnChanges {
       this.selectedCategory = 'todos';
     }
     this.applyFilters();
+  }
+  
+  // Verifica o tamanho da tela para definir o estado inicial do filtro
+  @HostListener('window:resize', ['$event'])
+  checkScreenSize(): void {
+    this.isMobile = window.innerWidth <= 768;
+    this.isCollapsedAll = this.isMobile;
   }
 
   toggleBrand(marca: string): void {

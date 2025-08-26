@@ -12,14 +12,14 @@
 @media (max-width: 768px) {
   .filter-card {
     width: 100%;
-    margin: 0;
+    margin-left: 0;
   }
 }
 
 /* Fixed width on larger screens */
 @media (min-width: 769px) {
   .filter-card {
-    width: 320px;
+    width: 255px;
     margin-left: 0;
   }
 }

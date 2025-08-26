@@ -23,10 +23,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   userType = this.authService.getUserType();
 
   // Observable que guarda a contagem de itens no carrinho
-  // Agora inicializado na própria declaração para resolver o erro de compilação
   public cartItemCount$: Observable<number> = this.cartService.cartItems$.pipe(
     map(items => items.length)
   );
+
+  // Variável para controlar o estado do dropdown do perfil
+  isProfileDropdownOpen: boolean = false;
 
   // Indica se o topo está “afinado” após rolagem
   isScrolled = false;
@@ -44,7 +46,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     private host: ElementRef,
     private authService: AuthService,
     private route: Router,
-    private cartService: CartService // Adicionando o CartService
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -133,5 +135,31 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   exit(): void {
     this.authService.clearSession();
+    this.isProfileDropdownOpen = false; // Fecha o dropdown ao sair
+  }
+
+  // Métodos para o Dropdown do Perfil
+  toggleProfileDropdown(event: Event): void {
+    // Para parar a propagação do evento de clique,
+    // garantindo que o `onDocumentClick` não feche o menu imediatamente
+    event.stopPropagation();
+    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
+  }
+
+  // Ouve cliques em qualquer lugar do documento
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    // Se o clique não estiver dentro do componente, fecha o dropdown
+    if (!this.host.nativeElement.contains(event.target)) {
+      this.isProfileDropdownOpen = false;
+    }
+  }
+
+  // Ouve a tecla ESC
+  @HostListener('document:keydown.esc', ['$event'])
+  onEscapeKeydown(): void {
+    if (this.isProfileDropdownOpen) {
+      this.isProfileDropdownOpen = false;
+    }
   }
 }

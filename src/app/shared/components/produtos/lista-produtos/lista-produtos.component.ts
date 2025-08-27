@@ -13,7 +13,7 @@ export class ListaProdutosComponent implements OnInit {
   currentPage: number = 0;
   totalPages: number = 0;
   totalElements: number = 0;
-  pageSize: number = 6;
+  pageSize: number = 8;
   
   filtroMarcas: string[] = [];
   filtroPrecoMin: number = 0;

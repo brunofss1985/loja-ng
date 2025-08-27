@@ -71,7 +71,7 @@
 
         <div class="tab-panel" *ngIf="activeTab === 'pedidos'">
           <h3>Meus pedidos</h3>
-
+          <p class="muted">Todos seus pedidos já feitos estão aqui.</p>
           <div *ngIf="orders.length > 0; else noOrders">
             <div class="card" *ngFor="let order of orders">
               <h4>Pedido #{{ order.id }} <app-order-status [status]="order.status"></app-order-status></h4>
@@ -79,7 +79,6 @@
               <p class="muted">Feito em {{ order.createdAt | date:'short' }}</p>
             </div>
           </div>
-
           <ng-template #noOrders>
             <p class="muted">Você ainda não fez nenhum pedido.</p>
           </ng-template>
@@ -87,11 +86,11 @@
 
         <div class="tab-panel" *ngIf="activeTab === 'enderecos'">
           <h3>Endereços</h3>
-          </div>
+        </div>
 
         <div class="tab-panel" *ngIf="activeTab === 'seguranca'">
           <h3>Segurança</h3>
-          </div>
+        </div>
       </section>
     </div>
   </div>
@@ -105,7 +104,6 @@
         <h3 id="editTitle">Editar perfil</h3>
         <button class="btn-ghost" style="color: black;" (click)="isModalOpen = false">Fechar</button>
       </div>
-
       <form *ngIf="profileForm" [formGroup]="profileForm" class="modal-body">
         <div class="linha-flex">
           <div class="campo">
@@ -124,17 +122,14 @@
             <label>Endereço</label>
             <input class="input" type="text" formControlName="address" />
           </div>
-
           <input type="hidden" formControlName="points" />
           <input type="hidden" formControlName="credits" />
         </div>
       </form>
-
       <div class="modal-actions">
         <button class="btn" (click)="saveProfile()">Salvar</button>
       </div>
     </div>
   </div>
 </div>
-
 </body>

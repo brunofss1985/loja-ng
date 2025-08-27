@@ -1,11 +1,15 @@
+.hide {
+  display: none;
+}
+
 /* Seu CSS original aqui... */
 .container {
   position: relative;
-  top: 100px;
   max-width: var(--container);
-  margin: 40px auto;
+  margin: 80px auto 0 auto;
   padding: 0 20px;
   flex-grow: 1;
+  max-height: 40vw;
 }
 
 .app-card {
@@ -185,10 +189,29 @@
 
 .tabs-header {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   padding: 12px;
   border-bottom: 1px solid var(--borda);
   background: #f7fbff;
+  overflow-x: auto; /* Adiciona a barra de rolagem horizontal */
+  -webkit-overflow-scrolling: touch; /* Melhora o scroll em dispositivos iOS */
+}
+
+/* Estilos para os botões dentro do tabs-header */
+.tabs-header button {
+  background: #eee;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.tabs-header button.active {
+  background: var(--cor-primaria, #007bff);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.25);
 }
 
 .tabs-header label {
@@ -206,34 +229,16 @@
   transform: translateY(-1px);
 }
 
-/* Radio invisível */
-.tabs-header {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-
-  button {
-    background: #eee;
-    border: none;
-    padding: 8px 16px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-
-    &.active {
-      background: var(--cor-primaria, #007bff);
-      color: #fff;
-      box-shadow: 0 6px 16px rgba(0, 123, 255, 0.25);
-    }
-  }
-}
-
+/* --- ESTILO CORRIGIDO PARA BARRA DE ROLAGEM VERTICAL --- */
 .tab-panel {
   background: #fff;
-  border: 1px solid #ddd;
   border-radius: 6px;
   padding: 20px;
+  max-height: 500px; /* Define uma altura máxima para o painel */
+  overflow-y: auto;   /* Adiciona a barra de rolagem vertical */
 }
+/* --- FIM DO ESTILO CORRIGIDO --- */
+
 
 /* Painéis */
 .painel-bloco {
@@ -289,6 +294,7 @@
   border-radius: 12px;
   padding: 14px;
   box-shadow: var(--sombra);
+  margin-top: 7px;
 }
 
 .card h4 {
@@ -351,7 +357,7 @@ h4 {
   display: grid; /* Use grid para centralizar */
   place-items: center;
   z-index: 50;
-  
+
   /* Esconde o modal por padrão */
   visibility: hidden;
   opacity: 0;
@@ -480,10 +486,6 @@ h4 {
 
   .content {
     padding: 16px;
-  }
-
-  .tabs-header {
-    overflow: auto;
   }
 }
 

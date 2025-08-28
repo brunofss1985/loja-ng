@@ -23,39 +23,39 @@ export class ProdutosService {
     return headers;
   }
 
-  buscarComFiltros(
-    categorias: string[] | undefined,
-    marcas: string[] | undefined,
-    minPreco: number | undefined,
-    maxPreco: number | undefined,
-    page: number,
-    size: number = 10
-  ): Observable<any> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+buscarComFiltros(
+  categorias: string[] | undefined,
+  marcas: string[] | undefined,
+  minPreco: number | undefined,
+  maxPreco: number | undefined,
+  page: number,
+  size: number = 10
+): Observable<any> {
+  let params = new HttpParams()
+    .set('page', page.toString())
+    .set('size', size.toString());
 
-    if (minPreco !== undefined && minPreco !== null) {
-      params = params.set('minPreco', minPreco.toString());
-    }
-    if (maxPreco !== undefined && maxPreco !== null) {
-      params = params.set('maxPreco', maxPreco.toString());
-    }
-
-    if (categorias && categorias.length > 0) {
-      categorias.forEach((categoria) => {
-        params = params.append('categorias', categoria);
-      });
-    }
-
-    if (marcas && marcas.length > 0) {
-      marcas.forEach((marca) => {
-        params = params.append('marcas', marca);
-      });
-    }
-
-    return this.http.get<any>(this.apiUrl, { params });
+  if (minPreco !== undefined && minPreco !== null) {
+    params = params.set('minPreco', minPreco.toString());
   }
+  if (maxPreco !== undefined && maxPreco !== null) {
+    params = params.set('maxPreco', maxPreco.toString());
+  }
+
+  // ✨ CORREÇÃO: Junta os valores em uma string separada por vírgula
+  if (categorias && categorias.length > 0) {
+    const categoriasString = categorias.join(',');
+    params = params.set('categorias', categoriasString);
+  }
+
+  // ✨ CORREÇÃO: Junta os valores em uma string separada por vírgula
+  if (marcas && marcas.length > 0) {
+    const marcasString = marcas.join(',');
+    params = params.set('marcas', marcasString);
+  }
+
+  return this.http.get<any>(this.apiUrl, { params });
+}
 
   buscarMarcas(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/marcas`);

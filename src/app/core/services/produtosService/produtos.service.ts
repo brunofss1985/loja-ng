@@ -23,39 +23,40 @@ export class ProdutosService {
     return headers;
   }
 
-buscarComFiltros(
-  categorias: string[] | undefined,
-  marcas: string[] | undefined,
-  minPreco: number | undefined,
-  maxPreco: number | undefined,
-  page: number,
-  size: number = 10
-): Observable<any> {
-  let params = new HttpParams()
-    .set('page', page.toString())
-    .set('size', size.toString());
+  buscarComFiltros(
+    categorias: string[] | undefined,
+    marcas: string[] | undefined,
+    minPreco: number | undefined,
+    maxPreco: number | undefined,
+    page: number,
+    size: number = 10
+  ): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
 
-  if (minPreco !== undefined && minPreco !== null) {
-    params = params.set('minPreco', minPreco.toString());
-  }
-  if (maxPreco !== undefined && maxPreco !== null) {
-    params = params.set('maxPreco', maxPreco.toString());
-  }
+    if (minPreco !== undefined && minPreco !== null) {
+      params = params.set('minPreco', minPreco.toString());
+    }
+    if (maxPreco !== undefined && maxPreco !== null) {
+      params = params.set('maxPreco', maxPreco.toString());
+    }
 
-  // ✨ CORREÇÃO: Junta os valores em uma string separada por vírgula
-  if (categorias && categorias.length > 0) {
-    const categoriasString = categorias.join(',');
-    params = params.set('categorias', categoriasString);
-  }
+    // ✅ Envia como múltiplos parâmetros (categorias=A&categorias=B)
+    if (categorias && categorias.length > 0) {
+      categorias.forEach(categoria => {
+        params = params.append('categorias', categoria);
+      });
+    }
 
-  // ✨ CORREÇÃO: Junta os valores em uma string separada por vírgula
-  if (marcas && marcas.length > 0) {
-    const marcasString = marcas.join(',');
-    params = params.set('marcas', marcasString);
-  }
+    if (marcas && marcas.length > 0) {
+      marcas.forEach(marca => {
+        params = params.append('marcas', marca);
+      });
+    }
 
-  return this.http.get<any>(this.apiUrl, { params });
-}
+    return this.http.get<any>(this.apiUrl, { params });
+  }
 
   buscarMarcas(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/marcas`);
@@ -65,21 +66,25 @@ buscarComFiltros(
     return this.http.get<string[]>(`${this.apiUrl}/categorias`);
   }
 
-  // ✨ NOVO: Busca marcas com base em categorias selecionadas
+  // ✨ Busca marcas com base nas categorias selecionadas
   buscarMarcasPorCategorias(categorias: string[]): Observable<string[]> {
     let params = new HttpParams();
-    categorias.forEach(categoria => {
-      params = params.append('categorias', categoria);
-    });
+    if (categorias && categorias.length > 0) {
+      categorias.forEach(c => {
+        params = params.append('categorias', c);
+      });
+    }
     return this.http.get<string[]>(`${this.apiUrl}/marcas-por-categoria`, { params });
   }
-  
-  // ✨ NOVO: Busca categorias com base em marcas selecionadas
+
+  // ✨ Busca categorias com base nas marcas selecionadas
   buscarCategoriasPorMarcas(marcas: string[]): Observable<string[]> {
     let params = new HttpParams();
-    marcas.forEach(marca => {
-      params = params.append('marcas', marca);
-    });
+    if (marcas && marcas.length > 0) {
+      marcas.forEach(m => {
+        params = params.append('marcas', m);
+      });
+    }
     return this.http.get<string[]>(`${this.apiUrl}/categorias-por-marca`, { params });
   }
 

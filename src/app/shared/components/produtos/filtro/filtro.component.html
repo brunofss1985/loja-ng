@@ -12,31 +12,7 @@
   <div class="filter-content-wrapper">
     <div class="filter-section collapsed">
       <div class="filter-header" (click)="toggleSection($event)">
-        <h5>Categoria</h5>
-        <div class="expand-icon"></div>
-      </div>
-      <div class="filter-content">
-        <div *ngIf="filteredCategorias.length > 0; else noCategories">
-          <div *ngFor="let categoria of filteredCategorias">
-            <label>
-              <input
-                type="checkbox"
-                [checked]="selectedCategorias.includes(categoria)"
-                (change)="toggleCategoria(categoria)"
-              >
-              {{ categoria | titlecase }}
-            </label>
-          </div>
-        </div>
-        <ng-template #noCategories>
-          <p>Nenhuma categoria disponível.</p>
-        </ng-template>
-      </div>
-    </div>
-
-    <div class="filter-section collapsed">
-      <div class="filter-header" (click)="toggleSection($event)">
-        <h5>Marca</h5>
+        <h5>Marca ({{ totalMarcas }})</h5>
         <div class="expand-icon"></div>
       </div>
       <div class="filter-content">
@@ -45,15 +21,39 @@
             <label>
               <input
                 type="checkbox"
-                [checked]="selectedMarcas.includes(marca)"
-                (change)="toggleMarca(marca)"
+                [checked]="selectedMarcas.includes(marca.name)"
+                (change)="toggleMarca(marca.name)"
               >
-              {{ marca }}
+              {{ marca.name }} ({{ marca.count }})
             </label>
           </div>
         </div>
         <ng-template #noBrands>
           <p>Nenhuma marca disponível.</p>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="filter-section collapsed">
+      <div class="filter-header" (click)="toggleSection($event)">
+        <h5>Categoria ({{ totalCategorias }})</h5>
+        <div class="expand-icon"></div>
+      </div>
+      <div class="filter-content">
+        <div *ngIf="filteredCategorias.length > 0; else noCategories">
+          <div *ngFor="let categoria of filteredCategorias">
+            <label>
+              <input
+                type="checkbox"
+                [checked]="selectedCategorias.includes(categoria.name)"
+                (change)="toggleCategoria(categoria.name)"
+              >
+              {{ categoria.name | titlecase }} ({{ categoria.count }})
+            </label>
+          </div>
+        </div>
+        <ng-template #noCategories>
+          <p>Nenhuma categoria disponível.</p>
         </ng-template>
       </div>
     </div>

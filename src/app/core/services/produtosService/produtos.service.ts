@@ -1,8 +1,15 @@
-// package src/app/core/services/produtosService/produtos.service.ts;
+// src/app/core/services/produtosService/produtos.service.ts
+
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Produto } from '../../models/product.model';
+
+// Interface para a contagem de itens
+export interface CountedItem {
+  name: string;
+  count: number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -42,15 +49,14 @@ export class ProdutosService {
       params = params.set('maxPreco', maxPreco.toString());
     }
 
-    // ✅ Envia como múltiplos parâmetros (categorias=A&categorias=B)
     if (categorias && categorias.length > 0) {
-      categorias.forEach(categoria => {
+      categorias.forEach((categoria) => {
         params = params.append('categorias', categoria);
       });
     }
 
     if (marcas && marcas.length > 0) {
-      marcas.forEach(marca => {
+      marcas.forEach((marca) => {
         params = params.append('marcas', marca);
       });
     }
@@ -58,34 +64,48 @@ export class ProdutosService {
     return this.http.get<any>(this.apiUrl, { params });
   }
 
-  buscarMarcas(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/marcas`);
+  // Métodos para listar itens com contagem
+  buscarMarcas(): Observable<CountedItem[]> {
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas`);
   }
 
-  buscarCategorias(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.apiUrl}/categorias`);
+  buscarCategorias(): Observable<CountedItem[]> {
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias`);
   }
 
-  // ✨ Busca marcas com base nas categorias selecionadas
-  buscarMarcasPorCategorias(categorias: string[]): Observable<string[]> {
+  buscarMarcasPorCategorias(categorias: string[]): Observable<CountedItem[]> {
     let params = new HttpParams();
     if (categorias && categorias.length > 0) {
-      categorias.forEach(c => {
+      categorias.forEach((c) => {
         params = params.append('categorias', c);
       });
     }
-    return this.http.get<string[]>(`${this.apiUrl}/marcas-por-categoria`, { params });
+    return this.http.get<CountedItem[]>(
+      `${this.apiUrl}/marcas-por-categoria`,
+      { params }
+    );
   }
 
-  // ✨ Busca categorias com base nas marcas selecionadas
-  buscarCategoriasPorMarcas(marcas: string[]): Observable<string[]> {
+  buscarCategoriasPorMarcas(marcas: string[]): Observable<CountedItem[]> {
     let params = new HttpParams();
     if (marcas && marcas.length > 0) {
-      marcas.forEach(m => {
+      marcas.forEach((m) => {
         params = params.append('marcas', m);
       });
     }
-    return this.http.get<string[]>(`${this.apiUrl}/categorias-por-marca`, { params });
+    return this.http.get<CountedItem[]>(
+      `${this.apiUrl}/categorias-por-marca`,
+      { params }
+    );
+  }
+
+  // Novos métodos para a contagem total
+  buscarTotalMarcas(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/marcas/count`);
+  }
+
+  buscarTotalCategorias(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/categorias/count`);
   }
 
   buscarPorId(id: string): Observable<any> {

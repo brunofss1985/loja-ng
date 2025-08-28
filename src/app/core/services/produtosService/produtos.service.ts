@@ -1,3 +1,4 @@
+// package src/app/core/services/produtosService/produtos.service.ts;
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -22,39 +23,66 @@ export class ProdutosService {
     return headers;
   }
 
-  // Novo método que centraliza a busca com todos os filtros
-  buscarComFiltros(categoria: string | undefined, marcas: string[], minPreco: number, maxPreco: number, page: number, size: number = 10): Observable<any> {
+  buscarComFiltros(
+    categorias: string[] | undefined,
+    marcas: string[] | undefined,
+    minPreco: number | undefined,
+    maxPreco: number | undefined,
+    page: number,
+    size: number = 10
+  ): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('size', size.toString())
-      .set('minPreco', minPreco.toString())
-      .set('maxPreco', maxPreco.toString());
+      .set('size', size.toString());
 
-    if (categoria && categoria !== 'todos') {
-      params = params.set('categoria', categoria);
+    if (minPreco !== undefined && minPreco !== null) {
+      params = params.set('minPreco', minPreco.toString());
     }
-    
+    if (maxPreco !== undefined && maxPreco !== null) {
+      params = params.set('maxPreco', maxPreco.toString());
+    }
+
+    if (categorias && categorias.length > 0) {
+      categorias.forEach((categoria) => {
+        params = params.append('categorias', categoria);
+      });
+    }
+
     if (marcas && marcas.length > 0) {
-      marcas.forEach(marca => {
+      marcas.forEach((marca) => {
         params = params.append('marcas', marca);
       });
     }
 
     return this.http.get<any>(this.apiUrl, { params });
   }
-  
-  // Novo método para buscar as marcas disponíveis para o filtro
+
   buscarMarcas(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/marcas`);
   }
 
-  // Os métodos antigos de paginação foram removidos para evitar redundância e centralizar a lógica no novo método.
+  buscarCategorias(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/categorias`);
+  }
 
-  // ----------------------------
-  // Produtos sem imagem (puro JSON)
-  // ----------------------------
+  // ✨ NOVO: Busca marcas com base em categorias selecionadas
+  buscarMarcasPorCategorias(categorias: string[]): Observable<string[]> {
+    let params = new HttpParams();
+    categorias.forEach(categoria => {
+      params = params.append('categorias', categoria);
+    });
+    return this.http.get<string[]>(`${this.apiUrl}/marcas-por-categoria`, { params });
+  }
   
-  // Os métodos abaixo não precisam de alteração, mas foram mantidos para completar o arquivo
+  // ✨ NOVO: Busca categorias com base em marcas selecionadas
+  buscarCategoriasPorMarcas(marcas: string[]): Observable<string[]> {
+    let params = new HttpParams();
+    marcas.forEach(marca => {
+      params = params.append('marcas', marca);
+    });
+    return this.http.get<string[]>(`${this.apiUrl}/categorias-por-marca`, { params });
+  }
+
   buscarPorId(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
@@ -76,10 +104,6 @@ export class ProdutosService {
       headers: this.getAuthHeaders(),
     });
   }
-
-  // ----------------------------
-  // Produtos com imagem (FormData)
-  // ----------------------------
 
   salvarComImagem(formData: FormData): Observable<Produto> {
     return this.http.post<Produto>(this.apiUrl, formData, {

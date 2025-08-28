@@ -1,82 +1,101 @@
 import {
   Component,
   OnInit,
-  Input,
   Output,
   EventEmitter,
-  OnChanges,
-  SimpleChanges,
   HostListener,
 } from '@angular/core';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-filtro',
   templateUrl: './filtro.component.html',
   styleUrls: ['./filtro.component.scss'],
 })
-export class FiltroComponent implements OnInit, OnChanges {
-  isCollapsedAll: boolean = false; // Inicia o filtro fechado
+export class FiltroComponent implements OnInit {
+  isCollapsedAll: boolean = false;
   isMobile: boolean = false;
 
-  @Input() currentCategory: string | undefined;
   @Output() filtersChanged = new EventEmitter<{
+    categorias: string[];
     marcas: string[];
     minPreco: number;
     maxPreco: number;
   }>();
 
-  marcas: string[] = [];
-  selectedBrands: string[] = [];
+  // Listas completas (originais)
+  allMarcas: string[] = [];
+  allCategorias: string[] = [];
+
+  // Listas filtradas (exibidas na tela)
+  filteredMarcas: string[] = [];
+  filteredCategorias: string[] = [];
+
+  // Seleções do usuário
+  selectedMarcas: string[] = [];
+  selectedCategorias: string[] = [];
+
   minPrice: number = 0;
   maxPrice: number = 999999;
-  selectedCategory: string = 'todos';
 
-  constructor(private produtoService: ProdutosService) {}
+  constructor(private produtoService: ProdutosService, private router: Router) {}
 
   ngOnInit(): void {
+    // Carrega as listas completas uma única vez
     this.produtoService.buscarMarcas().subscribe((marcas) => {
-      this.marcas = marcas;
+      this.allMarcas = marcas;
+      this.filteredMarcas = [...this.allMarcas];
+    });
+
+    this.produtoService.buscarCategorias().subscribe((categorias) => {
+      this.allCategorias = categorias;
+      this.filteredCategorias = [...this.allCategorias];
     });
     this.checkScreenSize();
   }
 
-  // Detecta mudanças na categoria da rota e atualiza o filtro
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['currentCategory'] && changes['currentCategory'].currentValue) {
-      this.selectedCategory = changes['currentCategory'].currentValue;
-    } else {
-      // Se a rota for '/produtos', a categoria é 'todos'
-      this.selectedCategory = 'todos';
-    }
-    this.applyFilters();
-  }
-  
-  // Verifica o tamanho da tela para definir o estado inicial do filtro
   @HostListener('window:resize', ['$event'])
   checkScreenSize(): void {
     this.isMobile = window.innerWidth <= 768;
     this.isCollapsedAll = this.isMobile;
   }
 
-  toggleBrand(marca: string): void {
-    const index = this.selectedBrands.indexOf(marca);
+  toggleMarca(marca: string): void {
+    const index = this.selectedMarcas.indexOf(marca);
     if (index > -1) {
-      this.selectedBrands.splice(index, 1);
+      this.selectedMarcas.splice(index, 1);
     } else {
-      this.selectedBrands.push(marca);
+      this.selectedMarcas.push(marca);
     }
-    this.applyFilters();
+    this.updateFilters();
   }
 
-  selectCategory(categoria: string): void {
-    this.selectedCategory = categoria;
-    this.applyFilters();
+  toggleCategoria(categoria: string): void {
+    const index = this.selectedCategorias.indexOf(categoria);
+    if (index > -1) {
+      this.selectedCategorias.splice(index, 1);
+    } else {
+      this.selectedCategorias.push(categoria);
+    }
+    this.updateFilters();
   }
 
-  applyFilters(): void {
+  updateFilters(): void {
+    // Atualiza a lista de marcas com base nas categorias selecionadas
+    this.produtoService.buscarMarcasPorCategorias(this.selectedCategorias).subscribe(marcas => {
+      this.filteredMarcas = marcas;
+    });
+
+    // Atualiza a lista de categorias com base nas marcas selecionadas
+    this.produtoService.buscarCategoriasPorMarcas(this.selectedMarcas).subscribe(categorias => {
+      this.filteredCategorias = categorias;
+    });
+
+    // Emite as seleções para o componente pai (ListaProdutosComponent)
     this.filtersChanged.emit({
-      marcas: this.selectedBrands,
+      categorias: this.selectedCategorias,
+      marcas: this.selectedMarcas,
       minPreco: this.minPrice,
       maxPreco: this.maxPrice,
     });
@@ -100,13 +119,22 @@ export class FiltroComponent implements OnInit, OnChanges {
   }
 
   clearFilters(): void {
-    this.selectedCategory = 'todos';
-    this.selectedBrands = [];
+    this.selectedCategorias = [];
+    this.selectedMarcas = [];
     this.minPrice = 0;
     this.maxPrice = 999999;
+    
+    // Volta a exibir todas as opções de filtro
+    this.filteredMarcas = [...this.allMarcas];
+    this.filteredCategorias = [...this.allCategorias];
 
-    // Chame seu método de aplicar filtros ou emita evento
-    this.applyFilters();
+    this.router.navigate(['/produtos']);
+    this.filtersChanged.emit({
+      categorias: this.selectedCategorias,
+      marcas: this.selectedMarcas,
+      minPreco: this.minPrice,
+      maxPreco: this.maxPrice,
+    });
   }
 
   toggleAllFilters() {

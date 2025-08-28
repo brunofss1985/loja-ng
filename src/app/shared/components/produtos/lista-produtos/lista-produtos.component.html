@@ -1,8 +1,5 @@
 <div class="main-container">
-    <app-filtro 
-      [currentCategory]="categoria" 
-      (filtersChanged)="onFiltersChanged($event)">
-    </app-filtro>
+  <app-filtro (filtersChanged)="onFiltersChanged($event)"></app-filtro>
   <div class="products-and-pagination-container">
     <ng-container *ngIf="produtos && produtos.length > 0; else noProducts">
       <div class="product-cards-container">

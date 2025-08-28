@@ -1,5 +1,4 @@
 <div class="filter-card" [ngClass]="{'collapsed-all': isCollapsedAll}">
-  
   <div class="filter-card-header" (click)="toggleAllFilters()">
     <h4>
       <span class="filter-icon">
@@ -11,39 +10,27 @@
   </div>
 
   <div class="filter-content-wrapper">
-  
     <div class="filter-section collapsed">
       <div class="filter-header" (click)="toggleSection($event)">
         <h5>Categoria</h5>
         <div class="expand-icon"></div>
       </div>
       <div class="filter-content">
-        <ul>
-          <li 
-            (click)="selectCategory('todos')" 
-            [ngClass]="{'active': selectedCategory === 'todos'}"
-          >
-            <a routerLink="/produtos">Todos os produtos</a>
-          </li>
-          <li 
-            (click)="selectCategory('creatina')" 
-            [ngClass]="{'active': selectedCategory === 'creatina'}"
-          >
-            <a routerLink="/produtos/creatina">Creatina</a>
-          </li>
-          <li 
-            (click)="selectCategory('whey')" 
-            [ngClass]="{'active': selectedCategory === 'whey'}"
-          >
-            <a routerLink="/produtos/whey protein">Whey Protein</a>
-          </li>
-          <li 
-            (click)="selectCategory('pre treino')" 
-            [ngClass]="{'active': selectedCategory === 'pre treino'}"
-          >
-            <a routerLink="/produtos/pre treino">Pre Treino</a>
-          </li>
-        </ul>
+        <div *ngIf="filteredCategorias.length > 0; else noCategories">
+          <div *ngFor="let categoria of filteredCategorias">
+            <label>
+              <input
+                type="checkbox"
+                [checked]="selectedCategorias.includes(categoria)"
+                (change)="toggleCategoria(categoria)"
+              >
+              {{ categoria | titlecase }}
+            </label>
+          </div>
+        </div>
+        <ng-template #noCategories>
+          <p>Nenhuma categoria disponível.</p>
+        </ng-template>
       </div>
     </div>
 
@@ -53,13 +40,13 @@
         <div class="expand-icon"></div>
       </div>
       <div class="filter-content">
-        <div *ngIf="marcas.length > 0; else noBrands">
-          <div *ngFor="let marca of marcas">
+        <div *ngIf="filteredMarcas.length > 0; else noBrands">
+          <div *ngFor="let marca of filteredMarcas">
             <label>
-              <input 
-                type="checkbox" 
-                [checked]="selectedBrands.includes(marca)" 
-                (change)="toggleBrand(marca)"
+              <input
+                type="checkbox"
+                [checked]="selectedMarcas.includes(marca)"
+                (change)="toggleMarca(marca)"
               >
               {{ marca }}
             </label>
@@ -74,14 +61,14 @@
     <div class="price-section">
       <h5>Preço</h5>
       <div class="price-range">
-        <input type="number" [(ngModel)]="minPrice" placeholder="Mínimo">
+        <input type="number" [(ngModel)]="minPrice" placeholder="Mínimo" (change)="updateFilters()">
         <span class="separator">a</span>
-        <input type="number" [(ngModel)]="maxPrice" placeholder="Máximo">
+        <input type="number" [(ngModel)]="maxPrice" placeholder="Máximo" (change)="updateFilters()">
       </div>
-        <div class="filter-buttons">
-          <button class="btn-apply" (click)="applyFilters()">Aplicar</button>
-          <button class="btn-clear" (click)="clearFilters()">Limpar</button>
-        </div>
+      <div class="filter-buttons">
+        <button class="btn-apply" (click)="updateFilters()">Aplicar</button>
+        <button class="btn-clear" (click)="clearFilters()">Limpar</button>
+      </div>
     </div>
 
   </div>

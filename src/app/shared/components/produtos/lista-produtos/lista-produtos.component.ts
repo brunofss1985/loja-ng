@@ -14,7 +14,8 @@ export class ListaProdutosComponent implements OnInit {
   totalPages: number = 0;
   totalElements: number = 0;
   pageSize: number = 8;
-  
+
+  filtroCategorias: string[] = [];
   filtroMarcas: string[] = [];
   filtroPrecoMin: number = 0;
   filtroPrecoMax: number = 999999;
@@ -28,14 +29,25 @@ export class ListaProdutosComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.categoria = params['categoria'];
       this.currentPage = 0;
-      this.filtroMarcas = [];
-      this.filtroPrecoMin = 0;
-      this.filtroPrecoMax = 999999;
+
+      // ✨ CORREÇÃO: Limpa os filtros ao carregar a página de todos os produtos
+      if (!this.categoria) {
+        this.filtroCategorias = [];
+        this.filtroMarcas = [];
+        this.filtroPrecoMin = 0;
+        this.filtroPrecoMax = 999999;
+      } else {
+        // Se houver uma categoria na URL, a usa como filtro inicial
+        this.filtroCategorias = [this.categoria];
+      }
+      
       this.carregarProdutos();
     });
   }
-  
-  onFiltersChanged(event: { marcas: string[]; minPreco: number; maxPreco: number }): void {
+
+  onFiltersChanged(event: { categorias: string[]; marcas: string[]; minPreco: number; maxPreco: number }): void {
+    // ✨ CORREÇÃO: Aplica os filtros exatamente como recebidos do componente filho
+    this.filtroCategorias = event.categorias;
     this.filtroMarcas = event.marcas;
     this.filtroPrecoMin = event.minPreco;
     this.filtroPrecoMax = event.maxPreco;
@@ -44,11 +56,15 @@ export class ListaProdutosComponent implements OnInit {
   }
 
   carregarProdutos() {
-    // CORREÇÃO: Passa 'undefined' se a categoria não estiver na rota
-    const categoriaParaFiltro = this.categoria === undefined ? undefined : this.categoria;
-
     this.produtoService
-      .buscarComFiltros(categoriaParaFiltro, this.filtroMarcas, this.filtroPrecoMin, this.filtroPrecoMax, this.currentPage, this.pageSize)
+      .buscarComFiltros(
+        this.filtroCategorias,
+        this.filtroMarcas,
+        this.filtroPrecoMin,
+        this.filtroPrecoMax,
+        this.currentPage,
+        this.pageSize
+      )
       .subscribe((response) => {
         this.produtos = response.content;
         this.totalPages = response.totalPages;

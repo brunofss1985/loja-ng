@@ -30,6 +30,8 @@ function passwordMatchValidator(
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+
+  @Input() disabled: boolean = false; 
   @Output() registerSuccess = new EventEmitter<void>();
 
   @Input() userToEdit!: any;
@@ -54,45 +56,31 @@ export class RegisterComponent {
         userType: new FormControl('', [Validators.required]),
         name: new FormControl('', [Validators.required]),
         email: new FormControl('', [Validators.required, Validators.email]),
-        password: new FormControl('', [
-          Validators.required,
-          Validators.minLength(6),
-        ]),
-        passwordConfirm: new FormControl('', [Validators.required]),
+        password: new FormControl('', [Validators.minLength(6)]),
+        passwordConfirm: new FormControl(''),
       },
       { validators: passwordMatchValidator }
     );
   }
 
   submit(usuarioSelecionado?: any) {
-    if (this.signupForm.invalid) {
-      this.toastService.error('Preencha corretamente todos os campos.');
-      return;
-    }
-
-    if (this.signupForm.hasError('passwordMismatch')) {
-      this.toastService.error('As senhas não coincidem.');
-      return;
-    }
-
-    const { name, email, password, userType } = this.signupForm.value;
-
     if (usuarioSelecionado) {
-      // Edição
-      const userId = usuarioSelecionado.id;
-      const updatedUser = { name, email, password, userType };
-
-      this.userService.updateUser(userId, updatedUser).subscribe({
-        next: () => {
-          this.toastService.success('Usuário atualizado com sucesso!');
-          this.registerSuccess.emit();
-          window.location.reload(); // Solução rápida para limpar o formulario (atualiza toda a pagina - nao recomendado)
-
-        },
-        error: () => this.toastService.error('Erro ao atualizar o usuário.'),
-      });
+      // 💡 Se estiver em modo de edição, não faz nada com os dados do formulário.
+      // O admin não deve alterar o usuário nessa tela.
+      return;
     } else {
-      // Novo cadastro
+      // Lógica para novo cadastro
+      if (this.signupForm.invalid) {
+        this.toastService.error('Preencha corretamente todos os campos.');
+        return;
+      }
+      if (this.signupForm.hasError('passwordMismatch')) {
+        this.toastService.error('As senhas não coincidem.');
+        return;
+      }
+      
+      const { name, email, password, userType } = this.signupForm.value;
+
       this.loginService.register(name, email, password, userType).subscribe({
         next: () => {
           this.toastService.success('Registrado com sucesso!');
@@ -108,13 +96,18 @@ export class RegisterComponent {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    
     if (changes['userToEdit'] && this.userToEdit) {
       this.signupForm.patchValue({
         name: this.userToEdit.name,
         email: this.userToEdit.email,
         userType: this.userToEdit.userType,
       });
+
+      // 💡 Desabilitar todos os controles do formulário no modo de edição
+      this.signupForm.disable();
+    } else if (changes['userToEdit'] && !this.userToEdit) {
+      // 💡 Habilitar controles do formulário quando não está em modo de edição
+      this.signupForm.enable();
     }
   }
 
@@ -126,5 +119,10 @@ export class RegisterComponent {
       password: '',
       passwordConfirm: '',
     });
+    // Reativa a validação do formulário após o reset
+    this.signupForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
+    this.signupForm.get('password')?.updateValueAndValidity();
+    this.signupForm.get('passwordConfirm')?.setValidators([Validators.required]);
+    this.signupForm.get('passwordConfirm')?.updateValueAndValidity();
   }
 }

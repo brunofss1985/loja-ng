@@ -4,132 +4,169 @@
 <input id="tab4" name="tabs" type="radio" class="hide" />
 
 <body style="height: 80%;">
-<div class="container">
-  <div class="app-card">
-    <div class="topbar">
-      <div class="perfil-mini">
-        <div class="avatar">{{ user?.name ? user?.name?.substring(0, 2)?.toUpperCase() : '' }}
-        </div>
-        <div class="perfil-info">
-          <h1>Olá, {{ user?.name }}</h1>
-          <p>Plano: {{ user?.userType || 'N/A' }} | Cliente desde {{ user?.createdAt | date:'yyyy' }}</p>
+  <div class="container">
+    <div class="app-card">
+      <div class="topbar">
+        <div class="perfil-mini">
+          <div class="avatar">{{ user?.name ? user?.name?.substring(0, 2)?.toUpperCase() : '' }}
+          </div>
+          <div class="perfil-info">
+            <h1>Olá, {{ user?.name }}</h1>
+            <p>Plano: {{ user?.userType || 'N/A' }} | Cliente desde {{ user?.createdAt | date:'yyyy' }}</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="content">
-      <aside class="side">
-        <div class="perfil-bloco">
-          <h3>Seus dados</h3>
-          <div class="dado">
-            <span>Nome</span>
-            <strong>{{ user?.name }}</strong>
-          </div>
-          <div class="dado">
-            <span>E-mail</span>
-            <strong>{{ user?.email }}</strong>
-          </div>
-          <div class="dado">
-            <span>Telefone</span>
-            <strong>{{ user?.phone || 'Não informado' }}</strong>
-          </div>
-          <div class="dado">
-            <span>Endereço</span>
-            <strong>{{ user?.address || 'Não informado' }}</strong>
-          </div>
-          <div class="linha"></div>
-          <div class="acao-topo">
-            <button class="btn" (click)="openModal()">
-              <span class="ico">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M3 21h4l11-11-4-4L3 17v4z" stroke="currentColor" stroke-width="1.5" />
-                </svg>
-              </span>
-              Editar perfil
-            </button>
-          </div>
-        </div>
-      </aside>
-
-      <section class="tabs-wrap">
-        <div class="tabs-header">
-          <button [ngClass]="{'active': activeTab === 'visao-geral'}" (click)="setTab('visao-geral')">Visão
-            Geral</button>
-          <button [ngClass]="{'active': activeTab === 'pedidos'}" (click)="setTab('pedidos')">Pedidos</button>
-          <button [ngClass]="{'active': activeTab === 'enderecos'}" (click)="setTab('enderecos')">Endereços</button>
-          <button [ngClass]="{'active': activeTab === 'seguranca'}" (click)="setTab('seguranca')">Segurança</button>
-        </div>
-
-        <div class="tab-panel" *ngIf="activeTab === 'visao-geral'">
-          <h3>Resumo rápido</h3>
-          <p class="muted">Acompanhe seu progresso e benefícios.</p>
-          <div class="card" *ngIf="lastOrder">
-            <h4>Último pedido <app-order-status [status]="lastOrder.status"></app-order-status></h4>
-            <p class="muted">#{{ lastOrder.id }} • {{ lastOrder.items.length }} itens • R$ {{ lastOrder.total }}</p>
-          </div>
-        </div>
-
-        <div class="tab-panel" *ngIf="activeTab === 'pedidos'">
-          <h3>Meus pedidos</h3>
-          <p class="muted">Todos seus pedidos já feitos estão aqui.</p>
-          <div *ngIf="orders.length > 0; else noOrders">
-            <div class="card" *ngFor="let order of orders">
-              <h4>Pedido #{{ order.id }} <app-order-status [status]="order.status"></app-order-status></h4>
-              <p class="muted">{{ order.items.length }} itens • R$ {{ order.total }}</p>
-              <p class="muted">Feito em {{ order.createdAt | date:'short' }}</p>
+      <div class="content">
+        <aside class="side">
+          <div class="perfil-bloco">
+            <h3>Seus dados</h3>
+            <div class="dado">
+              <span>Nome</span>
+              <strong>{{ user?.name }}</strong>
+            </div>
+            <div class="dado">
+              <span>E-mail</span>
+              <strong>{{ user?.email }}</strong>
+            </div>
+            <div class="dado">
+              <span>Telefone</span>
+              <strong>{{ user?.phone || 'Não informado' }}</strong>
+            </div>
+            <div class="dado">
+              <span>Endereço</span>
+              <strong>{{ user?.address || 'Não informado' }}</strong>
+            </div>
+            <div class="linha"></div>
+            <div class="acao-topo">
+              <button class="btn" (click)="openModal()">
+                <span class="ico">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M3 21h4l11-11-4-4L3 17v4z" stroke="currentColor" stroke-width="1.5" />
+                  </svg>
+                </span>
+                Editar perfil
+              </button>
             </div>
           </div>
-          <ng-template #noOrders>
-            <p class="muted">Você ainda não fez nenhum pedido.</p>
-          </ng-template>
-        </div>
+        </aside>
 
-        <div class="tab-panel" *ngIf="activeTab === 'enderecos'">
-          <h3>Endereços</h3>
-        </div>
+        <section class="tabs-wrap">
+          <div class="tabs-header">
+            <button [ngClass]="{'active': activeTab === 'visao-geral'}" (click)="setTab('visao-geral')">Visão Geral</button>
+            <button [ngClass]="{'active': activeTab === 'pedidos'}" (click)="setTab('pedidos')">Pedidos</button>
+            <button [ngClass]="{'active': activeTab === 'enderecos'}" (click)="setTab('enderecos')">Endereços</button>
+            <button [ngClass]="{'active': activeTab === 'seguranca'}" (click)="setTab('seguranca')">Segurança</button>
+          </div>
 
-        <div class="tab-panel" *ngIf="activeTab === 'seguranca'">
-          <h3>Segurança</h3>
-        </div>
-      </section>
+          <div class="tab-panel" *ngIf="activeTab === 'visao-geral'">
+            <h3>Resumo rápido</h3>
+            <p class="muted">Acompanhe seu progresso e benefícios.</p>
+            <div class="card" *ngIf="lastOrder">
+              <h4>Último pedido <app-order-status [status]="lastOrder.status"></app-order-status></h4>
+              <p class="muted">#{{ lastOrder.id }} • {{ lastOrder.items.length }} itens • R$ {{ lastOrder.total }}</p>
+            </div>
+          </div>
+
+          <div class="tab-panel" *ngIf="activeTab === 'pedidos'">
+            <h3>Meus pedidos</h3>
+            <p class="muted">Todos seus pedidos já feitos estão aqui.</p>
+            <div *ngIf="orders.length > 0; else noOrders">
+              <div class="card" *ngFor="let order of orders">
+                <h4>Pedido #{{ order.id }} <app-order-status [status]="order.status"></app-order-status></h4>
+                <p class="muted">{{ order.items.length }} itens • R$ {{ order.total }}</p>
+                <p class="muted">Feito em {{ order.createdAt | date:'short' }}</p>
+              </div>
+            </div>
+            <ng-template #noOrders>
+              <p class="muted">Você ainda não fez nenhum pedido.</p>
+            </ng-template>
+          </div>
+
+          <div class="tab-panel" *ngIf="activeTab === 'enderecos'">
+            <h3>Endereços</h3>
+          </div>
+
+          <div class="tab-panel" *ngIf="activeTab === 'seguranca'">
+            <h3>Segurança</h3>
+            <p class="muted">Altere sua senha de acesso a qualquer momento.</p>
+            <div class="card">
+              <h4>Alterar senha</h4>
+              <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+                <div class="campo">
+                  <label for="currentPassword">Senha antiga</label>
+                  <input id="currentPassword" class="input" type="password" formControlName="currentPassword" />
+                  <div *ngIf="passwordForm.get('currentPassword')?.invalid && (passwordForm.get('currentPassword')?.dirty || passwordForm.get('currentPassword')?.touched)" class="error-message">
+                    A senha antiga é obrigatória.
+                  </div>
+                </div>
+                <div class="campo">
+                  <label for="newPassword">Nova senha</label>
+                  <input id="newPassword" class="input" type="password" formControlName="newPassword" />
+                  <div *ngIf="passwordForm.get('newPassword')?.invalid && (passwordForm.get('newPassword')?.dirty || passwordForm.get('newPassword')?.touched)" class="error-message">
+                    A nova senha deve ter pelo menos 6 caracteres.
+                  </div>
+                </div>
+                <div class="campo">
+                  <label for="confirmPassword">Confirme a nova senha</label>
+                  <input id="confirmPassword" class="input" type="password" formControlName="confirmPassword" />
+                  <div *ngIf="passwordForm.get('confirmPassword')?.invalid && (passwordForm.get('confirmPassword')?.dirty || passwordForm.get('confirmPassword')?.touched)" class="error-message">
+                    As senhas não coincidem.
+                  </div>
+                </div>
+                <div class="modal-actions" style="justify-content: flex-end; margin-top: 15px;">
+                  <button type="submit" class="btn" [disabled]="passwordForm.invalid">Alterar senha</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="modal-edit" [ngClass]="{'visible': isModalOpen}">
-  <div class="modal-backdrop" (click)="isModalOpen = false" aria-hidden="true"></div>
-  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editTitle">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3 id="editTitle">Editar perfil</h3>
-        <button class="btn-ghost" style="color: black;" (click)="isModalOpen = false">Fechar</button>
-      </div>
-      <form *ngIf="profileForm" [formGroup]="profileForm" class="modal-body">
-        <div class="linha-flex">
-          <div class="campo">
-            <label>Nome</label>
-            <input class="input" type="text" formControlName="name" />
-          </div>
-          <div class="campo">
-            <label>E-mail</label>
-            <input class="input" type="email" formControlName="email" />
-          </div>
-          <div class="campo">
-            <label>Telefone</label>
-            <input class="input" type="tel" formControlName="phone" />
-          </div>
-          <div class="campo">
-            <label>Endereço</label>
-            <input class="input" type="text" formControlName="address" />
-          </div>
-          <input type="hidden" formControlName="points" />
-          <input type="hidden" formControlName="credits" />
+  <div class="modal-edit" [ngClass]="{'visible': isModalOpen}">
+    <div class="modal-backdrop" (click)="isModalOpen = false" aria-hidden="true"></div>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+      <div class="modal-card">
+        <div class="modal-head">
+          <h3 id="editTitle">Editar perfil</h3>
+          <button class="btn-ghost" style="color: black;" (click)="isModalOpen = false">Fechar</button>
         </div>
-      </form>
-      <div class="modal-actions">
-        <button class="btn" (click)="saveProfile()">Salvar</button>
+        <form *ngIf="profileForm" [formGroup]="profileForm" class="modal-body">
+          <div class="linha-flex">
+            <div class="campo">
+              <label>Nome</label>
+              <input class="input" type="text" formControlName="name" />
+            </div>
+            <div class="campo">
+              <label>E-mail</label>
+              <input class="input" type="email" formControlName="email" />
+            </div>
+            <div class="campo">
+              <label>Telefone</label>
+              <input class="input" type="tel" formControlName="phone" />
+            </div>
+            <div class="campo">
+              <label>Endereço</label>
+              <input class="input" type="text" formControlName="address" />
+            </div>
+            <input type="hidden" formControlName="points" />
+            <input type="hidden" formControlName="credits" />
+          </div>
+        </form>
+        <div class="modal-actions">
+          <button class="btn" (click)="saveProfile()">Salvar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </body>
+
+<style>
+  .error-message {
+    color: #f44336;
+    font-size: 0.8rem;
+    margin-top: 5px;
+  }
+</style>

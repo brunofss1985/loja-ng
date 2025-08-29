@@ -1,1 +1,58 @@
-<p>perfil works!</p>
+<div class="perfil-container">
+  <h2>Editar Perfil de Administrador</h2>
+
+  <form [formGroup]="perfilForm" (ngSubmit)="salvarPerfil()">
+    
+    <label for="name">Nome:</label>
+    <input id="name" type="text" formControlName="name" />
+    <div *ngIf="perfilForm.controls['name'].invalid && perfilForm.controls['name'].touched" class="invalid-text">
+      <small *ngIf="perfilForm.controls['name'].errors?.['required']">O nome é obrigatório.</small>
+    </div>
+
+    <label for="email">E-mail:</label>
+    <input id="email" type="email" formControlName="email" />
+    <div *ngIf="perfilForm.controls['email'].invalid && perfilForm.controls['email'].touched" class="invalid-text">
+      <small *ngIf="perfilForm.controls['email'].errors?.['required']">O e-mail é obrigatório.</small>
+    </div>
+    
+    <label for="userType">Tipo de Usuário:</label>
+    <input id="userType" type="text" formControlName="userType" [disabled]="true" />
+
+    <label for="phone">Telefone:</label>
+    <input id="phone" type="text" formControlName="phone" />
+    
+    <label for="address">Endereço:</label>
+    <input id="address" type="text" formControlName="address" />
+
+    <button type="submit" [disabled]="perfilForm.invalid">Salvar Alterações</button>
+  </form>
+
+  ---
+  
+  <h3>Alterar Senha</h3>
+  <form [formGroup]="passwordForm" (ngSubmit)="mudarSenha()">
+    <label for="currentPassword">Senha Atual:</label>
+    <input id="currentPassword" type="password" formControlName="currentPassword" />
+    <div *ngIf="passwordForm.controls['currentPassword'].invalid && passwordForm.controls['currentPassword'].touched" class="invalid-text">
+      <small *ngIf="passwordForm.controls['currentPassword'].errors?.['required']">A senha atual é obrigatória.</small>
+    </div>
+    
+    <label for="newPassword">Nova Senha:</label>
+    <input id="newPassword" type="password" formControlName="newPassword" />
+    <div *ngIf="passwordForm.controls['newPassword'].invalid && passwordForm.controls['newPassword'].touched" class="invalid-text">
+      <small *ngIf="passwordForm.controls['newPassword'].errors?.['required']">A nova senha é obrigatória.</small>
+      <small *ngIf="passwordForm.controls['newPassword'].errors?.['minlength']">Deve ter no mínimo 6 caracteres.</small>
+    </div>
+    
+    <label for="newPasswordConfirm">Confirmar Nova Senha:</label>
+    <input id="newPasswordConfirm" type="password" formControlName="newPasswordConfirm" />
+    <div *ngIf="passwordForm.controls['newPasswordConfirm'].invalid && passwordForm.controls['newPasswordConfirm'].touched" class="invalid-text">
+      <small *ngIf="passwordForm.controls['newPasswordConfirm'].errors?.['required']">A confirmação é obrigatória.</small>
+    </div>
+    <div *ngIf="passwordForm.hasError('passwordMismatch')" class="invalid-text">
+      <small>As senhas não coincidem.</small>
+    </div>
+    
+    <button type="submit" [disabled]="passwordForm.invalid">Alterar Senha</button>
+  </form>
+</div>

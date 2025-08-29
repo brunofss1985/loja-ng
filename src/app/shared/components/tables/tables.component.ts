@@ -19,14 +19,16 @@ export class TablesComponent implements OnInit {
 
   @Input() showActionButtons: boolean = false;
   @Input() actionButtonsLabel!: string;
+  // 💡 Adicionado novo input para controlar a visibilidade do botão de edição
+  @Input() showEditButton: boolean = true; 
 
   @Input() cellFormatter?: (header: string, value: any) => string;
 
-  @Output() editRow  = new EventEmitter<any>();
+  @Output() editRow = new EventEmitter<any>();
 
   @Output() createButtonClicked = new EventEmitter<void>();
 
-  @Output() deleteRow  = new EventEmitter<void>();
+  @Output() deleteRow = new EventEmitter<void>();
 
   constructor(private modalService: ModalService) {}
 
@@ -35,7 +37,7 @@ export class TablesComponent implements OnInit {
   onCreateButtonClick(): void {
     this.createButtonClicked.emit();
   }
-  
+
   openModal() {
     this.modalService.open();
   }

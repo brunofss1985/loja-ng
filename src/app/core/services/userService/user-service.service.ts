@@ -1,7 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+
+export interface PasswordChange {
+  currentPassword: string;
+  newPassword: string;
+}
 
 export interface User {
   id?: string;
@@ -21,6 +27,8 @@ export interface User {
 export class UserService {
   private apiUrl = `${environment.apiUrl}/user`;
 
+  private currentUserCache: User | null = null;
+
   constructor(private http: HttpClient) {}
 
   getAllUsers(): Observable<User[]> {
@@ -32,18 +40,35 @@ export class UserService {
   }
 
   getUserByEmail(email: string): Observable<User> {
-  return this.http.get<User>(`${this.apiUrl}/email/${email}`);
-}
-
+    return this.http.get<User>(`${this.apiUrl}/email/${email}`);
+  }
 
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/me`);
+    if (this.currentUserCache) {
+      return of(this.currentUserCache);
+    }
+    return this.http.get<User>(`${this.apiUrl}/me`).pipe(
+      tap((user) => (this.currentUserCache = user))
+    );
   }
 
   updateCurrentUser(user: User): Observable<User> {
-  return this.http.put<User>(`${this.apiUrl}/me`, user);
-}
+    // 💡 A API irá lidar com a atualização, mas podemos remover o userType
+    // e o email do objeto para garantir que não haja alteração indesejada.
+    const userToUpdate = { ...user };
+    delete userToUpdate.userType;
+    delete userToUpdate.email;
 
+    return this.http.put<User>(`${this.apiUrl}/me`, userToUpdate).pipe(
+      tap((updatedUser) => {
+        this.currentUserCache = updatedUser;
+      })
+    );
+  }
+
+  updatePassword(passwords: PasswordChange): Observable<any> {
+    return this.http.put(`${this.apiUrl}/change-password`, passwords);
+  }
 
   createUser(user: User): Observable<User> {
     return this.http.post<User>(this.apiUrl, user);

@@ -1,29 +1,28 @@
 <h5>Usuários</h5>
-<app-tables 
-[showCreateButton]="true"
-[showActionButtons]="true"
-[createButtonLabel]=" 'Cadastrar'"
-[title]="'Tabela de Usuários Cadastrados'"
-[columns]="headers" 
-[columnLabels]="columnLabels"
-(deleted)="loadUsers()"
-[rows]="users"
-[cellFormatter]="formatUserCell.bind(this)" 
-(editRow)="onEditUser($event)"
-(deleteRow)="onDeleteUser($event)"
+<app-tables
+  [showCreateButton]="true"
+  [showActionButtons]="true"
+  [createButtonLabel]="'Cadastrar'"
+  [title]="'Tabela de Usuários Cadastrados'"
+  [columns]="headers"
+  [columnLabels]="columnLabels"
+  (deleted)="loadUsers()"
+  [rows]="users"
+  [cellFormatter]="formatUserCell.bind(this)"
+  (deleteRow)="onDeleteUser($event)"
+  [showEditButton]="false"
 >
 </app-tables>
 
 <app-modal
-[(isOpen)]="modalAberto"
-(isOpenChange)="onModalFechado()"
-[tittleModal]="!usuarioSelecionado ? 'Cadastrar Usuário' : 'Editar Usuário'"
-[size]="'small'"
-(saveClick)="save()"
+  [(isOpen)]="modalAberto"
+  (isOpenChange)="onModalFechado()"
+  [tittleModal]="!usuarioSelecionado ? 'Cadastrar Usuário' : 'Editar Usuário'"
+  [size]="'small'"
+  (saveClick)="save()"
 >
-<app-register
-[userToEdit]="usuarioSelecionado"
-(registerSuccess)="onUserRegistered()"
-></app-register>
-
+  <app-register
+    [userToEdit]="usuarioSelecionado"
+    (registerSuccess)="onUserRegistered()"
+  ></app-register>
 </app-modal>

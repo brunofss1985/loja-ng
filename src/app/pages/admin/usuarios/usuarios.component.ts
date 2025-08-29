@@ -5,6 +5,7 @@ import {
   UserService,
 } from 'src/app/core/services/userService/user-service.service';
 import { RegisterComponent } from '../../public/register/register.component';
+// 💡 Importação e declaração corrigidas
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -33,6 +34,7 @@ export class UsuariosComponent implements OnInit {
   constructor(
     private userService: UserService,
     private authService: AuthService,
+    // 💡 Declaração do tipo corrigida para ToastrService
     private toastr: ToastrService
   ) {}
 
@@ -55,7 +57,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   onUserRegistered() {
-    this.loadUsers(); 
+    this.loadUsers();
     this.modalAberto = false;
   }
 
@@ -72,20 +74,20 @@ export class UsuariosComponent implements OnInit {
   }
 
   onDeleteUser(id: any) {
-  const confirmar = confirm('Tem certeza que deseja deletar este item?');
-  if (!confirmar) return;
+    const confirmar = confirm('Tem certeza que deseja deletar este item?');
+    if (!confirmar) return;
 
-  this.userService.deleteUser(id).subscribe({
-    next: () => {
-      this.toastr.success(`Usuário ${id} deletado com sucesso`);
-      this.loadUsers(); // Atualiza a lista
-    },
-    error: (error) => {
-      this.toastr.error('Erro ao deletar usuário');
-      console.error('Erro ao deletar usuário:', error);
-    },
-  });
-}
+    this.userService.deleteUser(id).subscribe({
+      next: () => {
+        this.toastr.success(`Usuário ${id} deletado com sucesso`);
+        this.loadUsers(); // Atualiza a lista
+      },
+      error: (error) => {
+        this.toastr.error('Erro ao deletar usuário');
+        console.error('Erro ao deletar usuário:', error);
+      },
+    });
+  }
 
   onModalFechado() {
     this.usuarioSelecionado = null;
@@ -95,13 +97,12 @@ export class UsuariosComponent implements OnInit {
   }
 
   formatUserCell(header: string, value: any) {
-  if (header === 'id' && typeof value === 'string') {
-    return value.slice(-4);
+    if (header === 'id' && typeof value === 'string') {
+      return value.slice(-4);
+    }
+    if (header === 'userType') {
+      return value === 'ADMIN' ? 'Administrador' : 'Usuário';
+    }
+    return value ?? '';
   }
-  if (header === 'userType') {
-    return value === 'ADMIN' ? 'Administrador' : 'Usuário';
-  }
-  return value ?? '';
-}
-
 }

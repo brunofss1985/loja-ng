@@ -14,6 +14,18 @@
             {{ opcao.nome }}
           </option>
         </select>
+        
+        <label for="size-select" class="ms-3">Exibir:</label>
+        <select 
+          id="size-select" 
+          class="form-select" 
+          [(ngModel)]="pageSize" 
+          (change)="onPageSizeChanged()"
+        >
+          <option *ngFor="let opcao of opcoesTamanhoPagina" [ngValue]="opcao.valor">
+            {{ opcao.nome }}
+          </option>
+        </select>
       </div>
 
       <div class="product-cards-container">

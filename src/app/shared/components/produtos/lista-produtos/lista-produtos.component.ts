@@ -1,4 +1,4 @@
-// src/app/pages/admin/produtos/produtos.component.ts (aqui você se referiu a esse arquivo, mas é o lista-produtos.component.ts)
+// src/app/pages/admin/produtos/produtos.component.ts
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -15,8 +15,17 @@ export class ListaProdutosComponent implements OnInit {
   currentPage: number = 0;
   totalPages: number = 0;
   totalElements: number = 0;
-  pageSize: number = 8; // ✨ NOVAS PROPRIEDADES DE ORDENAÇÃO
-
+  
+  // ✨ NOVAS PROPRIEDADES PARA A QUANTIDADE DE PRODUTOS
+  pageSize: number = 8;
+  opcoesTamanhoPagina = [
+    { nome: '4', valor: 4 },
+    { nome: '8', valor: 8 },
+    { nome: '16', valor: 16 },
+    { nome: '24', valor: 24 },
+    { nome: 'Todos', valor: 999999 }, // Valor alto para exibir todos
+  ];
+  
   ordenacaoSelecionada: string = 'relevance';
   opcoesOrdenacao = [
     { nome: 'Relevância', valor: 'relevance' },
@@ -66,10 +75,16 @@ export class ListaProdutosComponent implements OnInit {
     this.filtroPrecoMax = event.maxPreco;
     this.currentPage = 0;
     this.carregarProdutos();
-  } // ✨ NOVO MÉTODO PARA LIDAR COM A ORDENAÇÃO
+  }
 
   onSortChanged(): void {
     this.currentPage = 0; // Volta para a primeira página ao mudar a ordenação
+    this.carregarProdutos();
+  }
+  
+  // ✨ NOVO MÉTODO PARA LIDAR COM A QUANTIDADE DE PRODUTOS POR PÁGINA
+  onPageSizeChanged(): void {
+    this.currentPage = 0; // Volta para a primeira página
     this.carregarProdutos();
   }
 
@@ -81,8 +96,8 @@ export class ListaProdutosComponent implements OnInit {
         this.filtroPrecoMin,
         this.filtroPrecoMax,
         this.currentPage,
-        this.pageSize,
-        this.ordenacaoSelecionada // ✨ PASSA O PARÂMETRO DE ORDENAÇÃO
+        this.pageSize, // ✨ PASSA A NOVA PROPRIEDADE
+        this.ordenacaoSelecionada
       )
       .subscribe((response) => {
         this.produtos = response.content;

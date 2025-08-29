@@ -200,7 +200,7 @@
 
 .header-botton {
   background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria));
-  padding: 8px 20px;
+  padding: 0px 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -222,7 +222,7 @@
 .header-botton a {
   color: var(--branco);
   text-decoration: none;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   padding: 6px 12px;
   border-radius: 6px;
@@ -419,6 +419,12 @@
 }
 
 /* Responsividade */
+@media (max-width: 968px) and (min-width: 754px) {
+  .header-botton ul {
+    gap: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .menu-toggle-label {
     display: block;

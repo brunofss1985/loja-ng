@@ -1,3 +1,5 @@
+// src/app/components/product-card/product-card.component.ts
+
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -13,12 +15,22 @@ export class ProductCardComponent {
   @Input() productPeso: string = '';
   @Input() productImage: string = '';
   @Input() productLink: string = '';
-  @Input() productPreco: string = '';
-  @Input() productPrecoDesconto: string = '';
-  @Input() productPorcentagemDesconto: string = '';
-  @Input() productDisponibilidade: string = ''; // <<< Novo campo adicionado
+  @Input() productPreco: number = 0;
+  @Input() productPrecoDesconto: number = 0;
+  @Input() productPorcentagemDesconto: string = ''; // 🎯 CORREÇÃO: Tipo de volta para 'string'
+  @Input() productDisponibilidade: string = '';
 
+  // Novo método para retornar o preço principal a ser exibido
+  getCurrentPrice(): number {
+    return this.productPrecoDesconto > 0 ? this.productPrecoDesconto : this.productPreco;
+  }
+
+  // 🎯 NOVO MÉTODO: Converte a porcentagem de string para number
   getPorcentagemNumerica(): number {
-    return this.productPorcentagemDesconto ? parseFloat(this.productPorcentagemDesconto) : 0;
+    const porcentagem = this.productPorcentagemDesconto;
+    if (porcentagem && !isNaN(parseFloat(porcentagem))) {
+      return parseFloat(porcentagem);
+    }
+    return 0;
   }
 }

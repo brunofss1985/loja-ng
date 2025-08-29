@@ -20,8 +20,8 @@
     </div>
 
     <div class="prices-container">
-      <h6 class="old-price">de R$ {{productPreco }}</h6>
-      <h6 class="current-price">por R$ {{ productPrecoDesconto }}</h6>
+      <h6 class="old-price" *ngIf="productPrecoDesconto > 0">de R$ {{ productPreco }}</h6>
+      <h6 class="current-price">por R$ {{ getCurrentPrice() }}</h6>
     </div>
 
     <div class="installments">ou 6x de R$ 33,32 sem juros</div>
@@ -59,7 +59,7 @@
 
     <div class="footerCard">
       <a [routerLink]="['/produto', productId]">
-        <button type="button" class="btn btn-warning">Compre Agora</button>
+        <button type="button" class="buttonComprar btn btn-warning">Compre Agora</button>
       </a>
     </div>
   </div>

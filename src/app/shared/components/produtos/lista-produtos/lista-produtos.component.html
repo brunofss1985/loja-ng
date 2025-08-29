@@ -2,6 +2,20 @@
   <app-filtro (filtersChanged)="onFiltersChanged($event)"></app-filtro>
   <div class="products-and-pagination-container">
     <ng-container *ngIf="produtos && produtos.length > 0; else noProducts">
+      <div class="product-header-sort">
+        <label for="sort-select">Ordenar por:</label>
+        <select 
+          id="sort-select" 
+          class="form-select" 
+          [(ngModel)]="ordenacaoSelecionada" 
+          (change)="onSortChanged()"
+        >
+          <option *ngFor="let opcao of opcoesOrdenacao" [ngValue]="opcao.valor">
+            {{ opcao.nome }}
+          </option>
+        </select>
+      </div>
+
       <div class="product-cards-container">
         <app-product-card
           *ngFor="let produto of produtos"

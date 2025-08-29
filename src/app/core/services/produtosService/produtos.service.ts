@@ -36,7 +36,8 @@ export class ProdutosService {
     minPreco: number | undefined,
     maxPreco: number | undefined,
     page: number,
-    size: number = 10
+    size: number = 10,
+    ordenacao: string | undefined = undefined // ✨ NOVO PARÂMETRO
   ): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
@@ -59,12 +60,15 @@ export class ProdutosService {
       marcas.forEach((marca) => {
         params = params.append('marcas', marca);
       });
+    } // ✨ ADICIONA O PARÂMETRO DE ORDENAÇÃO
+
+    if (ordenacao) {
+      params = params.set('sort', ordenacao);
     }
 
     return this.http.get<any>(this.apiUrl, { params });
-  }
+  } // Métodos para listar itens com contagem
 
-  // Métodos para listar itens com contagem
   buscarMarcas(): Observable<CountedItem[]> {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas`);
   }
@@ -80,10 +84,9 @@ export class ProdutosService {
         params = params.append('categorias', c);
       });
     }
-    return this.http.get<CountedItem[]>(
-      `${this.apiUrl}/marcas-por-categoria`,
-      { params }
-    );
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas-por-categoria`, {
+      params,
+    });
   }
 
   buscarCategoriasPorMarcas(marcas: string[]): Observable<CountedItem[]> {
@@ -93,13 +96,11 @@ export class ProdutosService {
         params = params.append('marcas', m);
       });
     }
-    return this.http.get<CountedItem[]>(
-      `${this.apiUrl}/categorias-por-marca`,
-      { params }
-    );
-  }
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias-por-marca`, {
+      params,
+    });
+  } // Novos métodos para a contagem total
 
-  // Novos métodos para a contagem total
   buscarTotalMarcas(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/marcas/count`);
   }

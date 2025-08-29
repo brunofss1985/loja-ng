@@ -1,3 +1,5 @@
+// src/app/pages/admin/produtos/produtos.component.ts
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProductFormComponent } from './produto-form/produto-form.component';
 import { Produto } from 'src/app/core/models/product.model';
@@ -34,14 +36,14 @@ export class ProdutosComponent implements OnInit {
   allProducts: Produto[] = [];
   modalAberto: boolean = false;
   isAdmin: boolean = false;
-  columns: string[] = ['id', 'nome', 'categoria', 'preco'];
+  columns: string[] = ['id', 'nome', 'categorias', 'preco']; // ✨ CORREÇÃO: Mudado de 'categoria' para 'categorias'
   columnLabels: { [key: string]: string } = {
     id: 'ID',
     nome: 'Nome',
-    categoria: 'Categoria',
+    categorias: 'Categoria', // ✨ CORREÇÃO: Mudado de 'categoria' para 'categorias'
     preco: 'Preco',
   };
-  
+
   // Variáveis para paginação
   currentPage: number = 0;
   totalPages: number = 0;
@@ -90,14 +92,16 @@ export class ProdutosComponent implements OnInit {
 
   loadProducts(): void {
     // CORREÇÃO: Usando o novo método 'buscarComFiltros' com filtros vazios
-    this.produtoService.buscarComFiltros(undefined, [], 0, 999999, this.currentPage, this.pageSize).subscribe({
-      next: (data: ProdutoResponse) => {
-        this.allProducts = data.content;
-        this.totalPages = data.totalPages;
-        // As propriedades de paginação agora vêm do objeto de resposta `data`
-      },
-      error: (err: any) => console.error('Erro ao carregar produtos:', err),
-    });
+    this.produtoService
+      .buscarComFiltros(undefined, undefined, 0, 999999, this.currentPage, this.pageSize) // ✨ CORREÇÃO: Mudei o segundo argumento de `[]` para `undefined` para que a busca retorne todos os produtos
+      .subscribe({
+        next: (data: ProdutoResponse) => {
+          this.allProducts = data.content;
+          this.totalPages = data.totalPages;
+          // As propriedades de paginação agora vêm do objeto de resposta `data`
+        },
+        error: (err: any) => console.error('Erro ao carregar produtos:', err),
+      });
   }
 
   onProductsRegistered() {

@@ -1,3 +1,5 @@
+// src/app/pages/admin/produtos/produto-form/produto-form.component.ts
+
 import {
   ChangeDetectorRef,
   Component,
@@ -43,7 +45,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       slug: [''],
       descricao: ['', Validators.required],
       descricaoCurta: [''],
-      categoria: ['', Validators.required],
+      categorias: [[]], // ✨ CORREÇÃO: Mudado de 'categoria' para 'categorias'
       peso: ['', Validators.required],
       sabor: [''],
       preco: [0, [Validators.required, Validators.min(0)]],
@@ -54,8 +56,6 @@ export class ProductFormComponent implements OnInit, OnChanges {
       statusAprovacao: ['pendente'],
       tamanhoPorcao: [''],
       galeria: [[]],
-
-      // Novos campos adicionados
       ativo: [true],
       estoque: [null],
       estoqueMinimo: [null],
@@ -99,11 +99,18 @@ export class ProductFormComponent implements OnInit, OnChanges {
   }
 
   patchFormFromProduct(edit: Produto): void {
-    const { imagem, imagemMimeType, galeria, galeriaMimeTypes, ...formValues } =
-      edit;
+    const {
+      imagem,
+      imagemMimeType,
+      galeria,
+      galeriaMimeTypes,
+      ...formValues
+    } = edit;
 
     this.form.patchValue({
       ...formValues,
+      // ✨ CORREÇÃO: Use `categorias` em vez de `categoria`
+      categorias: edit.categorias,
       dimensoes: edit.dimensoes ?? {
         altura: null,
         largura: null,
@@ -140,7 +147,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       slug: '',
       descricao: '',
       descricaoCurta: '',
-      categoria: '',
+      categorias: [], // ✨ CORREÇÃO: Reseta o campo 'categorias' como uma lista vazia
       peso: '',
       sabor: '',
       tamanhoPorcao: '',
@@ -151,7 +158,6 @@ export class ProductFormComponent implements OnInit, OnChanges {
       lucroEstimado: 0,
       statusAprovacao: 'pendente',
       galeria: [],
-
       ativo: true,
       estoque: null,
       estoqueMinimo: null,
@@ -223,100 +229,104 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.form.get('galeria')?.setValue(nomesAtualizados);
   }
 
-   get dimensoesGroup(): FormGroup {
+  get dimensoesGroup(): FormGroup {
     return this.form.get('dimensoes') as FormGroup;
   }
 
- submit(): void {
-  if (this.form.invalid) {
-    this.toastService.error('Preencha corretamente todos os campos.');
-    this.form.markAllAsTouched();
-    return;
+  submit(): void {
+    if (this.form.invalid) {
+      this.toastService.error('Preencha corretamente todos os campos.');
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.form.value;
+
+    // ✨ CORREÇÃO: Converte a string de categorias do input para um array de strings
+    if (typeof formValue.categorias === 'string') {
+      formValue.categorias = formValue.categorias
+        .split(',')
+        .map((c: string) => c.trim())
+        .filter((c: string) => c.length > 0);
+    }
+
+    if (typeof formValue.restricoes === 'string') {
+      formValue.restricoes = formValue.restricoes
+        .split(',')
+        .map((r: string) => r.trim())
+        .filter((r: string) => r.length > 0);
+    }
+
+    if (typeof formValue.palavrasChave === 'string') {
+      formValue.palavrasChave = formValue.palavrasChave
+        .split(',')
+        .map((p: string) => p.trim())
+        .filter((p: string) => p.length > 0);
+    }
+
+    if (typeof formValue.vendasMensais === 'string') {
+      formValue.vendasMensais = formValue.vendasMensais
+        .split(',')
+        .map((val: string) => parseInt(val.trim(), 10))
+        .filter((n: number) => !isNaN(n));
+    }
+
+    if (formValue.dimensoes) {
+      const { altura, largura, profundidade } = formValue.dimensoes;
+      formValue.dimensoes = {
+        altura: altura ? Number(altura) : null,
+        largura: largura ? Number(largura) : null,
+        profundidade: profundidade ? Number(profundidade) : null,
+      };
+    }
+
+    const produto: Produto = {
+      ...formValue,
+      id: formValue.id ?? 0,
+      preco: Number(formValue.preco),
+      precoDesconto: Number(formValue.precoDesconto || 0),
+      custo: Number(formValue.custo || 0),
+      lucroEstimado: Number(formValue.lucroEstimado || 0),
+      statusAprovacao: formValue.statusAprovacao || 'pendente',
+      restricoes: formValue.restricoes,
+      palavrasChave: formValue.palavrasChave,
+      vendasMensais: formValue.vendasMensais,
+    };
+
+    const formData = new FormData();
+    formData.append(
+      'produto',
+      new Blob([JSON.stringify(produto)], { type: 'application/json' })
+    );
+
+    if (this.imagemSelecionada) {
+      formData.append('imagem', this.imagemSelecionada);
+    }
+
+    this.galeriaSelecionada.forEach((file) => {
+      formData.append('galeria', file);
+    });
+
+    const acao =
+      produto.id && produto.id > 0
+        ? this.produtosService.atualizarComImagem(produto.id, formData)
+        : this.produtosService.salvarComImagem(formData);
+
+    acao.subscribe({
+      next: (res: Produto) => {
+        const msg = produto.id
+          ? 'Produto atualizado com sucesso!'
+          : 'Produto cadastrado com sucesso!';
+        this.toastService.success(msg);
+        this.produtoSalvo.emit(res);
+        this.resetFormToDefaults();
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastService.error('Erro ao salvar o produto.');
+      },
+    });
   }
-
-  const formValue = this.form.value;
-
-  // Converte string → array de strings
-  if (typeof formValue.restricoes === 'string') {
-    formValue.restricoes = formValue.restricoes
-      .split(',')
-      .map((r: string) => r.trim())
-      .filter((r: string) => r.length > 0);
-  }
-
-  if (typeof formValue.palavrasChave === 'string') {
-    formValue.palavrasChave = formValue.palavrasChave
-      .split(',')
-      .map((p: string) => p.trim())
-      .filter((p: string) => p.length > 0);
-  }
-
-  // 👇 Novo trecho: converte string → array de inteiros
-  if (typeof formValue.vendasMensais === 'string') {
-    formValue.vendasMensais = formValue.vendasMensais
-      .split(',')
-      .map((val: string) => parseInt(val.trim(), 10))
-      .filter((n: number) => !isNaN(n));
-  }
-
-if (formValue.dimensoes) {
-  const { altura, largura, profundidade } = formValue.dimensoes;
-  formValue.dimensoes = {
-    altura: altura ? Number(altura) : null,
-    largura: largura ? Number(largura) : null,
-    profundidade: profundidade ? Number(profundidade) : null
-  };
-}
-
-
-  const produto: Produto = {
-    ...formValue,
-    id: formValue.id ?? 0,
-    preco: Number(formValue.preco),
-    precoDesconto: Number(formValue.precoDesconto || 0),
-    custo: Number(formValue.custo || 0),
-    lucroEstimado: Number(formValue.lucroEstimado || 0),
-    statusAprovacao: formValue.statusAprovacao || 'pendente',
-    restricoes: formValue.restricoes,
-    palavrasChave: formValue.palavrasChave,
-    vendasMensais: formValue.vendasMensais,
-  };
-
-  const formData = new FormData();
-  formData.append(
-    'produto',
-    new Blob([JSON.stringify(produto)], { type: 'application/json' })
-  );
-
-  if (this.imagemSelecionada) {
-    formData.append('imagem', this.imagemSelecionada);
-  }
-
-  this.galeriaSelecionada.forEach((file) => {
-    formData.append('galeria', file);
-  });
-
-  const acao =
-    produto.id && produto.id > 0
-      ? this.produtosService.atualizarComImagem(produto.id, formData)
-      : this.produtosService.salvarComImagem(formData);
-
-  acao.subscribe({
-    next: (res: Produto) => {
-      const msg = produto.id
-        ? 'Produto atualizado com sucesso!'
-        : 'Produto cadastrado com sucesso!';
-      this.toastService.success(msg);
-      this.produtoSalvo.emit(res);
-      this.resetFormToDefaults();
-    },
-    error: (err) => {
-      console.error(err);
-      this.toastService.error('Erro ao salvar o produto.');
-    },
-  });
-}
-
 
   arrayBufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
     const bytes =

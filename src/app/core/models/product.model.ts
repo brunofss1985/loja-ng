@@ -1,11 +1,13 @@
+// src/app/core/models/product.model.ts
+
 export interface Produto {
-  id: number;
+  id?: number;
   nome: string;
   marca: string;
   slug?: string;
   descricao: string;
   descricaoCurta?: string;
-  categoria: string;
+  categorias?: string[]; // ✨ Alterado de 'categoria: string' para 'categorias?: string[]'
   peso: string;
   sabor?: string;
   preco: number;

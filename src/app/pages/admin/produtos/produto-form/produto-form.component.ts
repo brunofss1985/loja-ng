@@ -50,7 +50,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       sabor: [''],
       preco: [0, [Validators.required, Validators.min(0)]],
       precoDesconto: [0],
-      porcentagemDesconto: [{ value: '0%', disabled: true }], // Novo campo
+      porcentagemDesconto: [{ value: '0%', disabled: true }],
       custo: [0],
       fornecedor: [''],
       lucroEstimado: [0],
@@ -58,6 +58,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       tamanhoPorcao: [''],
       galeria: [[]],
       ativo: [true],
+      disponibilidade: ['em_estoque'], // <<< Novo campo adicionado
       estoque: [null],
       estoqueMinimo: [null],
       estoqueMaximo: [null],
@@ -91,7 +92,6 @@ export class ProductFormComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     if (this.productToEdit) this.patchFormFromProduct(this.productToEdit);
     
-    // Adiciona o listener para o cálculo da porcentagem de desconto
     this.form.get('preco')?.valueChanges.subscribe(() => {
       this.calcularPorcentagemDesconto();
     });
@@ -129,15 +129,13 @@ export class ProductFormComponent implements OnInit, OnChanges {
         media: edit.avaliacoes?.media ?? null,
         comentarios: edit.avaliacoes?.comentarios ?? [],
       },
-      porcentagemDesconto: edit.porcentagemDesconto ? `${edit.porcentagemDesconto}%` : '0%' // Define o valor ao editar
+      porcentagemDesconto: edit.porcentagemDesconto ? `${edit.porcentagemDesconto}%` : '0%'
     });
 
-    // Imagem principal
     if (imagem && imagemMimeType && !this.imagemSelecionada) {
       this.imagemPreview = `data:${imagemMimeType};base64,${imagem}`;
     }
 
-    // Galeria
     this.galeriaPreviewUrls = [];
     if (Array.isArray(galeria) && galeria.length > 0) {
       this.galeriaPreviewUrls = galeria.map(
@@ -146,7 +144,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       );
     }
     
-    this.calcularPorcentagemDesconto(); // Garante que o cálculo é feito na inicialização, caso os valores existam
+    this.calcularPorcentagemDesconto();
     setTimeout(() => this.cdr.detectChanges(), 100);
   }
 
@@ -164,13 +162,14 @@ export class ProductFormComponent implements OnInit, OnChanges {
       tamanhoPorcao: '',
       preco: 0,
       precoDesconto: 0,
-      porcentagemDesconto: '0%', // Reseta o campo
+      porcentagemDesconto: '0%',
       custo: 0,
       fornecedor: '',
       lucroEstimado: 0,
       statusAprovacao: 'pendente',
       galeria: [],
       ativo: true,
+      disponibilidade: 'em_estoque', // <<< Novo campo adicionado
       estoque: null,
       estoqueMinimo: null,
       estoqueMaximo: null,

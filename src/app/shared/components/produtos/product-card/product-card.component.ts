@@ -16,8 +16,8 @@ export class ProductCardComponent {
   @Input() productPreco: string = '';
   @Input() productPrecoDesconto: string = '';
   @Input() productPorcentagemDesconto: string = '';
+  @Input() productDisponibilidade: string = ''; // <<< Novo campo adicionado
 
-  // ✨ Novo método de ajuda para o template
   getPorcentagemNumerica(): number {
     return this.productPorcentagemDesconto ? parseFloat(this.productPorcentagemDesconto) : 0;
   }

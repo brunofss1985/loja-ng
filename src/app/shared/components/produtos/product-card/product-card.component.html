@@ -32,7 +32,30 @@
       <span class="badge boleto">Boleto</span>
     </div>
 
-    <div class="stock-row"><span class="dot"></span>Em estoque e envio imediato</div>
+    <div class="stock-row">
+      <span class="dot" [ngClass]="{
+        'em_estoque': productDisponibilidade === 'em_estoque',
+        'por_encomenda': productDisponibilidade === 'por_encomenda',
+        'nao_disponivel': productDisponibilidade === 'nao_disponivel'
+      }"></span>
+      <ng-container [ngSwitch]="productDisponibilidade">
+        <span [ngClass]="{
+          'em_estoque': productDisponibilidade === 'em_estoque',
+          'por_encomenda': productDisponibilidade === 'por_encomenda',
+          'nao_disponivel': productDisponibilidade === 'nao_disponivel'
+        }" *ngSwitchCase="'em_estoque'">Em estoque e envio imediato</span>
+        <span [ngClass]="{
+          'em_estoque': productDisponibilidade === 'em_estoque',
+          'por_encomenda': productDisponibilidade === 'por_encomenda',
+          'nao_disponivel': productDisponibilidade === 'nao_disponivel'
+        }" *ngSwitchCase="'por_encomenda'">Produto por encomenda</span>
+        <span [ngClass]="{
+          'em_estoque': productDisponibilidade === 'em_estoque',
+          'por_encomenda': productDisponibilidade === 'por_encomenda',
+          'nao_disponivel': productDisponibilidade === 'nao_disponivel'
+        }" *ngSwitchCase="'nao_disponivel'">Não disponível</span>
+      </ng-container>
+    </div>
 
     <div class="footerCard">
       <a [routerLink]="['/produto', productId]">

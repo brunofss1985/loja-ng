@@ -25,6 +25,7 @@ export interface Produto {
 
   // Novos campos
   ativo?: boolean;
+  disponibilidade?: 'em_estoque' | 'por_encomenda' | 'nao_disponivel'; // Novo campo adicionado
   estoque?: number;
   estoqueMinimo?: number;
   estoqueMaximo?: number;

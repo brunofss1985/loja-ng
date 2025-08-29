@@ -65,7 +65,7 @@
       </div>
       <div class="col-md-4">
         <label class="mt-2">Porcentagem de Desconto (%)</label>
-        <input class="form-control" formControlName="porcentagemDesconto" type="text"  />
+        <input class="form-control" formControlName="porcentagemDesconto" type="text" />
       </div>
       <div class="col-md-4">
         <label class="mt-2">Custo</label>
@@ -88,6 +88,14 @@
         <select class="form-control" formControlName="ativo">
           <option [ngValue]="true">Sim</option>
           <option [ngValue]="false">Não</option>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="mt-2">Disponibilidade</label>
+        <select class="form-control" formControlName="disponibilidade">
+          <option value="em_estoque">Em Estoque e Envio Imediato</option>
+          <option value="por_encomenda">Produto por Encomenda</option>
+          <option value="nao_disponivel">Não Disponível</option>
         </select>
       </div>
     </div>

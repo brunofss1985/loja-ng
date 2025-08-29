@@ -1,22 +1,18 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
   <div class="container-fluid">
     <div class="row">
-
       <div class="col-md-3 col-sm-12">
         <div *ngIf="imagemPreview && !imagemSelecionada" class="mb-3">
           <label>Imagem atual:</label>
           <img [src]="imagemPreview" alt="Imagem atual" class="img-fluid border rounded w-100 mb-2" />
         </div>
-
         <div *ngIf="imagemSelecionada" class="mb-3">
           <label>Nova imagem selecionada:</label>
           <img [src]="imagemPreview" alt="Nova imagem" class="img-fluid border rounded w-100 mb-2" />
         </div>
-
         <label class="mt-2">Imagem do Produto</label>
         <input type="file" class="form-control mt-1" (change)="onImagemSelecionada($event)" />
       </div>
-
       <div class="col-md-9 col-sm-12">
         <div class="row">
           <div class="col-md-4">
@@ -29,7 +25,7 @@
           </div>
           <div class="col-md-4">
             <label class="mt-2">Categorias</label>
-            <input class="form-control" formControlName="categorias" placeholder="Ex: Categoria 1, Categoria 2"/>
+            <input class="form-control" formControlName="categorias" placeholder="Ex: Categoria 1, Categoria 2" />
           </div>
           <div class="col-md-4">
             <label class="mt-2">Peso</label>
@@ -68,6 +64,10 @@
         <input class="form-control" formControlName="precoDesconto" type="number" />
       </div>
       <div class="col-md-4">
+        <label class="mt-2">Porcentagem de Desconto (%)</label>
+        <input class="form-control" formControlName="porcentagemDesconto" type="text"  />
+      </div>
+      <div class="col-md-4">
         <label class="mt-2">Custo</label>
         <input class="form-control" formControlName="custo" type="number" />
       </div>
@@ -91,7 +91,6 @@
         </select>
       </div>
     </div>
-
     <div class="row mt-4">
       <div class="col-md-4">
         <label class="mt-2">Estoque</label>
@@ -114,8 +113,6 @@
         <input class="form-control" formControlName="codigoBarras" />
       </div>
     </div>
-
-
     <div [formGroup]="dimensoesGroup">
       <div class="row mt-4">
         <div class="col-md-4">
@@ -132,9 +129,6 @@
         </div>
       </div>
     </div>
-
-
-
     <div class="row mt-4">
       <div class="col-md-4">
         <label class="mt-2">Fornecedor</label>
@@ -157,7 +151,6 @@
         <input class="form-control" formControlName="prazoEntregaFornecedor" />
       </div>
     </div>
-
     <div class="row mt-4">
       <div class="col-md-4">
         <label class="mt-2">Data de Cadastro</label>
@@ -190,7 +183,6 @@
         <input class="form-control" formControlName="palavrasChave" placeholder="Ex: proteína, whey" />
       </div>
     </div>
-
     <div class="row mt-4">
       <div class="col-md-4">
         <label class="mt-2">Quantidade Vendida</label>
@@ -201,32 +193,22 @@
         <input class="form-control" formControlName="vendasMensais" placeholder="Ex: 10,15,20,18" />
       </div>
     </div>
-
     <div class="row mt-4">
       <div class="col-12">
         <label class="mt-2">Galeria de Imagens</label>
         <input type="file" class="form-control" accept="image/*" multiple (change)="onGaleriaSelecionada($event)" />
         <div class="d-flex flex-wrap gap-2 mt-3">
           <div *ngFor="let img of galeriaPreviewUrls; let i = index" class="position-relative">
-            <img
-              [src]="img"
-              alt="Imagem da galeria"
-              width="100"
-              height="100"
-              style="object-fit: cover; border: 1px solid #ccc; border-radius: 4px;"
-            />
-            <button
-              type="button"
-              class="btn btn-sm btn-danger position-absolute top-0 end-0"
-              (click)="removerImagemGaleria(i)"
-            >
+            <img [src]="img" alt="Imagem da galeria" width="100" height="100"
+              style="object-fit: cover; border: 1px solid #ccc; border-radius: 4px;" />
+            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+              (click)="removerImagemGaleria(i)">
               ✕
             </button>
           </div>
         </div>
       </div>
     </div>
-
     <div class="row mt-4">
       <div class="col-md-4">
         <label class="mt-2">Média de Avaliações</label>

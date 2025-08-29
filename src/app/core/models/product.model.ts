@@ -7,11 +7,12 @@ export interface Produto {
   slug?: string;
   descricao: string;
   descricaoCurta?: string;
-  categorias?: string[]; // ✨ Alterado de 'categoria: string' para 'categorias?: string[]'
+  categorias?: string[];
   peso: string;
   sabor?: string;
   preco: number;
   precoDesconto?: number;
+  porcentagemDesconto?: string; // Novo campo adicionado
   custo?: number;
   fornecedor?: string;
   lucroEstimado?: number;
@@ -35,7 +36,7 @@ export interface Produto {
     profundidade: number | null;
   };
   restricoes?: string[];
-  tabelaNutricional?: any; // ou defina melhor se quiser tipar os nutrientes
+  tabelaNutricional?: any;
   modoDeUso?: string;
   palavrasChave?: string[];
   avaliacoes?: {

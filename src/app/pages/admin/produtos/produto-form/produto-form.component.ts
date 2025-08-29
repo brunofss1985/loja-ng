@@ -45,11 +45,12 @@ export class ProductFormComponent implements OnInit, OnChanges {
       slug: [''],
       descricao: ['', Validators.required],
       descricaoCurta: [''],
-      categorias: [[]], // ✨ CORREÇÃO: Mudado de 'categoria' para 'categorias'
+      categorias: [[]],
       peso: ['', Validators.required],
       sabor: [''],
       preco: [0, [Validators.required, Validators.min(0)]],
       precoDesconto: [0],
+      porcentagemDesconto: [{ value: '0%', disabled: true }], // Novo campo
       custo: [0],
       fornecedor: [''],
       lucroEstimado: [0],
@@ -89,6 +90,15 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.productToEdit) this.patchFormFromProduct(this.productToEdit);
+    
+    // Adiciona o listener para o cálculo da porcentagem de desconto
+    this.form.get('preco')?.valueChanges.subscribe(() => {
+      this.calcularPorcentagemDesconto();
+    });
+
+    this.form.get('precoDesconto')?.valueChanges.subscribe(() => {
+      this.calcularPorcentagemDesconto();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -109,7 +119,6 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
     this.form.patchValue({
       ...formValues,
-      // ✨ CORREÇÃO: Use `categorias` em vez de `categoria`
       categorias: edit.categorias,
       dimensoes: edit.dimensoes ?? {
         altura: null,
@@ -120,6 +129,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
         media: edit.avaliacoes?.media ?? null,
         comentarios: edit.avaliacoes?.comentarios ?? [],
       },
+      porcentagemDesconto: edit.porcentagemDesconto ? `${edit.porcentagemDesconto}%` : '0%' // Define o valor ao editar
     });
 
     // Imagem principal
@@ -135,7 +145,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
           `data:${galeriaMimeTypes?.[i] || 'image/jpeg'};base64,${base64Data}`
       );
     }
-
+    
+    this.calcularPorcentagemDesconto(); // Garante que o cálculo é feito na inicialização, caso os valores existam
     setTimeout(() => this.cdr.detectChanges(), 100);
   }
 
@@ -147,12 +158,13 @@ export class ProductFormComponent implements OnInit, OnChanges {
       slug: '',
       descricao: '',
       descricaoCurta: '',
-      categorias: [], // ✨ CORREÇÃO: Reseta o campo 'categorias' como uma lista vazia
+      categorias: [],
       peso: '',
       sabor: '',
       tamanhoPorcao: '',
       preco: 0,
       precoDesconto: 0,
+      porcentagemDesconto: '0%', // Reseta o campo
       custo: 0,
       fornecedor: '',
       lucroEstimado: 0,
@@ -233,6 +245,18 @@ export class ProductFormComponent implements OnInit, OnChanges {
     return this.form.get('dimensoes') as FormGroup;
   }
 
+  private calcularPorcentagemDesconto(): void {
+    const preco = this.form.get('preco')?.value;
+    const precoDesconto = this.form.get('precoDesconto')?.value;
+
+    if (preco > 0 && precoDesconto < preco) {
+      const desconto = ((preco - precoDesconto) / preco) * 100;
+      this.form.get('porcentagemDesconto')?.patchValue(desconto.toFixed(2) + '%');
+    } else {
+      this.form.get('porcentagemDesconto')?.patchValue('0%');
+    }
+  }
+
   submit(): void {
     if (this.form.invalid) {
       this.toastService.error('Preencha corretamente todos os campos.');
@@ -240,9 +264,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
       return;
     }
 
-    const formValue = this.form.value;
+    const formValue = this.form.getRawValue();
 
-    // ✨ CORREÇÃO: Converte a string de categorias do input para um array de strings
     if (typeof formValue.categorias === 'string') {
       formValue.categorias = formValue.categorias
         .split(',')
@@ -285,6 +308,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       id: formValue.id ?? 0,
       preco: Number(formValue.preco),
       precoDesconto: Number(formValue.precoDesconto || 0),
+      porcentagemDesconto: formValue.porcentagemDesconto,
       custo: Number(formValue.custo || 0),
       lucroEstimado: Number(formValue.lucroEstimado || 0),
       statusAprovacao: formValue.statusAprovacao || 'pendente',

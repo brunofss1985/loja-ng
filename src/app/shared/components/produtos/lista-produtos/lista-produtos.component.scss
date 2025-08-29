@@ -123,10 +123,11 @@
   display: grid;
   /* Agora a mágica acontece aqui: os cards se ajustam para preencher o espaço */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  gap: 0;
   justify-content: center; /* Centraliza os cards no espaço restante */
   // padding: 8px;
   margin-bottom: 32px;
+  margin-right: 14px;
 }
 
 /* Paginação moderna */

@@ -31,7 +31,7 @@
  .discount-badge {
      position: absolute;
      top: 16px;
-     left: 16px;
+     right: 16px;
      background: linear-gradient(135deg, #ff4757, #ff3742);
      color: var(--branco);
      padding: 6px 12px;
@@ -45,7 +45,7 @@
  .frete-badge {
      position: absolute;
      top: 16px;
-     right: 16px;
+     left: 16px;
      background: linear-gradient(135deg, #2ed573, #1dd1a1);
      color: var(--branco);
      padding: 6px 10px;

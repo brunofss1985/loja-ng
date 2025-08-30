@@ -1,5 +1,3 @@
-// src/app/components/header/header.component.ts
-
 import {
   Component,
   OnInit,
@@ -7,8 +5,7 @@ import {
   OnDestroy,
   Renderer2,
   ElementRef,
-  HostListener,
-  ViewChild,
+  HostListener
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -31,23 +28,23 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isProfileDropdownOpen: boolean = false;
   isScrolled = false;
-  
+
   private headerEl: HTMLElement | null = null;
   private menuToggleEl: HTMLInputElement | null = null;
   private burgerLabelEl: HTMLElement | null = null;
   private cleanupFns: Array<() => void> = [];
-  
+
   searchTerm: string = '';
 
-  // PROPRIEDADES PARA O DROPDOWN DE CATEGORIAS
+  // DROPDOWN CATEGORIAS
   isCategoriesDropdownOpen: boolean = false;
   categorias: CountedItem[] = [];
 
-  // NOVO: PROPRIEDADES PARA O DROPDOWN DE MARCAS
+  // DROPDOWN MARCAS
   isBrandsDropdownOpen: boolean = false;
   marcas: CountedItem[] = [];
 
-  // NOVO: PROPRIEDADES PARA O DROPDOWN DE OBJETIVOS
+  // DROPDOWN OBJETIVOS
   isObjectivesDropdownOpen: boolean = false;
   objetivos: CountedItem[] = [];
 
@@ -71,7 +68,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     );
 
-    // NOVO: Busca as marcas
+    // Busca as marcas
     this.produtosService.buscarMarcas().subscribe(
       (data) => {
         this.marcas = data;
@@ -81,7 +78,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     );
 
-    // NOVO: Busca os objetivos
+    // Busca os objetivos
     this.produtosService.buscarObjetivos().subscribe(
       (data) => {
         this.objetivos = data;
@@ -96,9 +93,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     const root = this.host.nativeElement;
     this.headerEl = (root.querySelector('.header') as HTMLElement) || root;
     this.menuToggleEl = root.querySelector('#menu-toggle') as HTMLInputElement;
-    this.burgerLabelEl = root.querySelector(
-      '.menu-toggle-label'
-    ) as HTMLElement;
+    this.burgerLabelEl = root.querySelector('.menu-toggle-label') as HTMLElement;
     this.onScroll();
     this.syncAria();
     const mobileLinks = root.querySelectorAll('.header-botton a');
@@ -177,18 +172,22 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isCategoriesDropdownOpen = false;
   }
 
-  // NOVO: Métodos para o Dropdown de Marcas
+  // 🔧 AJUSTE: agora navega com queryParam (?marca=...), sem quebrar o restante
   toggleBrandsDropdown(event: Event): void {
     event.stopPropagation();
     this.isBrandsDropdownOpen = !this.isBrandsDropdownOpen;
   }
 
   onBrandSelected(brandName: string): void {
-    this.route.navigate(['/produtos', brandName]);
+    // Suporta imediatamente sem precisar alterar o app-routing:
+    // /produtos?marca=NomeDaMarca
+    this.route.navigate(['/produtos'], {
+      queryParams: { marca: brandName }
+    });
     this.isBrandsDropdownOpen = false;
   }
 
-  // NOVO: Métodos para o Dropdown de Objetivos
+  // OBJETIVOS
   toggleObjectivesDropdown(event: Event): void {
     event.stopPropagation();
     this.isObjectivesDropdownOpen = !this.isObjectivesDropdownOpen;
@@ -204,25 +203,17 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this.host.nativeElement.contains(event.target)) {
       this.isProfileDropdownOpen = false;
       this.isCategoriesDropdownOpen = false;
-      this.isBrandsDropdownOpen = false; // NOVO: Fecha o dropdown de marcas
-      this.isObjectivesDropdownOpen = false; // NOVO: Fecha o dropdown de objetivos
+      this.isBrandsDropdownOpen = false;
+      this.isObjectivesDropdownOpen = false;
     }
   }
 
   @HostListener('document:keydown.esc')
   onEscapeKeydown(): void {
-    if (this.isProfileDropdownOpen) {
-      this.isProfileDropdownOpen = false;
-    }
-    if (this.isCategoriesDropdownOpen) {
-      this.isCategoriesDropdownOpen = false;
-    }
-    if (this.isBrandsDropdownOpen) {
-      this.isBrandsDropdownOpen = false;
-    }
-    if (this.isObjectivesDropdownOpen) {
-      this.isObjectivesDropdownOpen = false;
-    }
+    if (this.isProfileDropdownOpen) this.isProfileDropdownOpen = false;
+    if (this.isCategoriesDropdownOpen) this.isCategoriesDropdownOpen = false;
+    if (this.isBrandsDropdownOpen) this.isBrandsDropdownOpen = false;
+    if (this.isObjectivesDropdownOpen) this.isObjectivesDropdownOpen = false;
   }
 
   onSearch(event: Event | KeyboardEvent): void {

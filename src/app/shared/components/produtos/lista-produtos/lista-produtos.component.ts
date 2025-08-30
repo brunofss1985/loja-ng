@@ -1,7 +1,6 @@
-// src/app/shared/components/produtos/lista-produtos/lista-produtos.component.ts
-
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { combineLatest } from 'rxjs';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
 
 @Component({
@@ -12,19 +11,20 @@ import { ProdutosService } from 'src/app/core/services/produtosService/produtos.
 export class ListaProdutosComponent implements OnInit {
   termoDeBusca?: string;
   categoria?: string;
+  marca?: string; // ✅ NOVO: suporte a marca via rota
   produtos!: any[];
   currentPage: number = 0;
   totalPages: number = 0;
   totalElements: number = 0;
 
-  // Propriedades para a quantidade de produtos por página
+  // Quantidade por página
   pageSize: number = 8;
   opcoesTamanhoPagina = [
     { nome: '4', valor: 4 },
     { nome: '8', valor: 8 },
     { nome: '16', valor: 16 },
     { nome: '24', valor: 24 },
-    { nome: 'Todos', valor: 999999 }, // Valor alto para exibir todos
+    { nome: 'Todos', valor: 999999 },
   ];
 
   ordenacaoSelecionada: string = 'relevance';
@@ -48,24 +48,57 @@ export class ListaProdutosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // 🌟 LÓGICA ATUALIZADA: Observa as mudanças na URL
-    this.route.params.subscribe((params) => {
-      this.termoDeBusca = params['termo'];
-      this.categoria = params['categoria'];
-      this.currentPage = 0;
+    // Observa params + queryParams ao mesmo tempo (sem quebrar o fluxo antigo)
+    combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
+      ([params, query]) => {
+        this.termoDeBusca = params.get('termo') || undefined;
+        this.categoria = params.get('categoria') || undefined;
 
-      // Reseta os filtros ao mudar de rota (para não misturar)
-      this.filtroCategorias = [];
-      this.filtroMarcas = [];
-      this.filtroPrecoMin = 0;
-      this.filtroPrecoMax = 999999;
+        // ✅ NOVO: marca via rota opcional (/produtos/marca/:marca)
+        this.marca = params.get('marca') || undefined;
 
-      if (this.categoria) {
-        this.filtroCategorias.push(this.categoria);
+        // Reseta filtros ao mudar de rota/query
+        this.filtroCategorias = [];
+        this.filtroMarcas = [];
+        this.filtroPrecoMin = 0;
+        this.filtroPrecoMax = 999999;
+
+        if (this.categoria) {
+          this.filtroCategorias.push(this.categoria);
+        }
+
+        // ✅ NOVO: marca via rota tem prioridade
+        if (this.marca) {
+          this.filtroMarcas.push(this.marca);
+        } else {
+          // ✅ NOVO: marca via query param (?marca=Nome)
+          const qpMarca = query.get('marca');
+          if (qpMarca) {
+            this.filtroMarcas.push(qpMarca);
+          }
+
+          // (Opcional) múltiplas marcas/categorias por query param (?marcas=A,B&categorias=X,Y)
+          const qpMarcas = query.getAll('marcas'); // suporta repetidos
+          qpMarcas.forEach((m) => {
+            m.split(',').forEach((part) => {
+              const t = part.trim();
+              if (t && !this.filtroMarcas.includes(t)) this.filtroMarcas.push(t);
+            });
+          });
+
+          const qpCategorias = query.getAll('categorias');
+          qpCategorias.forEach((c) => {
+            c.split(',').forEach((part) => {
+              const t = part.trim();
+              if (t && !this.filtroCategorias.includes(t)) this.filtroCategorias.push(t);
+            });
+          });
+        }
+
+        this.currentPage = 0;
+        this.carregarProdutos();
       }
-
-      this.carregarProdutos();
-    });
+    );
   }
 
   onFiltersChanged(event: {
@@ -79,7 +112,9 @@ export class ListaProdutosComponent implements OnInit {
     this.filtroPrecoMin = event.minPreco;
     this.filtroPrecoMax = event.maxPreco;
     this.currentPage = 0;
-    this.termoDeBusca = undefined; // Garante que a busca por termo seja ignorada
+
+    // Mantém a lógica antiga: busca por termo é ignorada quando filtros mudam
+    this.termoDeBusca = undefined;
     this.carregarProdutos();
   }
 
@@ -93,8 +128,7 @@ export class ListaProdutosComponent implements OnInit {
     this.carregarProdutos();
   }
 
-  carregarProdutos() {
-    // 🌟 LÓGICA ATUALIZADA: Decide qual método de serviço chamar
+  carregarProdutos(): void {
     let produtoObservable;
 
     if (this.termoDeBusca) {
@@ -105,11 +139,11 @@ export class ListaProdutosComponent implements OnInit {
         this.ordenacaoSelecionada
       );
     } else {
-      // ✅ CORREÇÃO APLICADA: Adicionado um array vazio `[]` no terceiro argumento
+      // Inclui marcas no filtro (💡 já estava, só garantimos o preenchimento acima)
       produtoObservable = this.produtoService.buscarComFiltros(
         this.filtroCategorias,
         this.filtroMarcas,
-        [], // Novo argumento para 'objetivos'
+        [], // objetivos (mantido)
         this.filtroPrecoMin,
         this.filtroPrecoMax,
         this.currentPage,
@@ -125,14 +159,14 @@ export class ListaProdutosComponent implements OnInit {
     });
   }
 
-  proximaPagina() {
+  proximaPagina(): void {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
       this.carregarProdutos();
     }
   }
 
-  paginaAnterior() {
+  paginaAnterior(): void {
     if (this.currentPage > 0) {
       this.currentPage--;
       this.carregarProdutos();
@@ -140,7 +174,7 @@ export class ListaProdutosComponent implements OnInit {
   }
 
   getPages(): number[] {
-    const pages = [];
+    const pages: number[] = [];
     for (let i = 0; i < this.totalPages; i++) {
       pages.push(i);
     }

@@ -20,6 +20,7 @@ const routes: Routes = [
       { path: '', component: PublicHomeComponent },
       { path: 'produtos', component: ListaProdutosComponent },
       { path: 'produtos/:categoria', component: ListaProdutosComponent },
+      { path: 'produtos/buscar/:termo', component: ListaProdutosComponent }, // ✨ NOVA ROTA DE BUSCA
       { path: 'produto/:id', component: DetalheProdutoComponent },
       { path: 'cart', component: CartComponent },
       { path: 'payment', component: PaymentComponent },

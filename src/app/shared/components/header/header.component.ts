@@ -6,6 +6,7 @@ import {
   Renderer2,
   ElementRef,
   HostListener,
+  ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -24,7 +25,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Observable que guarda a contagem de itens no carrinho
   public cartItemCount$: Observable<number> = this.cartService.cartItems$.pipe(
-    map(items => items.length)
+    map((items) => items.length)
   );
 
   // Variável para controlar o estado do dropdown do perfil
@@ -40,6 +41,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Guarda funções para limpar ouvintes
   private cleanupFns: Array<() => void> = [];
+
+  // Variável para o termo de busca
+  searchTerm: string = '';
 
   constructor(
     private renderer: Renderer2,
@@ -156,10 +160,24 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // Ouve a tecla ESC
-  @HostListener('document:keydown.esc', ['$event'])
+  @HostListener('document:keydown.esc')
   onEscapeKeydown(): void {
     if (this.isProfileDropdownOpen) {
       this.isProfileDropdownOpen = false;
+    }
+  }
+
+  // Novo método para a busca
+  onSearch(event: Event | KeyboardEvent): void {
+    if (event instanceof KeyboardEvent && event.key !== 'Enter') {
+      return;
+    }
+    const term = this.searchTerm.trim();
+    if (term) {
+      this.route.navigate(['/produtos/buscar', term]);
+    } else {
+      // Se o campo estiver vazio, apenas navegue para a página de produtos
+      this.route.navigate(['/produtos']);
     }
   }
 }

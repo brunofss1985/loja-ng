@@ -1,4 +1,4 @@
-// src/app/pages/admin/produtos/produtos.component.ts
+// src/app/pages/admin/produtos/lista-produtos.component.ts
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -10,13 +10,14 @@ import { ProdutosService } from 'src/app/core/services/produtosService/produtos.
   styleUrls: ['./lista-produtos.component.scss'],
 })
 export class ListaProdutosComponent implements OnInit {
-  categoria!: string;
+  termoDeBusca?: string;
+  categoria?: string;
   produtos!: any[];
   currentPage: number = 0;
   totalPages: number = 0;
   totalElements: number = 0;
-  
-  // ✨ NOVAS PROPRIEDADES PARA A QUANTIDADE DE PRODUTOS
+
+  // Propriedades para a quantidade de produtos por página
   pageSize: number = 8;
   opcoesTamanhoPagina = [
     { nome: '4', valor: 4 },
@@ -25,7 +26,7 @@ export class ListaProdutosComponent implements OnInit {
     { nome: '24', valor: 24 },
     { nome: 'Todos', valor: 999999 }, // Valor alto para exibir todos
   ];
-  
+
   ordenacaoSelecionada: string = 'relevance';
   opcoesOrdenacao = [
     { nome: 'Relevância', valor: 'relevance' },
@@ -47,18 +48,22 @@ export class ListaProdutosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // 🌟 LÓGICA ATUALIZADA: Observa as mudanças na URL
     this.route.params.subscribe((params) => {
+      this.termoDeBusca = params['termo'];
       this.categoria = params['categoria'];
       this.currentPage = 0;
 
-      if (!this.categoria) {
-        this.filtroCategorias = [];
-        this.filtroMarcas = [];
-        this.filtroPrecoMin = 0;
-        this.filtroPrecoMax = 999999;
-      } else {
-        this.filtroCategorias = [this.categoria];
+      // Reseta os filtros ao mudar de rota (para não misturar)
+      this.filtroCategorias = [];
+      this.filtroMarcas = [];
+      this.filtroPrecoMin = 0;
+      this.filtroPrecoMax = 999999;
+
+      if (this.categoria) {
+        this.filtroCategorias.push(this.categoria);
       }
+
       this.carregarProdutos();
     });
   }
@@ -74,36 +79,48 @@ export class ListaProdutosComponent implements OnInit {
     this.filtroPrecoMin = event.minPreco;
     this.filtroPrecoMax = event.maxPreco;
     this.currentPage = 0;
+    this.termoDeBusca = undefined; // Garante que a busca por termo seja ignorada
     this.carregarProdutos();
   }
 
   onSortChanged(): void {
-    this.currentPage = 0; // Volta para a primeira página ao mudar a ordenação
+    this.currentPage = 0;
     this.carregarProdutos();
   }
-  
-  // ✨ NOVO MÉTODO PARA LIDAR COM A QUANTIDADE DE PRODUTOS POR PÁGINA
+
   onPageSizeChanged(): void {
-    this.currentPage = 0; // Volta para a primeira página
+    this.currentPage = 0;
     this.carregarProdutos();
   }
 
   carregarProdutos() {
-    this.produtoService
-      .buscarComFiltros(
+    // 🌟 LÓGICA ATUALIZADA: Decide qual método de serviço chamar
+    let produtoObservable;
+
+    if (this.termoDeBusca) {
+      produtoObservable = this.produtoService.buscarPorTermo(
+        this.termoDeBusca,
+        this.currentPage,
+        this.pageSize,
+        this.ordenacaoSelecionada
+      );
+    } else {
+      produtoObservable = this.produtoService.buscarComFiltros(
         this.filtroCategorias,
         this.filtroMarcas,
         this.filtroPrecoMin,
         this.filtroPrecoMax,
         this.currentPage,
-        this.pageSize, // ✨ PASSA A NOVA PROPRIEDADE
+        this.pageSize,
         this.ordenacaoSelecionada
-      )
-      .subscribe((response) => {
-        this.produtos = response.content;
-        this.totalPages = response.totalPages;
-        this.totalElements = response.totalElements;
-      });
+      );
+    }
+
+    produtoObservable.subscribe((response) => {
+      this.produtos = response.content;
+      this.totalPages = response.totalPages;
+      this.totalElements = response.totalElements;
+    });
   }
 
   proximaPagina() {

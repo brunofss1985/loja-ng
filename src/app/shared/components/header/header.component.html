@@ -258,8 +258,12 @@
           </a>
         </div>
       </li>
-      <li routerLink="/produtos/pre treino"><a>Promoções</a></li>
-      <li routerLink="#"><a>kits Promocionais</a></li>
+      <li [routerLink]="['/produtos']" [queryParams]="{ objetivos: 'pre treino' }">
+        <a>Promoções</a>
+      </li>
+      <li [routerLink]="['/produtos']" [queryParams]="{ categorias: 'Kit' }">
+        <a>Kits Promocionais</a>
+      </li>
     </ul>
   </div>
 
@@ -280,10 +284,18 @@
           <li><a routerLink="#">📦 Todas as categorias</a></li>
           <li><a routerLink="/produtos">🛍️ Todos os produtos</a></li>
           <li><a routerLink="#">✨ Novidades</a></li>
-          <li><a routerLink="/produtos/creatina">🏷️ Marcas</a></li>
-          <li><a routerLink="/produtos/whey protein">🎯 Objetivos</a></li>
-          <li><a routerLink="/produtos/pre treino">🔥 Promoções</a></li>
-          <li><a routerLink="#">📦 Kits Promocionais</a></li>
+          <li>
+            <a [routerLink]="['/produtos']" [queryParams]="{ marcas: '' }">🏷️ Marcas</a>
+          </li>
+          <li>
+            <a [routerLink]="['/produtos']" [queryParams]="{ objetivos: '' }">🎯 Objetivos</a>
+          </li>
+          <li>
+            <a [routerLink]="['/produtos']" [queryParams]="{ objetivos: 'pre treino' }">🔥 Promoções</a>
+          </li>
+          <li>
+            <a routerLink="/produtos" [queryParams]="{ categorias: 'Kit' }">📦 Kits Promocionais</a>
+          </li>
         </ul>
       </div>
       <div class="mobile-menu-section" *ngIf="userType === null">

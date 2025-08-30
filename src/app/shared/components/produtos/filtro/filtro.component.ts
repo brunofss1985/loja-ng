@@ -29,22 +29,27 @@ export class FiltroComponent implements OnInit {
     maxPreco: number;
   }>();
 
+  // listas totais (vindas da API)
   allMarcas: CountedItem[] = [];
   allCategorias: CountedItem[] = [];
   allObjetivos: CountedItem[] = [];
 
+  // listas filtradas (usadas no template)
   filteredMarcas: CountedItem[] = [];
   filteredCategorias: CountedItem[] = [];
   filteredObjetivos: CountedItem[] = [];
 
+  // selecionados
   selectedMarcas: string[] = [];
   selectedCategorias: string[] = [];
   selectedObjetivos: string[] = [];
 
-  totalCategorias: number = 0;
-  totalMarcas: number = 0;
-  totalObjetivos: number = 0;
+  // totais globais (para referência, caso precise)
+  totalMarcasAll: number = 0;
+  totalCategoriasAll: number = 0;
+  totalObjetivosAll: number = 0;
 
+  // preços
   minPrice: number = 0;
   maxPrice: number = 999999;
 
@@ -55,45 +60,52 @@ export class FiltroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Carrega a lista de categorias e a contagem total
+    // Carrega listas completas (contagem incluída)
     this.produtoService.buscarCategorias().subscribe((categorias) => {
       this.allCategorias = categorias;
+      // inicialmente mostrar todas
       this.filteredCategorias = [...this.allCategorias];
     });
-    this.produtoService.buscarTotalCategorias().subscribe((count) => {
-      this.totalCategorias = count;
-    });
-
-    // Carrega a lista de marcas e a contagem total
     this.produtoService.buscarMarcas().subscribe((marcas) => {
       this.allMarcas = marcas;
       this.filteredMarcas = [...this.allMarcas];
     });
-    this.produtoService.buscarTotalMarcas().subscribe((count) => {
-      this.totalMarcas = count;
-    });
-
-    // Carrega a lista de objetivos e a contagem total
     this.produtoService.buscarObjetivos().subscribe((objetivos) => {
       this.allObjetivos = objetivos;
       this.filteredObjetivos = [...this.allObjetivos];
     });
-    this.produtoService.buscarTotalObjetivos().subscribe((count) => {
-      this.totalObjetivos = count;
+
+    // Carrega totais globais (opcional)
+    this.produtoService.buscarTotalCategorias().subscribe((c) => {
+      this.totalCategoriasAll = c;
+    });
+    this.produtoService.buscarTotalMarcas().subscribe((m) => {
+      this.totalMarcasAll = m;
+    });
+    this.produtoService.buscarTotalObjetivos().subscribe((o) => {
+      this.totalObjetivosAll = o;
     });
 
     this.checkScreenSize();
 
-    // 💡 PASSO CRUCIAL: Ler o estado inicial da URL
+    // Ler estado inicial da URL (se houver filtros aplicados)
     combineLatest([
       this.activatedRoute.paramMap,
       this.activatedRoute.queryParamMap,
     ]).subscribe(([params, query]) => {
-      this.selectedMarcas = query.get('marcas')?.split(',') || [];
-      this.selectedCategorias = query.get('categorias')?.split(',') || [];
-      this.selectedObjetivos = query.get('objetivos')?.split(',') || [];
-      this.minPrice = +query.get('minPreco')! || 0;
-      this.maxPrice = +query.get('maxPreco')! || 999999;
+      const marcasParam = query.get('marcas') || '';
+      const categoriasParam = query.get('categorias') || '';
+      const objetivosParam = query.get('objetivos') || '';
+
+      this.selectedMarcas = marcasParam ? marcasParam.split(',').filter(Boolean) : [];
+      this.selectedCategorias = categoriasParam ? categoriasParam.split(',').filter(Boolean) : [];
+      this.selectedObjetivos = objetivosParam ? objetivosParam.split(',').filter(Boolean) : [];
+
+      this.minPrice = query.get('minPreco') ? +query.get('minPreco')! : 0;
+      this.maxPrice = query.get('maxPreco') ? +query.get('maxPreco')! : 999999;
+
+      // aplica filtros sobre as listas (chama endpoints que retornam contagens filtradas)
+      this.applyFiltersToLists();
     });
   }
 
@@ -103,6 +115,7 @@ export class FiltroComponent implements OnInit {
     this.isCollapsedAll = this.isMobile;
   }
 
+  // Toggle marca
   toggleMarca(marca: string): void {
     const index = this.selectedMarcas.indexOf(marca);
     if (index > -1) {
@@ -110,9 +123,12 @@ export class FiltroComponent implements OnInit {
     } else {
       this.selectedMarcas.push(marca);
     }
+
+    this.applyFiltersToLists();
     this.updateUrl();
   }
 
+  // Toggle categoria
   toggleCategoria(categoria: string): void {
     const index = this.selectedCategorias.indexOf(categoria);
     if (index > -1) {
@@ -120,9 +136,12 @@ export class FiltroComponent implements OnInit {
     } else {
       this.selectedCategorias.push(categoria);
     }
+
+    this.applyFiltersToLists();
     this.updateUrl();
   }
 
+  // Toggle objetivo
   toggleObjetivo(objetivo: string): void {
     const index = this.selectedObjetivos.indexOf(objetivo);
     if (index > -1) {
@@ -130,10 +149,58 @@ export class FiltroComponent implements OnInit {
     } else {
       this.selectedObjetivos.push(objetivo);
     }
+
+    // Nota: não existe no service um endpoint "categorias-por-objetivo" ou "marcas-por-objetivo".
+    // Se você tiver endpoints como esses no backend podemos chamá-los aqui.
+    // Por enquanto, apenas atualizamos a URL (e o backend fará a filtragem de produtos).
     this.updateUrl();
   }
 
-  // ✅ NOVO: método que atualiza a URL com os filtros atuais
+  // Aplica filtros e atualiza as listas filtradas usando os endpoints já disponíveis
+  private applyFiltersToLists(): void {
+    // 1) Se existem marcas selecionadas -> atualiza categorias compatíveis
+    if (this.selectedMarcas.length > 0) {
+      this.produtoService
+        .buscarCategoriasPorMarcas(this.selectedMarcas)
+        .subscribe((cats) => {
+          this.filteredCategorias = cats;
+        }, () => {
+          // fallback
+          this.filteredCategorias = [...this.allCategorias];
+        });
+    } else {
+      // sem marcas selecionadas → mostra todas as categorias
+      this.filteredCategorias = [...this.allCategorias];
+    }
+
+    // 2) Se existem categorias selecionadas -> atualiza marcas compatíveis e objetivos compatíveis
+    if (this.selectedCategorias.length > 0) {
+      this.produtoService
+        .buscarMarcasPorCategorias(this.selectedCategorias)
+        .subscribe((marcas) => {
+          this.filteredMarcas = marcas;
+        }, () => {
+          this.filteredMarcas = [...this.allMarcas];
+        });
+
+      this.produtoService
+        .buscarObjetivosPorCategorias(this.selectedCategorias)
+        .subscribe((objs) => {
+          this.filteredObjetivos = objs;
+        }, () => {
+          this.filteredObjetivos = [...this.allObjetivos];
+        });
+    } else {
+      // sem categorias selecionadas → mostra todas marcas e objetivos
+      this.filteredMarcas = [...this.allMarcas];
+      this.filteredObjetivos = [...this.allObjetivos];
+    }
+
+    // Observação: se quiser que selecionar objetivos também filtre categorias/marcas,
+    // será necessário adicionar endpoints no backend (ex: /categorias-por-objetivo, /marcas-por-objetivo).
+  }
+
+  // Atualiza a URL com os filtros
   updateUrl() {
     this.router.navigate(['/produtos'], {
       queryParams: {
@@ -149,20 +216,22 @@ export class FiltroComponent implements OnInit {
         minPreco: this.minPrice > 0 ? this.minPrice : null,
         maxPreco: this.maxPrice < 999999 ? this.maxPrice : null,
       },
-      queryParamsHandling: '', // Importante para remover queryParams antigos
+      queryParamsHandling: '', // remove query params antigos (como no seu código original)
     });
   }
 
-  // ✅ CORRIGIDO: Agora o clearFilters também usa a navegação de URL
+  // Limpa filtros e restaura listas
   clearFilters(): void {
-    // Limpa os dados locais
     this.selectedCategorias = [];
     this.selectedMarcas = [];
     this.selectedObjetivos = [];
     this.minPrice = 0;
     this.maxPrice = 999999;
 
-    // Navega para a URL base para limpar todos os filtros
+    this.filteredCategorias = [...this.allCategorias];
+    this.filteredMarcas = [...this.allMarcas];
+    this.filteredObjetivos = [...this.allObjetivos];
+
     this.router.navigate(['/produtos'], { queryParams: {} });
   }
 
@@ -184,5 +253,18 @@ export class FiltroComponent implements OnInit {
 
   toggleAllFilters() {
     this.isCollapsedAll = !this.isCollapsedAll;
+  }
+
+  // Getters expostos ao template → soma dos `count` das listas filtradas
+  get totalCategorias(): number {
+    return this.filteredCategorias.reduce((acc, item) => acc + (item.count || 0), 0);
+  }
+
+  get totalMarcas(): number {
+    return this.filteredMarcas.reduce((acc, item) => acc + (item.count || 0), 0);
+  }
+
+  get totalObjetivos(): number {
+    return this.filteredObjetivos.reduce((acc, item) => acc + (item.count || 0), 0);
   }
 }

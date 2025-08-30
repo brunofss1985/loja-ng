@@ -1,3 +1,5 @@
+// src/app/components/header/header.component.ts
+
 import {
   Component,
   OnInit,
@@ -167,7 +169,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Novo método para a busca
+  // Método de busca atualizado para limpar o campo
   onSearch(event: Event | KeyboardEvent): void {
     if (event instanceof KeyboardEvent && event.key !== 'Enter') {
       return;
@@ -179,5 +181,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       // Se o campo estiver vazio, apenas navegue para a página de produtos
       this.route.navigate(['/produtos']);
     }
+
+    // ✨ LINHA ADICIONADA: Limpa o campo de busca
+    this.searchTerm = '';
   }
 }

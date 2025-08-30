@@ -27,6 +27,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+
 }
 
 /* CONTROLES DE ORDENAÇÃO E EXIBIÇÃO MELHORADOS */
@@ -118,21 +119,20 @@
 .product-header-sort .ms-3 {
   margin-left: 32px !important;
 }
+
 /* Grid responsivo dos produtos */
 .product-cards-container {
   display: grid;
-  /* Agora a mágica acontece aqui: os cards se ajustam para preencher o espaço */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 0;
-  justify-content: center; /* Centraliza os cards no espaço restante */
-  // padding: 8px;
+  gap: 20px;
+  justify-content: center;
   margin-bottom: 32px;
-  margin-right: 14px;
+  margin-right: 0; /* REMOVIDO a margem da direita */
 }
 
 /* Paginação moderna */
 .pagination {
-  margin: 25px auto ;
+  margin: 25px auto;
   border-top: 1px solid var(--borda);
 }
 
@@ -214,84 +214,9 @@
   line-height: 1.5;
 }
 
-/* Card de produto (simulado para o preview) */
-.product-card-demo {
-  background: linear-gradient(180deg, #ffffff, #fafdff);
-  border: 1px solid var(--borda);
-  border-radius: 16px;
-  padding: 16px;
-  box-shadow: var(--sombra);
-  transition: all 0.25s ease;
-  text-align: center;
-  height: 320px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.product-card-demo:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--sombra-strong);
-}
-
-.product-card-demo h3 {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--texto);
-  margin: 8px 0;
-  line-height: 1.3;
-}
-
-.product-card-demo .price {
-  font-size: 1.2rem;
-  font-weight: 900;
-  color: var(--cor-primaria);
-  margin: 8px 0;
-}
-
-.product-card-demo .btn-demo {
-  background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.product-card-demo .btn-demo:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
-}
-
-/* Filtro simulado */
-.filter-demo {
-  background: white;
-  border: 1px solid var(--borda);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.filter-demo h4 {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--texto);
-  margin: 0 0 12px 0;
-}
-
-.filter-demo label {
-  display: block;
-  margin: 8px 0;
-  color: var(--texto-suave);
-  font-weight: 600;
-  cursor: pointer;
-}
-
 /* Responsividade aprimorada */
 @media (max-width: 1187px) and (min-width: 852px) {
-   .main-container {
+  .main-container {
     padding: 0 !important;
   }
 }
@@ -340,7 +265,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 852px) {
   .main-container {
     flex-direction: column;
     gap: 16px;
@@ -348,6 +273,12 @@
     margin-top: 50px;
     padding-left: 0 !important;
   }
+
+  .products-and-pagination-container {
+     padding: 12px;
+    margin-left: 12px !important;
+}
+
   
   .filter-container {
     width: 100%;

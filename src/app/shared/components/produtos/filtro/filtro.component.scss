@@ -9,18 +9,27 @@
 }
 
 /* Mobile first - expansive on small screens */
-@media (max-width: 768px) {
+@media (max-width: 852px) {
   .filter-card {
     width: 100%;
     margin-left: 0;
+    border-radius: 16px; /* Ajuste para mobile para que as bordas se alinhem */
   }
 }
 
 /* Fixed width on larger screens */
-@media (min-width: 769px) {
+@media (min-width: 853px) {
   .filter-card {
     width: 255px;
     margin-left: 0;
+  }
+
+  .filter-card .filter-content-wrapper {
+    max-height: none;
+  }
+
+  .filter-card .expand-icon-main {
+    display: none;
   }
 }
 
@@ -101,17 +110,6 @@
 
 .filter-card:not(.collapsed-all) .filter-content-wrapper {
   max-height: 800px;
-}
-
-/* NOVO: Sobrescreve a altura em telas grandes para garantir que esteja sempre expandido */
-@media (min-width: 769px) {
-  .filter-card .filter-content-wrapper {
-    max-height: none;
-  }
-
-  .filter-card .expand-icon-main {
-    display: none;
-  }
 }
 
 .filter-section {

@@ -48,6 +48,7 @@ export class FiltroComponent implements OnInit {
   totalMarcasAll: number = 0;
   totalCategoriasAll: number = 0;
   totalObjetivosAll: number = 0;
+  totalProdutosAll: number = 0;
 
   // preços
   minPrice: number = 0;
@@ -63,7 +64,6 @@ export class FiltroComponent implements OnInit {
     // Carrega listas completas (contagem incluída)
     this.produtoService.buscarCategorias().subscribe((categorias) => {
       this.allCategorias = categorias;
-      // inicialmente mostrar todas
       this.filteredCategorias = [...this.allCategorias];
     });
     this.produtoService.buscarMarcas().subscribe((marcas) => {
@@ -75,7 +75,7 @@ export class FiltroComponent implements OnInit {
       this.filteredObjetivos = [...this.allObjetivos];
     });
 
-    // Carrega totais globais (opcional)
+    // Carrega totais globais
     this.produtoService.buscarTotalCategorias().subscribe((c) => {
       this.totalCategoriasAll = c;
     });
@@ -84,6 +84,11 @@ export class FiltroComponent implements OnInit {
     });
     this.produtoService.buscarTotalObjetivos().subscribe((o) => {
       this.totalObjetivosAll = o;
+    });
+    
+    // Busca o total de produtos quando a página carrega
+    this.produtoService.buscarComFiltros().subscribe(response => {
+      this.totalProdutosAll = response.totalElements;
     });
 
     this.checkScreenSize();
@@ -104,7 +109,6 @@ export class FiltroComponent implements OnInit {
       this.minPrice = query.get('minPreco') ? +query.get('minPreco')! : 0;
       this.maxPrice = query.get('maxPreco') ? +query.get('maxPreco')! : 999999;
 
-      // aplica filtros sobre as listas (chama endpoints que retornam contagens filtradas)
       this.applyFiltersToLists();
     });
   }
@@ -149,10 +153,7 @@ export class FiltroComponent implements OnInit {
     } else {
       this.selectedObjetivos.push(objetivo);
     }
-
-    // Nota: não existe no service um endpoint "categorias-por-objetivo" ou "marcas-por-objetivo".
-    // Se você tiver endpoints como esses no backend podemos chamá-los aqui.
-    // Por enquanto, apenas atualizamos a URL (e o backend fará a filtragem de produtos).
+    
     this.updateUrl();
   }
 
@@ -195,9 +196,6 @@ export class FiltroComponent implements OnInit {
       this.filteredMarcas = [...this.allMarcas];
       this.filteredObjetivos = [...this.allObjetivos];
     }
-
-    // Observação: se quiser que selecionar objetivos também filtre categorias/marcas,
-    // será necessário adicionar endpoints no backend (ex: /categorias-por-objetivo, /marcas-por-objetivo).
   }
 
   // Atualiza a URL com os filtros
@@ -216,7 +214,7 @@ export class FiltroComponent implements OnInit {
         minPreco: this.minPrice > 0 ? this.minPrice : null,
         maxPreco: this.maxPrice < 999999 ? this.maxPrice : null,
       },
-      queryParamsHandling: '', // remove query params antigos (como no seu código original)
+      queryParamsHandling: '',
     });
   }
 
@@ -255,16 +253,30 @@ export class FiltroComponent implements OnInit {
     this.isCollapsedAll = !this.isCollapsedAll;
   }
 
-  // Getters expostos ao template → soma dos `count` das listas filtradas
+  // Getters corrigidos: agora contam a quantidade de itens nas listas
   get totalCategorias(): number {
-    return this.filteredCategorias.reduce((acc, item) => acc + (item.count || 0), 0);
+    return this.filteredCategorias.length;
   }
 
   get totalMarcas(): number {
-    return this.filteredMarcas.reduce((acc, item) => acc + (item.count || 0), 0);
+    return this.filteredMarcas.length;
   }
 
   get totalObjetivos(): number {
-    return this.filteredObjetivos.reduce((acc, item) => acc + (item.count || 0), 0);
+    return this.filteredObjetivos.length;
+  }
+
+  // Getter para o total de produtos no título principal, usando a contagem de produtos
+  get totalProdutos(): number {
+      if (this.selectedMarcas.length > 0) {
+          return this.filteredMarcas.reduce((acc, item) => acc + (item.count || 0), 0);
+      }
+      if (this.selectedCategorias.length > 0) {
+          return this.filteredCategorias.reduce((acc, item) => acc + (item.count || 0), 0);
+      }
+      if (this.selectedObjetivos.length > 0) {
+          return this.filteredObjetivos.reduce((acc, item) => acc + (item.count || 0), 0);
+      }
+      return this.totalProdutosAll;
   }
 }

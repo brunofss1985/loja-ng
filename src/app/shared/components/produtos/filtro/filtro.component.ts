@@ -1,5 +1,3 @@
-// src/app/components/filtro/filtro.component.ts
-
 import {
   Component,
   OnInit,
@@ -7,8 +5,12 @@ import {
   EventEmitter,
   HostListener,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { ProdutosService, CountedItem } from 'src/app/core/services/produtosService/produtos.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import {
+  ProdutosService,
+  CountedItem,
+} from 'src/app/core/services/produtosService/produtos.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-filtro',
@@ -22,27 +24,35 @@ export class FiltroComponent implements OnInit {
   @Output() filtersChanged = new EventEmitter<{
     categorias: string[];
     marcas: string[];
+    objetivos: string[];
     minPreco: number;
     maxPreco: number;
   }>();
 
   allMarcas: CountedItem[] = [];
   allCategorias: CountedItem[] = [];
+  allObjetivos: CountedItem[] = [];
 
   filteredMarcas: CountedItem[] = [];
   filteredCategorias: CountedItem[] = [];
+  filteredObjetivos: CountedItem[] = [];
 
   selectedMarcas: string[] = [];
   selectedCategorias: string[] = [];
+  selectedObjetivos: string[] = [];
 
-  // Novas propriedades para a contagem total
   totalCategorias: number = 0;
   totalMarcas: number = 0;
+  totalObjetivos: number = 0;
 
   minPrice: number = 0;
   maxPrice: number = 999999;
 
-  constructor(private produtoService: ProdutosService, private router: Router) {}
+  constructor(
+    private produtoService: ProdutosService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     // Carrega a lista de categorias e a contagem total
@@ -50,7 +60,7 @@ export class FiltroComponent implements OnInit {
       this.allCategorias = categorias;
       this.filteredCategorias = [...this.allCategorias];
     });
-    this.produtoService.buscarTotalCategorias().subscribe(count => {
+    this.produtoService.buscarTotalCategorias().subscribe((count) => {
       this.totalCategorias = count;
     });
 
@@ -59,11 +69,32 @@ export class FiltroComponent implements OnInit {
       this.allMarcas = marcas;
       this.filteredMarcas = [...this.allMarcas];
     });
-    this.produtoService.buscarTotalMarcas().subscribe(count => {
+    this.produtoService.buscarTotalMarcas().subscribe((count) => {
       this.totalMarcas = count;
     });
 
+    // Carrega a lista de objetivos e a contagem total
+    this.produtoService.buscarObjetivos().subscribe((objetivos) => {
+      this.allObjetivos = objetivos;
+      this.filteredObjetivos = [...this.allObjetivos];
+    });
+    this.produtoService.buscarTotalObjetivos().subscribe((count) => {
+      this.totalObjetivos = count;
+    });
+
     this.checkScreenSize();
+
+    // 💡 PASSO CRUCIAL: Ler o estado inicial da URL
+    combineLatest([
+      this.activatedRoute.paramMap,
+      this.activatedRoute.queryParamMap,
+    ]).subscribe(([params, query]) => {
+      this.selectedMarcas = query.get('marcas')?.split(',') || [];
+      this.selectedCategorias = query.get('categorias')?.split(',') || [];
+      this.selectedObjetivos = query.get('objetivos')?.split(',') || [];
+      this.minPrice = +query.get('minPreco')! || 0;
+      this.maxPrice = +query.get('maxPreco')! || 999999;
+    });
   }
 
   @HostListener('window:resize', ['$event'])
@@ -79,7 +110,7 @@ export class FiltroComponent implements OnInit {
     } else {
       this.selectedMarcas.push(marca);
     }
-    this.updateFilters();
+    this.updateUrl();
   }
 
   toggleCategoria(categoria: string): void {
@@ -89,24 +120,50 @@ export class FiltroComponent implements OnInit {
     } else {
       this.selectedCategorias.push(categoria);
     }
-    this.updateFilters();
+    this.updateUrl();
   }
 
-  updateFilters(): void {
-    this.produtoService.buscarMarcasPorCategorias(this.selectedCategorias).subscribe(marcas => {
-      this.filteredMarcas = marcas;
-    });
+  toggleObjetivo(objetivo: string): void {
+    const index = this.selectedObjetivos.indexOf(objetivo);
+    if (index > -1) {
+      this.selectedObjetivos.splice(index, 1);
+    } else {
+      this.selectedObjetivos.push(objetivo);
+    }
+    this.updateUrl();
+  }
 
-    this.produtoService.buscarCategoriasPorMarcas(this.selectedMarcas).subscribe(categorias => {
-      this.filteredCategorias = categorias;
+  // ✅ NOVO: método que atualiza a URL com os filtros atuais
+  updateUrl() {
+    this.router.navigate(['/produtos'], {
+      queryParams: {
+        categorias: this.selectedCategorias.length
+          ? this.selectedCategorias.join(',')
+          : null,
+        marcas: this.selectedMarcas.length
+          ? this.selectedMarcas.join(',')
+          : null,
+        objetivos: this.selectedObjetivos.length
+          ? this.selectedObjetivos.join(',')
+          : null,
+        minPreco: this.minPrice > 0 ? this.minPrice : null,
+        maxPreco: this.maxPrice < 999999 ? this.maxPrice : null,
+      },
+      queryParamsHandling: '', // Importante para remover queryParams antigos
     });
+  }
 
-    this.filtersChanged.emit({
-      categorias: this.selectedCategorias,
-      marcas: this.selectedMarcas,
-      minPreco: this.minPrice,
-      maxPreco: this.maxPrice,
-    });
+  // ✅ CORRIGIDO: Agora o clearFilters também usa a navegação de URL
+  clearFilters(): void {
+    // Limpa os dados locais
+    this.selectedCategorias = [];
+    this.selectedMarcas = [];
+    this.selectedObjetivos = [];
+    this.minPrice = 0;
+    this.maxPrice = 999999;
+
+    // Navega para a URL base para limpar todos os filtros
+    this.router.navigate(['/produtos'], { queryParams: {} });
   }
 
   toggleSection(event: Event): void {
@@ -115,7 +172,6 @@ export class FiltroComponent implements OnInit {
 
     if (section) {
       const isExpanded = section.classList.contains('expanded');
-
       if (isExpanded) {
         section.classList.remove('expanded');
         section.classList.add('collapsed');
@@ -124,24 +180,6 @@ export class FiltroComponent implements OnInit {
         section.classList.add('expanded');
       }
     }
-  }
-
-  clearFilters(): void {
-    this.selectedCategorias = [];
-    this.selectedMarcas = [];
-    this.minPrice = 0;
-    this.maxPrice = 999999;
-    
-    this.filteredMarcas = [...this.allMarcas];
-    this.filteredCategorias = [...this.allCategorias];
-
-    this.router.navigate(['/produtos']);
-    this.filtersChanged.emit({
-      categorias: this.selectedCategorias,
-      marcas: this.selectedMarcas,
-      minPreco: this.minPrice,
-      maxPreco: this.maxPrice,
-    });
   }
 
   toggleAllFilters() {

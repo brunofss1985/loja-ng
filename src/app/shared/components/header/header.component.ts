@@ -5,14 +5,17 @@ import {
   OnDestroy,
   Renderer2,
   ElementRef,
-  HostListener
+  HostListener,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/services/authService/auth.service';
 import { CartService } from 'src/app/core/services/cartService/cart-service.service';
-import { ProdutosService, CountedItem } from 'src/app/core/services/produtosService/produtos.service';
+import {
+  ProdutosService,
+  CountedItem,
+} from 'src/app/core/services/produtosService/produtos.service';
 
 @Component({
   selector: 'app-header',
@@ -52,48 +55,32 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     private renderer: Renderer2,
     private host: ElementRef,
     private authService: AuthService,
-    private route: Router,
+    private router: Router, // Use o nome router, pois é mais comum
     private cartService: CartService,
     private produtosService: ProdutosService
   ) {}
 
   ngOnInit(): void {
-    // Busca as categorias
-    this.produtosService.buscarCategorias().subscribe(
-      (data) => {
-        this.categorias = data;
-      },
-      (error) => {
-        console.error('Erro ao buscar categorias:', error);
-      }
-    );
+    this.produtosService.buscarCategorias().subscribe((data) => {
+      this.categorias = data;
+    });
 
-    // Busca as marcas
-    this.produtosService.buscarMarcas().subscribe(
-      (data) => {
-        this.marcas = data;
-      },
-      (error) => {
-        console.error('Erro ao buscar marcas:', error);
-      }
-    );
+    this.produtosService.buscarMarcas().subscribe((data) => {
+      this.marcas = data;
+    });
 
-    // Busca os objetivos
-    this.produtosService.buscarObjetivos().subscribe(
-      (data) => {
-        this.objetivos = data;
-      },
-      (error) => {
-        console.error('Erro ao buscar objetivos:', error);
-      }
-    );
+    this.produtosService.buscarObjetivos().subscribe((data) => {
+      this.objetivos = data;
+    });
   }
 
   ngAfterViewInit(): void {
     const root = this.host.nativeElement;
     this.headerEl = (root.querySelector('.header') as HTMLElement) || root;
     this.menuToggleEl = root.querySelector('#menu-toggle') as HTMLInputElement;
-    this.burgerLabelEl = root.querySelector('.menu-toggle-label') as HTMLElement;
+    this.burgerLabelEl = root.querySelector(
+      '.menu-toggle-label'
+    ) as HTMLElement;
     this.onScroll();
     this.syncAria();
     const mobileLinks = root.querySelectorAll('.header-botton a');
@@ -167,34 +154,38 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isCategoriesDropdownOpen = !this.isCategoriesDropdownOpen;
   }
 
-  onCategorySelected(categoryName: string): void {
-    this.route.navigate(['/produtos', categoryName]);
-    this.isCategoriesDropdownOpen = false;
-  }
-
-  // 🔧 AJUSTE: agora navega com queryParam (?marca=...), sem quebrar o restante
   toggleBrandsDropdown(event: Event): void {
     event.stopPropagation();
     this.isBrandsDropdownOpen = !this.isBrandsDropdownOpen;
   }
 
-  onBrandSelected(brandName: string): void {
-    // Suporta imediatamente sem precisar alterar o app-routing:
-    // /produtos?marca=NomeDaMarca
-    this.route.navigate(['/produtos'], {
-      queryParams: { marca: brandName }
-    });
-    this.isBrandsDropdownOpen = false;
-  }
-
-  // OBJETIVOS
   toggleObjectivesDropdown(event: Event): void {
     event.stopPropagation();
     this.isObjectivesDropdownOpen = !this.isObjectivesDropdownOpen;
   }
 
+  onCategorySelected(categoryName: string): void {
+    // Ao selecionar uma categoria, navega para produtos, limpando os outros filtros.
+    // O `queryParams` será o único parâmetro na URL.
+    this.router.navigate(['/produtos'], {
+      queryParams: { categorias: categoryName },
+    });
+    this.isCategoriesDropdownOpen = false;
+  }
+
+  onBrandSelected(brandName: string): void {
+    // Ao selecionar uma marca, navega para produtos, limpando os outros filtros.
+    this.router.navigate(['/produtos'], {
+      queryParams: { marcas: brandName },
+    });
+    this.isBrandsDropdownOpen = false;
+  }
+
   onObjectiveSelected(objectiveName: string): void {
-    this.route.navigate(['/produtos', objectiveName]);
+    // Ao selecionar um objetivo, navega para produtos, limpando os outros filtros.
+    this.router.navigate(['/produtos'], {
+      queryParams: { objetivos: objectiveName },
+    });
     this.isObjectivesDropdownOpen = false;
   }
 
@@ -222,9 +213,15 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const term = this.searchTerm.trim();
     if (term) {
-      this.route.navigate(['/produtos/buscar', term]);
+      // Navega para a rota de busca e remove todos os query parameters existentes.
+      this.router.navigate(['/produtos/buscar', term], {
+        queryParams: {},
+      });
     } else {
-      this.route.navigate(['/produtos']);
+      // Se a busca for vazia, vai para a página de produtos, limpando os filtros.
+      this.router.navigate(['/produtos'], {
+        queryParams: {},
+      });
     }
     this.searchTerm = '';
   }

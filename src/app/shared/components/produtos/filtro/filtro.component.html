@@ -23,7 +23,7 @@
                 type="checkbox"
                 [checked]="selectedMarcas.includes(marca.name)"
                 (change)="toggleMarca(marca.name)"
-              >
+              />
               {{ marca.name }} ({{ marca.count }})
             </label>
           </div>
@@ -47,7 +47,7 @@
                 type="checkbox"
                 [checked]="selectedCategorias.includes(categoria.name)"
                 (change)="toggleCategoria(categoria.name)"
-              >
+              />
               {{ categoria.name | titlecase }} ({{ categoria.count }})
             </label>
           </div>
@@ -58,18 +58,41 @@
       </div>
     </div>
 
-    <div class="price-section">
-      <h5>Preço</h5>
-      <div class="price-range">
-        <input type="number" [(ngModel)]="minPrice" placeholder="Mínimo" (change)="updateFilters()">
-        <span class="separator">a</span>
-        <input type="number" [(ngModel)]="maxPrice" placeholder="Máximo" (change)="updateFilters()">
+    <div class="filter-section collapsed">
+      <div class="filter-header" (click)="toggleSection($event)">
+        <h5>Objetivos ({{ totalObjetivos }})</h5>
+        <div class="expand-icon"></div>
       </div>
-      <div class="filter-buttons">
-        <button class="btn-apply" (click)="updateFilters()">Aplicar</button>
-        <button class="btn-clear" (click)="clearFilters()">Limpar</button>
+      <div class="filter-content">
+        <div *ngIf="filteredObjetivos.length > 0; else noObjectives">
+          <div *ngFor="let objetivo of filteredObjetivos">
+            <label>
+              <input
+                type="checkbox"
+                [checked]="selectedObjetivos.includes(objetivo.name)"
+                (change)="toggleObjetivo(objetivo.name)"
+              />
+              {{ objetivo.name | titlecase }} ({{ objetivo.count }})
+            </label>
+          </div>
+        </div>
+        <ng-template #noObjectives>
+          <p>Nenhum objetivo disponível.</p>
+        </ng-template>
       </div>
     </div>
 
+    <div class="price-section">
+      <h5>Preço</h5>
+      <div class="price-range">
+        <input type="number" [(ngModel)]="minPrice" placeholder="Mínimo" />
+        <span class="separator">a</span>
+        <input type="number" [(ngModel)]="maxPrice" placeholder="Máximo" />
+      </div>
+      <div class="filter-buttons">
+        <button class="btn-apply" (click)="updateUrl()">Aplicar</button>
+        <button class="btn-clear" (click)="clearFilters()">Limpar</button>
+      </div>
+    </div>
   </div>
 </div>

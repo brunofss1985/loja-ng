@@ -56,14 +56,17 @@ export class ProdutosService {
     if (sort) {
       params = params.set('sort', sort);
     }
-    
-    return this.http.get<PaginatedResponse<Produto>>(`${this.apiUrl}/search`, { params });
+
+    return this.http.get<PaginatedResponse<Produto>>(`${this.apiUrl}/search`, {
+      params,
+    });
   }
 
-  // MÉTODO ATUALIZADO: Busca com filtros
+  // ✅ MÉTODO ATUALIZADO: Busca com filtros, incluindo "objetivos"
   buscarComFiltros(
     categorias?: string[],
     marcas?: string[],
+    objetivos?: string[], // NOVO PARÂMETRO
     minPreco: number = 0,
     maxPreco: number = 999999,
     page: number = 0,
@@ -87,20 +90,39 @@ export class ProdutosService {
         params = params.append('marcas', marca);
       });
     }
+    // NOVO: Adiciona os objetivos aos parâmetros da URL
+    if (objetivos && objetivos.length > 0) {
+      objetivos.forEach((objetivo) => {
+        params = params.append('objetivos', objetivo);
+      });
+    }
 
     return this.http.get<PaginatedResponse<Produto>>(this.apiUrl, { params });
+  }
+
+  // ✅ NOVO MÉTODO: Lista objetivos com contagem
+  buscarObjetivos(): Observable<CountedItem[]> {
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/objetivos`).pipe(
+      map((items) =>
+        items.map((item) => ({ name: item.name, count: item.count }))
+      )
+    );
   }
 
   // Métodos para listar itens com contagem
   buscarMarcas(): Observable<CountedItem[]> {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas`).pipe(
-      map(items => items.map(item => ({ name: item.name, count: item.count })))
+      map((items) =>
+        items.map((item) => ({ name: item.name, count: item.count }))
+      )
     );
   }
 
   buscarCategorias(): Observable<CountedItem[]> {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias`).pipe(
-      map(items => items.map(item => ({ name: item.name, count: item.count })))
+      map((items) =>
+        items.map((item) => ({ name: item.name, count: item.count }))
+      )
     );
   }
 
@@ -111,7 +133,9 @@ export class ProdutosService {
         params = params.append('categorias', c);
       });
     }
-    return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas-por-categoria`, { params });
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas-por-categoria`, {
+      params,
+    });
   }
 
   buscarCategoriasPorMarcas(marcas: string[]): Observable<CountedItem[]> {
@@ -121,7 +145,22 @@ export class ProdutosService {
         params = params.append('marcas', m);
       });
     }
-    return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias-por-marca`, { params });
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias-por-marca`, {
+      params,
+    });
+  }
+
+  // ✅ NOVO MÉTODO: Buscar objetivos por categoria
+  buscarObjetivosPorCategorias(categorias: string[]): Observable<CountedItem[]> {
+    let params = new HttpParams();
+    if (categorias && categorias.length > 0) {
+      categorias.forEach((c) => {
+        params = params.append('categorias', c);
+      });
+    }
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/objetivos-por-categoria`, {
+      params,
+    });
   }
 
   // Novos métodos para a contagem total
@@ -131,6 +170,11 @@ export class ProdutosService {
 
   buscarTotalCategorias(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/categorias/count`);
+  }
+
+  // ✅ NOVO MÉTODO: Contagem total de objetivos
+  buscarTotalObjetivos(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/objetivos/count`);
   }
 
   buscarPorId(id: string): Observable<any> {

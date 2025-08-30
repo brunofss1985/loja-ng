@@ -36,11 +36,11 @@ export class ProdutosComponent implements OnInit {
   allProducts: Produto[] = [];
   modalAberto: boolean = false;
   isAdmin: boolean = false;
-  columns: string[] = ['id', 'nome', 'categorias', 'preco']; // ✨ CORREÇÃO: Mudado de 'categoria' para 'categorias'
+  columns: string[] = ['id', 'nome', 'categorias', 'preco'];
   columnLabels: { [key: string]: string } = {
     id: 'ID',
     nome: 'Nome',
-    categorias: 'Categoria', // ✨ CORREÇÃO: Mudado de 'categoria' para 'categorias'
+    categorias: 'Categoria',
     preco: 'Preco',
   };
 
@@ -91,9 +91,9 @@ export class ProdutosComponent implements OnInit {
   }
 
   loadProducts(): void {
-    // CORREÇÃO: Usando o novo método 'buscarComFiltros' com filtros vazios
+    // ✅ CORREÇÃO APLICADA: Incluído um 'undefined' como terceiro argumento
     this.produtoService
-      .buscarComFiltros(undefined, undefined, 0, 999999, this.currentPage, this.pageSize) // ✨ CORREÇÃO: Mudei o segundo argumento de `[]` para `undefined` para que a busca retorne todos os produtos
+      .buscarComFiltros(undefined, undefined, undefined, 0, 999999, this.currentPage, this.pageSize)
       .subscribe({
         next: (data: ProdutoResponse) => {
           this.allProducts = data.content;

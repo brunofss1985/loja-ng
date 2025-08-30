@@ -15,6 +15,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/services/authService/auth.service';
 import { CartService } from 'src/app/core/services/cartService/cart-service.service';
+import { ProdutosService, CountedItem } from 'src/app/core/services/produtosService/produtos.service';
 
 @Component({
   selector: 'app-header',
@@ -22,61 +23,84 @@ import { CartService } from 'src/app/core/services/cartService/cart-service.serv
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
-  // Variável para exibir o tipo de usuário logado
   userType = this.authService.getUserType();
 
-  // Observable que guarda a contagem de itens no carrinho
   public cartItemCount$: Observable<number> = this.cartService.cartItems$.pipe(
     map((items) => items.length)
   );
 
-  // Variável para controlar o estado do dropdown do perfil
   isProfileDropdownOpen: boolean = false;
-
-  // Indica se o topo está “afinado” após rolagem
   isScrolled = false;
-
-  // Referências internas aos elementos do template
+  
   private headerEl: HTMLElement | null = null;
   private menuToggleEl: HTMLInputElement | null = null;
   private burgerLabelEl: HTMLElement | null = null;
-
-  // Guarda funções para limpar ouvintes
   private cleanupFns: Array<() => void> = [];
-
-  // Variável para o termo de busca
+  
   searchTerm: string = '';
+
+  // PROPRIEDADES PARA O DROPDOWN DE CATEGORIAS
+  isCategoriesDropdownOpen: boolean = false;
+  categorias: CountedItem[] = [];
+
+  // NOVO: PROPRIEDADES PARA O DROPDOWN DE MARCAS
+  isBrandsDropdownOpen: boolean = false;
+  marcas: CountedItem[] = [];
+
+  // NOVO: PROPRIEDADES PARA O DROPDOWN DE OBJETIVOS
+  isObjectivesDropdownOpen: boolean = false;
+  objetivos: CountedItem[] = [];
 
   constructor(
     private renderer: Renderer2,
     private host: ElementRef,
     private authService: AuthService,
     private route: Router,
-    private cartService: CartService
+    private cartService: CartService,
+    private produtosService: ProdutosService
   ) {}
 
   ngOnInit(): void {
-    // A lógica de inicialização do cartItemCount$ foi movida para a declaração
-    // da propriedade, então não precisamos mais dela aqui.
+    // Busca as categorias
+    this.produtosService.buscarCategorias().subscribe(
+      (data) => {
+        this.categorias = data;
+      },
+      (error) => {
+        console.error('Erro ao buscar categorias:', error);
+      }
+    );
+
+    // NOVO: Busca as marcas
+    this.produtosService.buscarMarcas().subscribe(
+      (data) => {
+        this.marcas = data;
+      },
+      (error) => {
+        console.error('Erro ao buscar marcas:', error);
+      }
+    );
+
+    // NOVO: Busca os objetivos
+    this.produtosService.buscarObjetivos().subscribe(
+      (data) => {
+        this.objetivos = data;
+      },
+      (error) => {
+        console.error('Erro ao buscar objetivos:', error);
+      }
+    );
   }
 
   ngAfterViewInit(): void {
     const root = this.host.nativeElement;
-
-    // Container do cabeçalho (use o elemento com a classe .header como raiz visual)
     this.headerEl = (root.querySelector('.header') as HTMLElement) || root;
-
-    // Elementos do menu mobile
     this.menuToggleEl = root.querySelector('#menu-toggle') as HTMLInputElement;
     this.burgerLabelEl = root.querySelector(
       '.menu-toggle-label'
     ) as HTMLElement;
-
-    // Estado inicial
     this.onScroll();
     this.syncAria();
-
-    // Fecha o menu ao clicar num item do menu mobile
     const mobileLinks = root.querySelectorAll('.header-botton a');
     mobileLinks.forEach((a: any) => {
       const un = this.renderer.listen(a, 'click', () => {
@@ -87,16 +111,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       this.cleanupFns.push(un);
     });
-
-    // Sincroniza a indicação de aberto/fechado ao alternar o toggle
     if (this.menuToggleEl) {
       const un = this.renderer.listen(this.menuToggleEl, 'change', () =>
         this.syncAria()
       );
       this.cleanupFns.push(un);
     }
-
-    // Fecha o menu ao aumentar a tela para desktop
     const unResize = this.renderer.listen('window', 'resize', () => {
       if (
         window.innerWidth >= 992 &&
@@ -110,7 +130,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cleanupFns.push(unResize);
   }
 
-  // Afina o cabeçalho ao rolar
   @HostListener('window:scroll')
   onScroll(): void {
     this.isScrolled = window.scrollY > 10;
@@ -122,7 +141,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // Atualiza acessibilidade do botão hambúrguer
   private syncAria(): void {
     if (this.burgerLabelEl) {
       const expanded = this.menuToggleEl?.checked ? 'true' : 'false';
@@ -141,35 +159,72 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   exit(): void {
     this.authService.clearSession();
-    this.isProfileDropdownOpen = false; // Fecha o dropdown ao sair
+    this.isProfileDropdownOpen = false;
   }
 
-  // Métodos para o Dropdown do Perfil
   toggleProfileDropdown(event: Event): void {
-    // Para parar a propagação do evento de clique,
-    // garantindo que o `onDocumentClick` não feche o menu imediatamente
     event.stopPropagation();
     this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
   }
 
-  // Ouve cliques em qualquer lugar do documento
+  toggleCategoriesDropdown(event: Event): void {
+    event.stopPropagation();
+    this.isCategoriesDropdownOpen = !this.isCategoriesDropdownOpen;
+  }
+
+  onCategorySelected(categoryName: string): void {
+    this.route.navigate(['/produtos', categoryName]);
+    this.isCategoriesDropdownOpen = false;
+  }
+
+  // NOVO: Métodos para o Dropdown de Marcas
+  toggleBrandsDropdown(event: Event): void {
+    event.stopPropagation();
+    this.isBrandsDropdownOpen = !this.isBrandsDropdownOpen;
+  }
+
+  onBrandSelected(brandName: string): void {
+    this.route.navigate(['/produtos', brandName]);
+    this.isBrandsDropdownOpen = false;
+  }
+
+  // NOVO: Métodos para o Dropdown de Objetivos
+  toggleObjectivesDropdown(event: Event): void {
+    event.stopPropagation();
+    this.isObjectivesDropdownOpen = !this.isObjectivesDropdownOpen;
+  }
+
+  onObjectiveSelected(objectiveName: string): void {
+    this.route.navigate(['/produtos', objectiveName]);
+    this.isObjectivesDropdownOpen = false;
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    // Se o clique não estiver dentro do componente, fecha o dropdown
     if (!this.host.nativeElement.contains(event.target)) {
       this.isProfileDropdownOpen = false;
+      this.isCategoriesDropdownOpen = false;
+      this.isBrandsDropdownOpen = false; // NOVO: Fecha o dropdown de marcas
+      this.isObjectivesDropdownOpen = false; // NOVO: Fecha o dropdown de objetivos
     }
   }
 
-  // Ouve a tecla ESC
   @HostListener('document:keydown.esc')
   onEscapeKeydown(): void {
     if (this.isProfileDropdownOpen) {
       this.isProfileDropdownOpen = false;
     }
+    if (this.isCategoriesDropdownOpen) {
+      this.isCategoriesDropdownOpen = false;
+    }
+    if (this.isBrandsDropdownOpen) {
+      this.isBrandsDropdownOpen = false;
+    }
+    if (this.isObjectivesDropdownOpen) {
+      this.isObjectivesDropdownOpen = false;
+    }
   }
 
-  // Método de busca atualizado para limpar o campo
   onSearch(event: Event | KeyboardEvent): void {
     if (event instanceof KeyboardEvent && event.key !== 'Enter') {
       return;
@@ -178,11 +233,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     if (term) {
       this.route.navigate(['/produtos/buscar', term]);
     } else {
-      // Se o campo estiver vazio, apenas navegue para a página de produtos
       this.route.navigate(['/produtos']);
     }
-
-    // ✨ LINHA ADICIONADA: Limpa o campo de busca
     this.searchTerm = '';
   }
 }

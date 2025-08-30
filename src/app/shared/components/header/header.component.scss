@@ -1,3 +1,5 @@
+/* src/app/components/header/header.component.scss */
+
 .header {
   position: fixed;
   top: 0;
@@ -245,8 +247,6 @@
   position: relative;
 }
 
-/* Removido o .profile-checkbox e suas regras de ~ e + */
-
 .profile-toggle {
   border: none !important;
   cursor: pointer;
@@ -259,7 +259,6 @@
   transition: transform 0.3s ease;
 }
 
-/* NOVO: Classe para girar a seta quando o dropdown estiver ativo */
 .profile-toggle.active .dropdown-arrow {
   transform: rotate(180deg);
 }
@@ -280,7 +279,6 @@
   z-index: 1002;
 }
 
-/* NOVO: Classe para mostrar o dropdown */
 .profile-dropdown-menu.show-dropdown-menu {
   opacity: 1;
   visibility: visible;
@@ -314,6 +312,66 @@
 
 .dropdown-item:last-child {
   border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* NOVO CÓDIGO PARA O DROPDOWN DE CATEGORIAS */
+.categories-dropdown {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  .dropdown-arrow {
+    margin-left: 5px;
+    transform: rotate(0deg);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  &.active .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    min-width: 200px;
+    padding: 0.5rem 0;
+    margin: 0;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 0.25rem;
+  }
+
+  .dropdown-menu.show-dropdown-menu {
+    display: block;
+  }
+
+  .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+
+    &:hover {
+      color: #16181b;
+      text-decoration: none;
+      background-color: #f8f9fa;
+    }
+  }
 }
 
 /* Menu Mobile Lateral */
@@ -503,7 +561,7 @@
 @media (max-width: 480px) {
   .header-top {
     padding: 6px 10px;
-    gap: 8px;
+    gap: 6px;
   }
 
   .search-container {

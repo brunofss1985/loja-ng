@@ -1,4 +1,4 @@
-// src/app/pages/admin/produtos/lista-produtos.component.ts
+// src/app/shared/components/produtos/lista-produtos/lista-produtos.component.ts
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -105,9 +105,11 @@ export class ListaProdutosComponent implements OnInit {
         this.ordenacaoSelecionada
       );
     } else {
+      // ✅ CORREÇÃO APLICADA: Adicionado um array vazio `[]` no terceiro argumento
       produtoObservable = this.produtoService.buscarComFiltros(
         this.filtroCategorias,
         this.filtroMarcas,
+        [], // Novo argumento para 'objetivos'
         this.filtroPrecoMin,
         this.filtroPrecoMax,
         this.currentPage,

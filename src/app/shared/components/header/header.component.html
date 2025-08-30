@@ -168,11 +168,96 @@
 
   <div class="header-botton">
     <ul>
-      <li routerLink="#"><a>Todas as categorias</a></li>
+      <li
+        class="categories-dropdown"
+        (click)="toggleCategoriesDropdown($event)"
+        [class.active]="isCategoriesDropdownOpen"
+      >
+        <a>Todas as categorias</a>
+        <svg
+          class="dropdown-arrow"
+          xmlns="http://www.w3.org/2000/svg"
+          height="16"
+          viewBox="0 0 24 24"
+          width="16"
+          fill="currentColor"
+        >
+          <path d="M7 10l5 5 5-5z" />
+        </svg>
+
+        <div
+          class="dropdown-menu"
+          [class.show-dropdown-menu]="isCategoriesDropdownOpen"
+        >
+          <a
+            class="dropdown-item"
+            *ngFor="let categoria of categorias"
+            (click)="onCategorySelected(categoria.name)"
+          >
+            {{ categoria.name }}
+          </a>
+        </div>
+      </li>
       <li routerLink="/produtos"><a>Todos os produtos</a></li>
       <li routerLink="#"><a>Novidades</a></li>
-      <li routerLink="/produtos/creatina"><a>Marcas</a></li>
-      <li routerLink="/produtos/whey protein"><a>Objetivos</a></li>
+      <li
+        class="categories-dropdown"
+        (click)="toggleBrandsDropdown($event)"
+        [class.active]="isBrandsDropdownOpen"
+      >
+        <a>Marcas</a>
+        <svg
+          class="dropdown-arrow"
+          xmlns="http://www.w3.org/2000/svg"
+          height="16"
+          viewBox="0 0 24 24"
+          width="16"
+          fill="currentColor"
+        >
+          <path d="M7 10l5 5 5-5z" />
+        </svg>
+        <div
+          class="dropdown-menu"
+          [class.show-dropdown-menu]="isBrandsDropdownOpen"
+        >
+          <a
+            class="dropdown-item"
+            *ngFor="let marca of marcas"
+            (click)="onBrandSelected(marca.name)"
+          >
+            {{ marca.name }}
+          </a>
+        </div>
+      </li>
+      <li
+        class="categories-dropdown"
+        (click)="toggleObjectivesDropdown($event)"
+        [class.active]="isObjectivesDropdownOpen"
+      >
+        <a>Objetivos</a>
+        <svg
+          class="dropdown-arrow"
+          xmlns="http://www.w3.org/2000/svg"
+          height="16"
+          viewBox="0 0 24 24"
+          width="16"
+          fill="currentColor"
+        >
+          <path d="M7 10l5 5 5-5z" />
+        </svg>
+        <div
+          class="dropdown-menu"
+          [class.show-dropdown-menu]="isObjectivesDropdownOpen"
+        >
+          <a
+            class="dropdown-item"
+            *ngFor="let objetivo of objetivos"
+            (click)="onObjectiveSelected(objetivo.name)"
+          >
+            {{ objetivo.name }}
+          </a>
+        </div>
+      </li>
       <li routerLink="/produtos/pre treino"><a>Promoções</a></li>
       <li routerLink="#"><a>kits Promocionais</a></li>
     </ul>
@@ -278,7 +363,7 @@
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="18"
-                viewBox="0 0 24 24"
+                viewbox="0 0 24 24"
                 width="18"
                 fill="currentColor"
               >

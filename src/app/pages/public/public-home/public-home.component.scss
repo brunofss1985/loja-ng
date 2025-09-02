@@ -569,11 +569,16 @@ a {
             overflow: visible;
         }
 
+        app-product-card {
+          min-width: 270px;
+        }
+
         .produto-card {
             flex: 0 0 calc(25% - 15px);
             min-width: 0;
             display: flex;
             justify-content: center;
+            
         }
 
         .product-card {

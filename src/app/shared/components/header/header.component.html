@@ -1,400 +1,197 @@
-<div class="header">
-  <input type="checkbox" id="menu-toggle" />
+ <div class="header">
+        <input type="checkbox" id="menu-toggle" />
 
-  <div class="header-top">
-    <label for="menu-toggle" class="menu-toggle-label" aria-label="Abrir menu">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        height="30"
-        viewBox="0 -960 960 960"
-        width="30"
-        fill="currentColor"
-      >
-        <path
-          d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"
-        />
-      </svg>
-    </label>
+        <div class="header-top">
+            <label for="menu-toggle" class="menu-toggle-label" aria-label="Abrir menu">
+                <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 -960 960 960" width="30" fill="currentColor">
+                    <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+                </svg>
+            </label>
 
-    <a routerLink="" class="logo-container" aria-label="Início">
-      <div class="logo" aria-hidden="true">
-        <img
-          class="icon-logo"
-          src="../../../../assets/img/logo.png"
-          alt="Menu"
-        />
-      </div>
-    </a>
+            <a routerLink="" class="logo-container" aria-label="Início">
+                <div class="logo" aria-hidden="true">
+                    <img class="icon-logo" src="../../../../assets/img/logo.png" alt="Menu" />
+                </div>
+            </a>
 
-    <div class="search-container">
-      <div class="search-box">
-        <input
-          type="text"
-          placeholder="Buscar produtos, marcas e muito mais..."
-          class="input-search"
-          [(ngModel)]="searchTerm"
-          (keydown.enter)="onSearch($event)"
-        />
-        <button
-          class="btn btn-outline-secondary"
-          type="button"
-          id="button-addon2"
-          aria-label="Buscar"
-          (click)="onSearch($event)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-            aria-hidden="true"
-          >
-            <path
-              d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85ZM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"
-            />
-          </svg>
-        </button>
-      </div>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar produtos, marcas e muito mais..." class="input-search" [(ngModel)]="searchTerm" (keydown.enter)="onSearch($event)" />
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" aria-label="Buscar" (click)="onSearch($event)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85ZM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="user">
+                <ul class="user-ul">
+                    <a href="/cart" aria-label="Carrinho" class="cart-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="24" fill="currentColor" class="icon-cart">
+                            <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T680-80q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Z" />
+                        </svg>
+                        <ng-container *ngIf="cartItemCount$ | async as count">
+                            <span class="cart-badge" *ngIf="count > 0">{{ count }}</span>
+                        </ng-container>
+                    </a>
+
+                    <div *ngIf="userType === null">
+                        <a class="li-a" href="/default-login/login" aria-label="Login">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 -960 960 960" width="24" fill="currentColor">
+                                <path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-. H120v-80h327L344-624l. 200Z" />
+                            </svg>
+                            <li>Login</li>
+                        </a>
+                    </div>
+
+                    <div *ngIf="userType === 'USER'" class="profile-dropdown">
+                        <div class="li-a profile-toggle" (click)="toggleProfileDropdown($event)" [class.active]="isProfileDropdownOpen" aria-label="Menu do Perfil">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 24 24" width="24" fill="currentColor">
+                                <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
+                            </svg>
+                            <li>Perfil</li>
+                            <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor">
+                                <path d="M7 10l5 5 5-5z" />
+                            </svg>
+                        </div>
+                        <div class="profile-dropdown-menu" [class.show-dropdown-menu]="isProfileDropdownOpen">
+                            <a routerLink="/perfil" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
+                                    <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
+                                </svg>
+                                Meu Perfil
+                            </a>
+                            <a (click)="exit()" href="#" class="dropdown-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
+                                    <path d="M16 13v-2H7V8l-5 4 5 4v-3h9zm2-10H6a2 2 0 00-2 2v4h2V5h12v14H6v-4H4v4a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2z" />
+                                </svg>
+                                Sair
+                            </a>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+
+        <div class="header-botton">
+            <ul>
+                <li class="categories-dropdown" (click)="toggleCategoriesDropdown($event)" [class.active]="isCategoriesDropdownOpen">
+                    <a>Todas as categorias</a>
+                    <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor">
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                    <div class="dropdown-menu" [class.show-dropdown-menu]="isCategoriesDropdownOpen">
+                        <a class="dropdown-item" *ngFor="let categoria of categorias" (click)="onCategorySelected(categoria.name)">
+                            {{ categoria.name }}
+                        </a>
+                    </div>
+                </li>
+                <li routerLink="/produtos"><a>Todos os produtos</a></li>
+                <li routerLink="#"><a>Novidades</a></li>
+                <li class="categories-dropdown" (click)="toggleBrandsDropdown($event)" [class.active]="isBrandsDropdownOpen">
+                    <a>Marcas</a>
+                    <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor">
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                    <div class="dropdown-menu" [class.show-dropdown-menu]="isBrandsDropdownOpen">
+                        <a class="dropdown-item" *ngFor="let marca of marcas" (click)="onBrandSelected(marca.name)">
+                            {{ marca.name }}
+                        </a>
+                    </div>
+                </li>
+                <li class="categories-dropdown" (click)="toggleObjectivesDropdown($event)" [class.active]="isObjectivesDropdownOpen">
+                    <a>Objetivos</a>
+                    <svg class="dropdown-arrow" xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16" fill="currentColor">
+                        <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                    <div class="dropdown-menu" [class.show-dropdown-menu]="isObjectivesDropdownOpen">
+                        <a class="dropdown-item" *ngFor="let objetivo of objetivos" (click)="onObjectiveSelected(objetivo.name)">
+                            {{ objetivo.name }}
+                        </a>
+                    </div>
+                </li>
+                <li [routerLink]="['/produtos']" [queryParams]="{ objetivos: 'pre treino' }">
+                    <a>Promoções</a>
+                </li>
+                <li [routerLink]="['/produtos']" [queryParams]="{ categorias: 'Kit' }">
+                    <a>Kits Promocionais</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mobile-menu">
+            <div class="mobile-menu-header">
+                <h2>Menu</h2>
+                <button class="mobile-menu-close" onclick="document.getElementById('menu-toggle').checked = false">×</button>
+            </div>
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-section">
+                    <h3>Categorias</h3>
+                    <ul>
+                        <li><a routerLink="#">📦 Todas as categorias</a></li>
+                        <li><a routerLink="/produtos">🛍️ Todos os produtos</a></li>
+                        <li><a routerLink="#">✨ Novidades</a></li>
+                        <li><a [routerLink]="['/produtos']" [queryParams]="{ marcas: '' }">🏷️ Marcas</a></li>
+                        <li><a [routerLink]="['/produtos']" [queryParams]="{ objetivos: '' }">🎯 Objetivos</a></li>
+                        <li><a [routerLink]="['/produtos']" [queryParams]="{ objetivos: 'pre treino' }">🔥 Promoções</a></li>
+                        <li><a routerLink="/produtos" [queryParams]="{ categorias: 'Kit' }">📦 Kits Promocionais</a></li>
+                    </ul>
+                </div>
+                <div class="mobile-menu-section" *ngIf="userType === null">
+                    <h3>Conta</h3>
+                    <ul>
+                        <li>
+                            <a href="/default-login/login">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                                    <path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-. H120v-80h327L344-624l. 200Z" />
+                                </svg>
+                                Login
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/cart">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                                    <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T680-80q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Z" />
+                                </svg>
+                                Carrinho
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mobile-menu-section" *ngIf="userType === 'USER'">
+                    <h3>Conta</h3>
+                    <ul>
+                        <li>
+                            <a href="/perfil">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18" fill="currentColor">
+                                    <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
+                                </svg>
+                                Perfil
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/cart">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 -960 960 960" width="18" fill="currentColor">
+                                    <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T680-80q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Z" />
+                                </svg>
+                                Carrinho
+                            </a>
+                        </li>
+                        <li>
+                            <a (click)="exit()" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="18" viewbox="0 0 24 24" width="18" fill="currentColor">
+                                    <path d="M16 13v-2H7V8l-5 4 5 4v-3h9zm2-10H6a2 2 0 00-2 2v4h2V5h12v14H6v-4H4v4a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2z" />
+                                </svg>
+                                Sair
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="mobile-overlay" onclick="document.getElementById('menu-toggle').checked = false"></div>
     </div>
 
-    <div class="user">
-      <ul class="user-ul">
-        <a href="/cart" aria-label="Carrinho" class="cart-link">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="20"
-            viewBox="0 -960 960 960"
-            width="24"
-            fill="currentColor"
-            class="icon-cart"
-          >
-            <path
-              d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T680-80q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Z"
-            />
-          </svg>
-
-          <ng-container *ngIf="cartItemCount$ | async as count">
-            <span class="cart-badge" *ngIf="count > 0">
-              {{ count }}
-            </span>
-          </ng-container>
-        </a>
-
-        <div *ngIf="userType === null">
-          <a class="li-a" href="/default-login/login" aria-label="Login">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="22"
-              viewBox="0 -960 960 960"
-              width="24"
-              fill="currentColor"
-            >
-              <path
-                d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-56-56 103-104H120v-80h327L344-624l56-56 200 200-200 200Z"
-              />
-            </svg>
-            <li>Login</li>
-          </a>
-        </div>
-
-        <div *ngIf="userType === 'USER'" class="profile-dropdown">
-          <div
-            class="li-a profile-toggle"
-            (click)="toggleProfileDropdown($event)"
-            [class.active]="isProfileDropdownOpen"
-            aria-label="Menu do Perfil"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="22"
-              viewBox="0 0 24 24"
-              width="24"
-              fill="currentColor"
-            >
-              <path
-                d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"
-              />
-            </svg>
-            <li>Perfil</li>
-            <svg
-              class="dropdown-arrow"
-              xmlns="http://www.w3.org/2000/svg"
-              height="16"
-              viewBox="0 0 24 24"
-              width="16"
-              fill="currentColor"
-            >
-              <path d="M7 10l5 5 5-5z" />
-            </svg>
-          </div>
-          <div
-            class="profile-dropdown-menu"
-            [class.show-dropdown-menu]="isProfileDropdownOpen"
-          >
-            <a routerLink="/perfil" class="dropdown-item">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="18"
-                viewBox="0 0 24 24"
-                width="18"
-                fill="currentColor"
-              >
-                <path
-                  d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"
-                />
-              </svg>
-              Meu Perfil
-            </a>
-            <a (click)="exit()" href="#" class="dropdown-item">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="18"
-                viewBox="0 0 24 24"
-                width="18"
-                fill="currentColor"
-              >
-                <path
-                  d="M16 13v-2H7V8l-5 4 5 4v-3h9zm2-10H6a2 2 0 00-2 2v4h2V5h12v14H6v-4H4v4a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2z"
-                />
-              </svg>
-              Sair
-            </a>
-          </div>
-        </div>
-      </ul>
-    </div>
-  </div>
-
-  <div class="header-botton">
-    <ul>
-      <li
-        class="categories-dropdown"
-        (click)="toggleCategoriesDropdown($event)"
-        [class.active]="isCategoriesDropdownOpen"
-      >
-        <a>Todas as categorias</a>
-        <svg
-          class="dropdown-arrow"
-          xmlns="http://www.w3.org/2000/svg"
-          height="16"
-          viewBox="0 0 24 24"
-          width="16"
-          fill="currentColor"
-        >
-          <path d="M7 10l5 5 5-5z" />
-        </svg>
-
-        <div
-          class="dropdown-menu"
-          [class.show-dropdown-menu]="isCategoriesDropdownOpen"
-        >
-          <a
-            class="dropdown-item"
-            *ngFor="let categoria of categorias"
-            (click)="onCategorySelected(categoria.name)"
-          >
-            {{ categoria.name }}
-          </a>
-        </div>
-      </li>
-      <li routerLink="/produtos"><a>Todos os produtos</a></li>
-      <li routerLink="#"><a>Novidades</a></li>
-      <li
-        class="categories-dropdown"
-        (click)="toggleBrandsDropdown($event)"
-        [class.active]="isBrandsDropdownOpen"
-      >
-        <a>Marcas</a>
-        <svg
-          class="dropdown-arrow"
-          xmlns="http://www.w3.org/2000/svg"
-          height="16"
-          viewBox="0 0 24 24"
-          width="16"
-          fill="currentColor"
-        >
-          <path d="M7 10l5 5 5-5z" />
-        </svg>
-        <div
-          class="dropdown-menu"
-          [class.show-dropdown-menu]="isBrandsDropdownOpen"
-        >
-          <a
-            class="dropdown-item"
-            *ngFor="let marca of marcas"
-            (click)="onBrandSelected(marca.name)"
-          >
-            {{ marca.name }}
-          </a>
-        </div>
-      </li>
-      <li
-        class="categories-dropdown"
-        (click)="toggleObjectivesDropdown($event)"
-        [class.active]="isObjectivesDropdownOpen"
-      >
-        <a>Objetivos</a>
-        <svg
-          class="dropdown-arrow"
-          xmlns="http://www.w3.org/2000/svg"
-          height="16"
-          viewBox="0 0 24 24"
-          width="16"
-          fill="currentColor"
-        >
-          <path d="M7 10l5 5 5-5z" />
-        </svg>
-        <div
-          class="dropdown-menu"
-          [class.show-dropdown-menu]="isObjectivesDropdownOpen"
-        >
-          <a
-            class="dropdown-item"
-            *ngFor="let objetivo of objetivos"
-            (click)="onObjectiveSelected(objetivo.name)"
-          >
-            {{ objetivo.name }}
-          </a>
-        </div>
-      </li>
-      <li [routerLink]="['/produtos']" [queryParams]="{ objetivos: 'pre treino' }">
-        <a>Promoções</a>
-      </li>
-      <li [routerLink]="['/produtos']" [queryParams]="{ categorias: 'Kit' }">
-        <a>Kits Promocionais</a>
-      </li>
-    </ul>
-  </div>
-
-  <div class="mobile-menu">
-    <div class="mobile-menu-header">
-      <h2>Menu</h2>
-      <button
-        class="mobile-menu-close"
-        onclick="document.getElementById('menu-toggle').checked = false"
-      >
-        ×
-      </button>
-    </div>
-    <div class="mobile-menu-content">
-      <div class="mobile-menu-section">
-        <h3>Categorias</h3>
-        <ul>
-          <li><a routerLink="#">📦 Todas as categorias</a></li>
-          <li><a routerLink="/produtos">🛍️ Todos os produtos</a></li>
-          <li><a routerLink="#">✨ Novidades</a></li>
-          <li>
-            <a [routerLink]="['/produtos']" [queryParams]="{ marcas: '' }">🏷️ Marcas</a>
-          </li>
-          <li>
-            <a [routerLink]="['/produtos']" [queryParams]="{ objetivos: '' }">🎯 Objetivos</a>
-          </li>
-          <li>
-            <a [routerLink]="['/produtos']" [queryParams]="{ objetivos: 'pre treino' }">🔥 Promoções</a>
-          </li>
-          <li>
-            <a routerLink="/produtos" [queryParams]="{ categorias: 'Kit' }">📦 Kits Promocionais</a>
-          </li>
-        </ul>
-      </div>
-      <div class="mobile-menu-section" *ngIf="userType === null">
-        <h3>Conta</h3>
-        <ul>
-          <li>
-            <a href="/default-login/login">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="18"
-                viewBox="0 -960 960 960"
-                width="18"
-                fill="currentColor"
-              >
-                <path
-                  d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-56-56 103-104H120v-80h327L344-624l56-56 200 200-200 200Z"
-                />
-              </svg>
-              Login
-            </a>
-          </li>
-          <li>
-            <a href="/cart">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="18"
-                viewBox="0 -960 960 960"
-                width="18"
-                fill="currentColor"
-              >
-                <path
-                  d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T680-80q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Z"
-                />
-              </svg>
-              Carrinho
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="mobile-menu-section" *ngIf="userType === 'USER'">
-        <h3>Conta</h3>
-        <ul>
-          <li>
-            <a href="/perfil">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="18"
-                viewBox="0 0 24 24"
-                width="18"
-                fill="currentColor"
-              >
-                <path
-                  d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"
-                />
-              </svg>
-              Perfil
-            </a>
-          </li>
-          <li>
-            <a href="/cart">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="18"
-                viewBox="0 -960 960 960"
-                width="18"
-                fill="currentColor"
-              >
-                <path
-                  d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T680-80q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Z"
-                />
-              </svg>
-              Carrinho
-            </a>
-          </li>
-          <li>
-            <a (click)="exit()" href="#">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="18"
-                viewbox="0 0 24 24"
-                width="18"
-                fill="currentColor"
-              >
-                <path
-                  d="M16 13v-2H7V8l-5 4 5 4v-3h9zm2-10H6a2 2 0 00-2 2v4h2V5h12v14H6v-4H4v4a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2z"
-                />
-              </svg>
-              Sair
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div
-    class="mobile-overlay"
-    onclick="document.getElementById('menu-toggle').checked = false"
-  ></div>
-</div>
-
-<div class="header-spacer" aria-hidden="true"></div>
+    <div class="header-spacer" aria-hidden="true"></div>

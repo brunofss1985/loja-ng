@@ -8,24 +8,24 @@ export interface Produto {
   descricao: string;
   descricaoCurta?: string;
   categorias?: string[];
+  objetivos?: string[]; // <<< NOVO CAMPO
   peso: string;
   sabor?: string;
   preco: number;
   precoDesconto?: number;
-  porcentagemDesconto?: string; // Novo campo adicionado
+  porcentagemDesconto?: string;
   custo?: number;
   fornecedor?: string;
   lucroEstimado?: number;
   statusAprovacao?: string;
   tamanhoPorcao?: string;
-  galeria?: string[]; // base64 ou nomes
+  galeria?: string[];
   imagem?: string;
   imagemMimeType?: string;
   galeriaMimeTypes?: string[];
-
-  // Novos campos
   ativo?: boolean;
-  disponibilidade?: 'em_estoque' | 'por_encomenda' | 'nao_disponivel'; // Novo campo adicionado
+  destaque?: boolean; // <<< NOVO CAMPO
+  disponibilidade?: 'em_estoque' | 'por_encomenda' | 'nao_disponivel';
   estoque?: number;
   estoqueMinimo?: number;
   estoqueMaximo?: number;

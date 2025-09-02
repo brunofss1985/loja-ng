@@ -46,6 +46,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       descricao: ['', Validators.required],
       descricaoCurta: [''],
       categorias: [[]],
+      objetivos: [[]], // <<< NOVO CAMPO
       peso: ['', Validators.required],
       sabor: [''],
       preco: [0, [Validators.required, Validators.min(0)]],
@@ -58,7 +59,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
       tamanhoPorcao: [''],
       galeria: [[]],
       ativo: [true],
-      disponibilidade: ['em_estoque'], // <<< Novo campo adicionado
+      destaque: [false], // <<< NOVO CAMPO
+      disponibilidade: ['em_estoque'],
       estoque: [null],
       estoqueMinimo: [null],
       estoqueMaximo: [null],
@@ -91,7 +93,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.productToEdit) this.patchFormFromProduct(this.productToEdit);
-    
+
     this.form.get('preco')?.valueChanges.subscribe(() => {
       this.calcularPorcentagemDesconto();
     });
@@ -109,17 +111,13 @@ export class ProductFormComponent implements OnInit, OnChanges {
   }
 
   patchFormFromProduct(edit: Produto): void {
-    const {
-      imagem,
-      imagemMimeType,
-      galeria,
-      galeriaMimeTypes,
-      ...formValues
-    } = edit;
+    const { imagem, imagemMimeType, galeria, galeriaMimeTypes, ...formValues } =
+      edit;
 
     this.form.patchValue({
       ...formValues,
-      categorias: edit.categorias,
+      categorias: edit.categorias?.join(', ') ?? '', // Converta arrays para string
+      objetivos: edit.objetivos?.join(', ') ?? '', // Converta arrays para string
       dimensoes: edit.dimensoes ?? {
         altura: null,
         largura: null,
@@ -129,7 +127,12 @@ export class ProductFormComponent implements OnInit, OnChanges {
         media: edit.avaliacoes?.media ?? null,
         comentarios: edit.avaliacoes?.comentarios ?? [],
       },
-      porcentagemDesconto: edit.porcentagemDesconto ? `${edit.porcentagemDesconto}%` : '0%'
+      restricoes: edit.restricoes?.join(', ') ?? '',
+      palavrasChave: edit.palavrasChave?.join(', ') ?? '',
+      vendasMensais: edit.vendasMensais?.join(', ') ?? '',
+      porcentagemDesconto: edit.porcentagemDesconto
+        ? `${edit.porcentagemDesconto}%`
+        : '0%',
     });
 
     if (imagem && imagemMimeType && !this.imagemSelecionada) {
@@ -143,7 +146,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
           `data:${galeriaMimeTypes?.[i] || 'image/jpeg'};base64,${base64Data}`
       );
     }
-    
+
     this.calcularPorcentagemDesconto();
     setTimeout(() => this.cdr.detectChanges(), 100);
   }
@@ -157,6 +160,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       descricao: '',
       descricaoCurta: '',
       categorias: [],
+      objetivos: [],
       peso: '',
       sabor: '',
       tamanhoPorcao: '',
@@ -169,7 +173,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
       statusAprovacao: 'pendente',
       galeria: [],
       ativo: true,
-      disponibilidade: 'em_estoque', // <<< Novo campo adicionado
+      destaque: false,
+      disponibilidade: 'em_estoque',
       estoque: null,
       estoqueMinimo: null,
       estoqueMaximo: null,
@@ -250,7 +255,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
     if (preco > 0 && precoDesconto < preco) {
       const desconto = ((preco - precoDesconto) / preco) * 100;
-      this.form.get('porcentagemDesconto')?.patchValue(desconto.toFixed(2) + '%');
+      this.form.get('porcentagemDesconto')?.patchValue(desconto.toFixed(2));
     } else {
       this.form.get('porcentagemDesconto')?.patchValue('0%');
     }
@@ -265,20 +270,25 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
     const formValue = this.form.getRawValue();
 
+    // Ações para converter strings de inputs em arrays de strings.
     if (typeof formValue.categorias === 'string') {
       formValue.categorias = formValue.categorias
         .split(',')
         .map((c: string) => c.trim())
         .filter((c: string) => c.length > 0);
     }
-
+    if (typeof formValue.objetivos === 'string') {
+      formValue.objetivos = formValue.objetivos
+        .split(',')
+        .map((o: string) => o.trim())
+        .filter((o: string) => o.length > 0);
+    }
     if (typeof formValue.restricoes === 'string') {
       formValue.restricoes = formValue.restricoes
         .split(',')
         .map((r: string) => r.trim())
         .filter((r: string) => r.length > 0);
     }
-
     if (typeof formValue.palavrasChave === 'string') {
       formValue.palavrasChave = formValue.palavrasChave
         .split(',')
@@ -314,6 +324,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
       restricoes: formValue.restricoes,
       palavrasChave: formValue.palavrasChave,
       vendasMensais: formValue.vendasMensais,
+      objetivos: formValue.objetivos, // <<< Campo 'objetivos'
+      destaque: formValue.destaque, // <<< Campo 'destaque'
     };
 
     const formData = new FormData();

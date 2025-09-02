@@ -272,6 +272,7 @@
   font-size: 10px;
   font-weight: 600;
   margin-bottom: 10px;
+  margin-top: 10px;
   padding: 6px 10px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
@@ -301,9 +302,20 @@
 }
 
 @keyframes pulse-em_estoque {
-  0% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.1); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Cores e Animação para Por Encomenda (Azul) */
@@ -319,9 +331,20 @@
 }
 
 @keyframes pulse-por_encomenda {
-  0% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.1); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Cores e Animação para Não Disponível (Vermelho) */
@@ -337,9 +360,20 @@
 }
 
 @keyframes pulse-nao_disponivel {
-  0% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(1.1); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(1.1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .footerCard {
@@ -459,6 +493,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

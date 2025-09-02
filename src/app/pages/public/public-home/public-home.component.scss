@@ -777,15 +777,27 @@ a {
         }
 
         @media (max-width: 600px) {
+            .carousel-wrapper {
+                overflow: hidden;
+                padding: 20px;
+            }
+            
             .carousel-track {
                 gap: 0;
-                padding: 0 20px;
+                padding: 0;
             }
             
             .produto-card {
                 flex: 0 0 100%;
-                padding: 0;
+                padding: 0 20px;
                 box-sizing: border-box;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .product-card {
+                width: 100%;
+                max-width: 350px;
             }
             
             .section-title h2 {
@@ -812,9 +824,17 @@ a {
                 padding: 40px 10px;
             }
             
+            .carousel-wrapper {
+                padding: 20px 10px;
+            }
+            
             .carousel-track {
                 gap: 0;
-                padding: 0 15px;
+                padding: 0;
+            }
+            
+            .produto-card {
+                padding: 0 10px;
             }
         }
 

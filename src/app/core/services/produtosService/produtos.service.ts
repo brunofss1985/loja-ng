@@ -1,3 +1,5 @@
+// src/app/core/services/produtosService/produtos.service.ts
+
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -99,24 +101,45 @@ export class ProdutosService {
     return this.http.get<PaginatedResponse<Produto>>(this.apiUrl, { params });
   }
 
+  // ✅ Ajustado para retornar PaginatedResponse<Produto>
+  buscarProdutosEmDestaque(
+    page: number = 0,
+    size: number = 10
+  ): Observable<PaginatedResponse<Produto>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    return this.http.get<PaginatedResponse<Produto>>(
+      `${this.apiUrl}/destaques`,
+      { params }
+    );
+  }
+
   // Lista objetivos com contagem
   buscarObjetivos(): Observable<CountedItem[]> {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/objetivos`).pipe(
-      map((items) => items.map((item) => ({ name: item.name, count: item.count })))
+      map((items) =>
+        items.map((item) => ({ name: item.name, count: item.count }))
+      )
     );
   }
 
   // Lista marcas com contagem
   buscarMarcas(): Observable<CountedItem[]> {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas`).pipe(
-      map((items) => items.map((item) => ({ name: item.name, count: item.count })))
+      map((items) =>
+        items.map((item) => ({ name: item.name, count: item.count }))
+      )
     );
   }
 
   // Lista categorias com contagem
   buscarCategorias(): Observable<CountedItem[]> {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias`).pipe(
-      map((items) => items.map((item) => ({ name: item.name, count: item.count })))
+      map((items) =>
+        items.map((item) => ({ name: item.name, count: item.count }))
+      )
     );
   }
 
@@ -154,9 +177,12 @@ export class ProdutosService {
         params = params.append('categorias', c);
       });
     }
-    return this.http.get<CountedItem[]>(`${this.apiUrl}/objetivos-por-categoria`, {
-      params,
-    });
+    return this.http.get<CountedItem[]>(
+      `${this.apiUrl}/objetivos-por-categoria`,
+      {
+        params,
+      }
+    );
   }
 
   // Totais (contagens globais)

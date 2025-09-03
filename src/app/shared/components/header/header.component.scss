@@ -280,6 +280,8 @@
         }
 
         .dropdown-arrow {
+
+            color: var(--cor-base);
             margin-left: 4px;
             transition: transform 0.3s ease;
         }
@@ -368,6 +370,10 @@
         .categories-dropdown.active .dropdown-arrow {
             transform: rotate(180deg);
             opacity: 1;
+        }
+
+        .categories-dropdown a {
+            gap: 0;
         }
 
         .categories-dropdown:hover > a,

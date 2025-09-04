@@ -1,7 +1,7 @@
 // src/app/pages/admin/produtos/produtos.component.ts
 
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProductFormComponent } from './produto-form/produto-form.component';
+import { ProductFormComponent } from '../../admin/produto-form/produto-form.component';
 import { Produto } from 'src/app/core/models/product.model';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
 import { ToastrService } from 'ngx-toastr';

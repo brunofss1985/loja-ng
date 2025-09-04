@@ -9,7 +9,7 @@ import { PerfilAdminComponent } from './perfil-admin/perfil-admin.component';
 // import { ProdutosEmFaltaComponent } from './produtos-em-falta/produtos-em-falta.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { AdminGuard } from 'src/app/core/guards/admin-guard';
-import { ProdutosComponent } from './produtos/produtos.component';
+import { ProdutosComponent } from '../public/produtos/produtos.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent,

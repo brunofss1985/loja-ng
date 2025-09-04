@@ -70,12 +70,12 @@
           <div class="produto-card" *ngFor="let produto of produtosEmDestaque">
             <app-product-card 
               [productId]="produto.id ?? 0"
-              [productNome]="produto.nome ?? ''"
+              [productNome]="produto.nome"
               [productModelo]="produto.descricaoCurta ?? ''"
-              [productPeso]="(produto.peso ?? 0) + 'g'"
+              [productPeso]="(produto.peso) + 'g'"
               [productImage]="produto.imagem ? 'data:' + produto.imagemMimeType + ';base64,' + produto.imagem : 'assets/img/no-image.png'"
-              [productPreco]="produto.preco ?? 0"
-              [productMarca]="produto.marca ?? ''"
+              [productPreco]="produto.preco"
+              [productMarca]="produto.marca"
               [productPrecoDesconto]="produto.precoDesconto ?? 0"
               [productPorcentagemDesconto]="produto.porcentagemDesconto ?? '0%'"
               [productDisponibilidade]="produto.disponibilidade ?? 'indisponível'">

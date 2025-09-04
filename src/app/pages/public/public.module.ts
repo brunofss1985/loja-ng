@@ -11,7 +11,7 @@ import { PublicComponent } from './public.component';
 import { ChatComponent } from './chat/chat.component';
 import { CartComponent } from './cart-component/cart-component.component';
 import { PerfilComponent } from './perfil/perfil.component';
-import { OrderStatusComponent } from '../../shared/components/order-status/order-status.component';
+import { OrderStatusComponent } from '../../shared/components/ui/order-status/order-status.component';
 import { PaymentResultComponent } from './payment-result/payment-result.component';
 
 

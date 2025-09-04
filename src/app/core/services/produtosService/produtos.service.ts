@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Produto } from '../../models/product.model';
+import { environment } from 'src/environments/environment';
 
 // Interface para a resposta paginada
 export interface PaginatedResponse<T> {
@@ -28,7 +29,7 @@ export interface CountedItem {
   providedIn: 'root',
 })
 export class ProdutosService {
-  private readonly apiUrl = 'http://localhost:8080/api/produtos';
+  private readonly apiUrl = `${environment.apiUrl}/api/produtos`;
 
   constructor(private http: HttpClient) {}
 

@@ -12,8 +12,8 @@ import { DeleteButtonComponent } from './components/delete-button/delete-button.
 import { EditButtonComponent } from './components/edit-button/edit-button.component';
 import { ListaProdutosComponent } from '../pages/public/lista-produtos/lista-produtos.component';
 import { DetalheProdutoComponent } from '../pages/public/detalhe-produto/detalhe-produto.component';
-import { ProductCardComponent } from '../pages/public/product-card/product-card.component';
-import { PaymentComponent } from './components/payment-component/payment-component.component';
+import { ProductCardComponent } from './components/product-card/product-card.component';
+import { PaymentComponent } from '../pages/public/payment-component/payment-component.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FiltroComponent } from '../pages/public/filtro/filtro.component';
 

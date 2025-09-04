@@ -8,7 +8,7 @@ import { ListaProdutosComponent } from 'src/app/pages/public/lista-produtos/list
 import { DetalheProdutoComponent } from 'src/app/pages/public/detalhe-produto/detalhe-produto.component';
 import { PublicComponent } from './public.component';
 import { CartComponent } from './cart-component/cart-component.component';
-import { PaymentComponent } from 'src/app/shared/components/payment-component/payment-component.component';
+import { PaymentComponent } from 'src/app/pages/public/payment-component/payment-component.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { PaymentResultComponent } from './payment-result/payment-result.component';
 
@@ -20,7 +20,7 @@ const routes: Routes = [
       { path: '', component: PublicHomeComponent },
       { path: 'produtos', component: ListaProdutosComponent },
       { path: 'produtos/:categoria', component: ListaProdutosComponent },
-      { path: 'produtos/buscar/:termo', component: ListaProdutosComponent }, // ✨ NOVA ROTA DE BUSCA
+      { path: 'produtos/buscar/:termo', component: ListaProdutosComponent },
       { path: 'produto/:id', component: DetalheProdutoComponent },
       { path: 'cart', component: CartComponent },
       { path: 'payment', component: PaymentComponent },

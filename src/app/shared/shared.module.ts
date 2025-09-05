@@ -6,10 +6,7 @@ import { DefaultLoginComponent } from './components/ui/default-login/default-log
 import { RouterModule } from '@angular/router';
 import { TablesComponent } from './components/layout/tables/tables.component';
 import { SidebarComponent } from './components/layout/sidebar/sidebar.component';
-import { InputTextComponent } from './components/ui/input-text/input-text.component';
 import { ModalComponent } from './components/ui/modal/modal.component';
-import { DeleteButtonComponent } from './components/ui/delete-button/delete-button.component';
-import { EditButtonComponent } from './components/ui/edit-button/edit-button.component';
 import { ListaProdutosComponent } from '../pages/public/lista-produtos/lista-produtos.component';
 import { DetalheProdutoComponent } from '../pages/public/detalhe-produto/detalhe-produto.component';
 import { ProductCardComponent } from './components/ui/product-card/product-card.component';
@@ -22,12 +19,9 @@ import { FiltroComponent } from '../pages/public/filtro/filtro.component';
     HeaderComponent,
     FooterComponent,
     DefaultLoginComponent,
-    InputTextComponent,
     TablesComponent,
     SidebarComponent,
     ModalComponent,
-    DeleteButtonComponent,
-    EditButtonComponent,
     ListaProdutosComponent,
     DetalheProdutoComponent,
     ProductCardComponent,
@@ -44,11 +38,9 @@ import { FiltroComponent } from '../pages/public/filtro/filtro.component';
     HeaderComponent,
     FooterComponent,
     DefaultLoginComponent,
-    InputTextComponent,
     TablesComponent,
     SidebarComponent,
     ModalComponent,
-    DeleteButtonComponent,
     ListaProdutosComponent,
     DetalheProdutoComponent,
     ProductCardComponent

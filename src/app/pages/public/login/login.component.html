@@ -1,46 +1,58 @@
 <form [formGroup]="loginForm" (ngSubmit)="submit()">
-      <h1>Fazer login</h1>
-      <app-input-text [showInput]="true" [showInputLabel]="true" [showInputTextPlaceholder]="true"      
-    [inputTextPlaceholder]="'E-mail do Usuário'" [labelName]="'E-mail'" idInput="email" [nameInput]="'email'"      
-    formControlName="email"></app-input-text>
-      <div class="invalid-text" *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
-          <small *ngIf="loginForm.controls['email'].errors?.['required']">O e-mail é obrigatório.</small>
-          <small *ngIf="loginForm.controls['email'].errors?.['email']">Fomarto do e-mail inválido..</small>
-        </div>
+  <h1>Fazer login</h1>
+  
+  <div class="input-container">
+    <label for="email">E-mail</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      placeholder="E-mail do Usuário"
+      formControlName="email"
+    />
+  </div>
+  <div class="invalid-text" *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched">
+    <small *ngIf="loginForm.controls['email'].errors?.['required']">O e-mail é obrigatório.</small>
+    <small *ngIf="loginForm.controls['email'].errors?.['email']">Fomarto do e-mail inválido.</small>
+  </div>
 
-      <app-input-text [inputType]="['password']" [showInput]="true" [showInputLabel]="true"      
-    [showInputTextPlaceholder]="true" [inputTextPlaceholder]="'Senha do Usuário'" [labelName]="'Senha'" idInput="senha"
-          [nameInput]="'senha'" formControlName="password"></app-input-text>
-      <div class="invalid-text"
+  <div class="input-container">
+    <label for="senha">Senha</label>
+    <input
+      type="password"
+      id="senha"
+      name="senha"
+      placeholder="Senha do Usuário"
+      formControlName="password"
+    />
+  </div>
+  <div class="invalid-text"
     *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
-          <small *ngIf="loginForm.controls['password'].errors?.['required']">A senha é obrigatória.</small>
-          <small *ngIf="loginForm.controls['password'].errors?.['minlength']">Deve ter pelo menos 6 caracteres.</small>
-        </div>
+    <small *ngIf="loginForm.controls['password'].errors?.['required']">A senha é obrigatória.</small>
+    <small *ngIf="loginForm.controls['password'].errors?.['minlength']">Deve ter pelo menos 6 caracteres.</small>
+  </div>
 
-      <button type="submit" [disabled]="loginForm.invalid">Login</button>
-      <a class="forgot" href="">Esqueci minha senha</a>
-      <button type="button" (click)="navigate()" class="back-button">Voltar</button>
+  <button type="submit" [disabled]="loginForm.invalid">Login</button>
+  <a class="forgot" href="">Esqueci minha senha</a>
+  <button type="button" (click)="navigate()" class="back-button">Voltar</button>
 
-      <span class="hr">
-         
+  <span class="hr">
     <hr>
-          <p>ou</p>
-         
+    <p>ou</p>
     <hr>
-       
   </span>
 
-      <div class="icons">
-          <img src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo" />
-          <img src="https://img.icons8.com/3d-fluency/94/instagram-new.png" alt="instagram-new" />
-          <img src="https://img.icons8.com/fluency/48/mac-os.png" alt="mac-os" />
-        </div>
+  <div class="icons">
+    <img src="https://img.icons8.com/color/48/google-logo.png" alt="google-logo" />
+    <img src="https://img.icons8.com/3d-fluency/94/instagram-new.png" alt="instagram-new" />
+    <img src="https://img.icons8.com/fluency/48/mac-os.png" alt="mac-os" />
+  </div>
 
-      <div class="register">
-          <p>Não tem conta? Cadastre-se</p> <a [routerLink]="['/default-login/register']">Aqui!</a>
-        </div>
+  <div class="register">
+    <p>Não tem conta? Cadastre-se</p> <a [routerLink]="['/default-login/register']">Aqui!</a>
+  </div>
 
-      <div *ngIf="errorMessage">
-          <p>{{ errorMessage }}</p>
-        </div>
-    </form>
+  <div class="error-message" *ngIf="errorMessage">
+    <p>{{ errorMessage }}</p>
+  </div>
+</form>

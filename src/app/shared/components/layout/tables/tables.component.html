@@ -24,9 +24,12 @@
             {{ cellFormatter ? cellFormatter(header, row[header]) : row[header] }}
           </td>
           <td *ngIf="showActionButtons">
-            <app-delete-button [itemId]="row['id']" (deleteClicked)="onDeleteRow(row['id'])">
-            </app-delete-button>
-            <app-edit-button *ngIf="showEditButton" (click)="onEditRow(row)"></app-edit-button>
+            <button class="delete-button" (click)="onDeleteRow(row['id'])">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+            <button class="edit-button" *ngIf="showEditButton" (click)="onEditRow(row)">
+              <span class="material-symbols-outlined">edit_square</span>
+            </button>
           </td>
         </tr>
       </tbody>

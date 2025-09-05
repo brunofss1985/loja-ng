@@ -17,7 +17,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: 1rem;
   background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%);
   position: relative;
   overflow-y: auto;
@@ -40,6 +40,12 @@ main {
   display: contents;
 }
 
+/* Permitir que os formulários filhos controlem seu próprio tamanho */
+.section-form > * {
+  width: auto;
+  max-width: none;
+}
+
 .section-main {
   flex: 1;
   background: var(--cor-base);
@@ -47,7 +53,7 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 3rem;
+  padding: 2rem;
   position: relative;
   overflow: hidden;
 }
@@ -67,7 +73,7 @@ main {
 }
 
 .section-main img {
-  max-width: 350px;
+  max-width: 280px;
   width: 100%;
   height: auto;
   opacity: 0.9;
@@ -82,7 +88,6 @@ main {
   filter: drop-shadow(0 15px 40px rgba(0, 123, 255, 0.15));
 }
 
-/* Animação de flutuação sutil */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px) rotate(0deg);
@@ -95,7 +100,6 @@ main {
   }
 }
 
-/* Decoração adicional para a seção principal */
 .section-main::after {
   content: '';
   position: absolute;
@@ -109,7 +113,6 @@ main {
   opacity: 0.3;
 }
 
-/* Responsividade */
 @media (max-width: 1024px) {
   main {
     flex-direction: column;
@@ -117,17 +120,18 @@ main {
   
   .section-main {
     flex: 0 0 auto;
-    min-height: 200px;
-    padding: 2rem;
+    min-height: 180px;
+    padding: 1.5rem;
   }
   
   .section-main img {
-    max-width: 200px;
+    max-width: 160px;
   }
   
   .section-form {
     flex: 1;
-    min-height: calc(100vh - 200px);
+    min-height: calc(100vh - 180px);
+    padding: 1rem;
   }
 }
 
@@ -138,7 +142,7 @@ main {
   
   .section-form {
     min-height: 100vh;
-    padding: 1rem;
+    padding: 0.5rem;
   }
   
   main {
@@ -149,16 +153,14 @@ main {
 
 @media (max-width: 480px) {
   .section-form {
-    padding: 0.5rem;
+    padding: 0.25rem;
   }
 }
 
-/* Transições suaves entre rotas */
 .section-form {
   transition: background 0.5s ease;
 }
 
-/* Estados específicos baseados na rota ativa */
 :host(.login-active) .section-form {
   background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-secundaria) 100%);
 }
@@ -167,7 +169,6 @@ main {
   background: linear-gradient(135deg, var(--cor-secundaria) 0%, var(--cor-primaria) 100%);
 }
 
-/* Melhorias de acessibilidade */
 @media (prefers-reduced-motion: reduce) {
   .section-main::before {
     animation: none;
@@ -182,7 +183,6 @@ main {
   }
 }
 
-/* Scroll customizado para a seção do formulário */
 .section-form::-webkit-scrollbar {
   width: 6px;
 }

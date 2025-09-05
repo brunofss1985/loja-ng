@@ -28,7 +28,7 @@ export class TablesComponent implements OnInit {
 
   @Output() createButtonClicked = new EventEmitter<void>();
 
-  @Output() deleteRow = new EventEmitter<void>();
+  @Output() deleteRow = new EventEmitter<any>();
 
   constructor(private modalService: ModalService) {}
 

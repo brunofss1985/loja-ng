@@ -29,8 +29,10 @@ h5 {
 
 button {
   margin-right: 15px;
-  background-color: rgb(83, 163, 255); /* azul padrão */
-  color: white; /* letra branca */
+  background-color: rgb(83, 163, 255);
+  /* azul padrão */
+  color: white;
+  /* letra branca */
   border: none;
   border-radius: 8px;
   padding: 1.5px 6px;
@@ -41,20 +43,21 @@ button {
 }
 
 #button-edit {
-  
-    border-radius: 25px;
-    padding: 0px ;
-    background-color: var(--cor-base);
-    margin: 0 15px 0 15px;
-    border: none;
-    transition: all 0.1s ease-in-out;
-    cursor: pointer;
-  
+
+  border-radius: 25px;
+  padding: 0px;
+  background-color: var(--cor-base);
+  margin: 0 15px 0 15px;
+  border: none;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+
 }
 
 
 button:hover {
-  background-color: #1f66b2; /* azul mais escuro no hover */
+  background-color: #1f66b2;
+  /* azul mais escuro no hover */
 }
 
 button:active {
@@ -72,6 +75,43 @@ button:focus {
   padding-bottom: 0;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.delete-button {
+  background-color: transparent;
+  color: rgb(255, 0, 0);
+  border: none;
+  margin-right: 5px;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+}
+
+.delete-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgb(255, 255, 255);
+}
+
+.delete-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.edit-button {
+  background-color: transparent;
+  color: rgb(66, 146, 46);
+  border: none;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+}
+
+.edit-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgb(255, 255, 255);
+}
+
+.edit-button:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 table {
@@ -104,7 +144,8 @@ td {
 
 tbody tr:hover {
   background-color: #f1f1f1;
-  cursor: default;;
+  cursor: default;
+  ;
 }
 
 th {

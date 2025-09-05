@@ -1,7 +1,7 @@
 <form [formGroup]="signupForm" (ngSubmit)="submit()">
   <h1 *ngIf="!userAuth">Criar conta</h1>
   <label for="userType">Tipo de Usuário:</label>
-  <select id="userType" formControlName="userType" required [disabled]="userToEdit">
+  <select id="userType" formControlName="userType" required>
     <option selected disabled value="">Escolha uma opção</option>
     <option *ngIf="userAuth && userType == 'ADMIN'" value="ADMIN">Administrador</option>
     <option value="USER">Usuário</option>
@@ -9,14 +9,14 @@
 
   <app-input-text idInput="nomeDeUsuario" [forInputLabel]="'nomeDeUsuario'" [showInput]="true" [showInputLabel]="true" [showInputTextPlaceholder]="true"
     [inputTextPlaceholder]="'Nome de Usuário'" [labelName]="'Nome de Usuário'"
-    [nameInput]="'Nome de Usuário'" formControlName="name" [disabled]="!!userToEdit"></app-input-text>
+    [nameInput]="'Nome de Usuário'" formControlName="name"></app-input-text>
   <div class="invalid-text" *ngIf="signupForm.controls['name'].invalid && signupForm.controls['name'].touched">
     <small *ngIf="signupForm.controls['name'].errors?.['required']">O nome é obrigatório.</small>
   </div>
 
   <app-input-text [showInput]="true" [showInputLabel]="true" [showInputTextPlaceholder]="true"
     [inputTextPlaceholder]="'E-mail do Usuário'" [labelName]="'E-mail'" idInput="email" [forInputLabel]="'email'" [nameInput]="'email'"
-    formControlName="email" [disabled]="!!userToEdit"></app-input-text>
+    formControlName="email"></app-input-text>
   <div class="invalid-text" *ngIf="signupForm.controls['email'].invalid && signupForm.controls['email'].touched">
     <small *ngIf="signupForm.controls['email'].errors?.['required']">O e-mail é obrigatório.</small>
     <small *ngIf="signupForm.controls['email'].errors?.['email']">Fomarto do e-mail inválido.</small>

@@ -63,7 +63,7 @@ export class UsuariosComponent implements OnInit {
 
   save(): void {
     if (this.registerComponent) {
-      this.registerComponent.submit(this.usuarioSelecionado);
+      this.registerComponent.submit();
       this.registerComponent.resetForm();
     }
   }

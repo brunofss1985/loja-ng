@@ -1,9 +1,7 @@
-// src/app/core/services/authService/auth.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap, catchError, of } from 'rxjs'; // 🎯 Importe 'Observable', 'tap', 'catchError' e 'of'
+import { Observable, tap, catchError, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -13,18 +11,28 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  // 🎯 O 'login' agora retorna um Observable.
   login(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.API_URL}/login`, { email, password }).pipe(
       tap(response => {
         this.saveToken(response.token);
         this.saveSessionId(response.sessionId.toString());
-        // ❌ A navegação não deve estar aqui. Ela deve ser feita no componente.
-        // Assim, garantimos que o loginService retorne o Observable completo.
       }),
       catchError(error => {
         console.error('Login failed:', error);
-        return of(null); // Retorna um Observable com um valor nulo em caso de erro
+        return of(null);
+      })
+    );
+  }
+
+  loginWithGoogle(idToken: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/google-login`, { token: idToken }).pipe(
+      tap(response => {
+        this.saveToken(response.token);
+        this.saveSessionId(response.sessionId.toString());
+      }),
+      catchError(err => {
+        console.error('Google login failed on backend:', err);
+        return of(null);
       })
     );
   }
@@ -41,7 +49,7 @@ export class AuthService {
         this.saveSessionId(response.sessionId.toString());
         this.router.navigate(['/private/dashboard']);
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Register failed:', err);
         alert('Erro ao criar conta');
       },

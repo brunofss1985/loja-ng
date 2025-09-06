@@ -9,11 +9,17 @@ export interface PasswordChange {
   newPassword: string;
 }
 
+// 🎯 Nova interface para a criação de senha
+export interface PasswordCreation {
+  newPassword: string;
+}
+
 export interface User {
   id?: string;
   name?: string;
   email?: string;
   userType?: 'ADMIN' | 'USER';
+  password?: string; 
   phone?: string;
   address?: string;
   points?: number;
@@ -68,6 +74,11 @@ export class UserService {
 
   updatePassword(passwords: PasswordChange): Observable<any> {
     return this.http.put(`${this.apiUrl}/change-password`, passwords);
+  }
+
+  // 🎯 Novo método para criar a senha
+  setPassword(password: PasswordCreation): Observable<any> {
+    return this.http.put(`${this.apiUrl}/set-password`, password);
   }
 
   createUser(user: User): Observable<User> {

@@ -1,4 +1,5 @@
 export const environment = {
-  production: true,
-   apiUrl: 'http://localhost:8080' // Substitua pela URL de produção quando tiver
+  production: false,
+  apiUrl: 'http://localhost:8080',
+  mercadoPagoPublicKey: 'TEST-ca476526-1d41-4d7e-a55c-a43c21fbe404',
 };

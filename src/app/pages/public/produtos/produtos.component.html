@@ -1,27 +1,87 @@
-<h5>Produtos</h5>
-<app-tables
-[title]="'Tabela de Produtos'"
-[showCreateButton]="true"
-[createButtonLabel]="'Cadastrar'"
-[rows]="allProducts"
-[columns]="columns"
-[columnLabels]="columnLabels"
-[showActionButtons]="true"
-(editRow)="onEditProduct($event)"
-(deleteRow)="onDeleteProducts($event)"
->
-</app-tables>
+<div class="main-container">
+  <div class="products-and-pagination-container">
+    <h5>Produtos</h5>
+
+    <div class="product-header-sort">
+      <label for="sort-select">Ordenar por:</label>
+      <select
+        id="sort-select"
+        class="form-select"
+        [(ngModel)]="ordenacaoSelecionada"
+        (change)="onSortChanged()"
+      >
+        <option *ngFor="let opcao of opcoesOrdenacao" [ngValue]="opcao.valor">
+          {{ opcao.nome }}
+        </option>
+      </select>
+
+      <label for="size-select" class="ms-3">Exibir:</label>
+      <select
+        id="size-select"
+        class="form-select"
+        [(ngModel)]="pageSize"
+        (change)="onPageSizeChanged()"
+      >
+        <option *ngFor="let opcao of opcoesTamanhoPagina" [ngValue]="opcao.valor">
+          {{ opcao.nome }}
+        </option>
+      </select>
+    </div>
+    
+    <app-tables
+      [title]="'Tabela de Produtos'"
+      [showCreateButton]="true"
+      [createButtonLabel]="'Cadastrar'"
+      [rows]="allProducts"
+      [columns]="columns"
+      [columnLabels]="columnLabels"
+      [showActionButtons]="true"
+      (editRow)="onEditProduct($event)"
+      (deleteRow)="onDeleteProducts($event)"
+    >
+    </app-tables>
+
+    <div class="pagination">
+      <div class="d-flex justify-content-center align-items-center mt-4">
+        <button
+          class="btn btn-outline-secondary me-2"
+          (click)="paginaAnterior()"
+          [disabled]="currentPage === 0"
+        >
+          Anterior
+        </button>
+
+        <ng-container *ngFor="let page of getPages()">
+          <button
+            class="btn mx-1"
+            [ngClass]="{'btn-primary': currentPage === page, 'btn-outline-secondary': currentPage !== page}"
+            (click)="goToPage(page)"
+          >
+            {{ page + 1 }}
+          </button>
+        </ng-container>
+
+        <button
+          class="btn btn-outline-secondary ms-2"
+          (click)="proximaPagina()"
+          [disabled]="currentPage >= totalPages - 1"
+        >
+          Próxima
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <app-modal
-[tittleModal]="!produtoSelecionado ? 'Cadastrar Produto' : 'Editar Produto'"
-[size]="'large'"
-[isOpen]="modalAberto"
-(isOpenChange)="onModalAbertoChange($event)"
-(saveClick)="save()"
+  [tittleModal]="!produtoSelecionado ? 'Cadastrar Produto' : 'Editar Produto'"
+  [size]="'large'"
+  [isOpen]="modalAberto"
+  (isOpenChange)="onModalAbertoChange($event)"
+  (saveClick)="save()"
 >
-
-<app-produto-form 
-[productToEdit]="produtoSelecionado"
-(produtoSalvo)="onProdutoSalvo($event)"></app-produto-form>
-
+  <app-produto-form
+    [productToEdit]="produtoSelecionado"
+    (produtoSalvo)="onProdutoSalvo($event)"
+  ></app-produto-form>
 </app-modal>

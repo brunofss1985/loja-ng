@@ -1,5 +1,3 @@
-// src/app/pages/admin/produtos/produtos.component.ts
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProductFormComponent } from '../../admin/produto-form/produto-form.component';
 import { Produto } from 'src/app/core/models/product.model';
@@ -47,7 +45,25 @@ export class ProdutosComponent implements OnInit {
   // Variáveis para paginação
   currentPage: number = 0;
   totalPages: number = 0;
+  totalElements: number = 0; // Adicionado para exibir total de elementos
   pageSize: number = 10;
+  opcoesTamanhoPagina = [
+    { nome: '10', valor: 10 },
+    { nome: '20', valor: 20 },
+    { nome: '30', valor: 30 },
+    { nome: 'Todos', valor: 999999 },
+  ];
+
+  // Variáveis de ordenação
+  ordenacaoSelecionada: string = 'relevance';
+  opcoesOrdenacao = [
+    { nome: 'Relevância', valor: 'relevance' },
+    { nome: 'Mais recentes', valor: 'dataCadastro,desc' },
+    { nome: 'Menor preço', valor: 'preco,asc' },
+    { nome: 'Maior preço', valor: 'preco,desc' },
+    { nome: 'Produtos A-Z', valor: 'nome,asc' },
+    { nome: 'Produtos Z-A', valor: 'nome,desc' },
+  ];
 
   ngOnInit(): void {
     this.loadProducts();
@@ -57,7 +73,6 @@ export class ProdutosComponent implements OnInit {
     this.produtoSelecionado = undefined;
     this.modalAberto = true;
 
-    // Resetar o formulário se estiver carregado
     setTimeout(() => {
       if (this.productFormComponent) {
         this.productFormComponent.resetFormToDefaults();
@@ -86,19 +101,28 @@ export class ProdutosComponent implements OnInit {
   }
 
   onProdutoSalvo(produto: any): void {
-    this.loadProducts(); // Atualiza a tabela
-    this.modalAberto = false; // Fecha o modal
+    this.loadProducts();
+    this.modalAberto = false;
   }
 
   loadProducts(): void {
-    // ✅ CORREÇÃO APLICADA: Incluído um 'undefined' como terceiro argumento
+    // Agora a chamada ao serviço de produtos inclui ordenação e tamanho da página
     this.produtoService
-      .buscarComFiltros(undefined, undefined, undefined, 0, 999999, this.currentPage, this.pageSize)
+      .buscarComFiltros(
+        undefined,
+        undefined,
+        undefined,
+        0,
+        999999,
+        this.currentPage,
+        this.pageSize,
+        this.ordenacaoSelecionada
+      )
       .subscribe({
         next: (data: ProdutoResponse) => {
           this.allProducts = data.content;
           this.totalPages = data.totalPages;
-          // As propriedades de paginação agora vêm do objeto de resposta `data`
+          this.totalElements = data.totalElements;
         },
         error: (err: any) => console.error('Erro ao carregar produtos:', err),
       });
@@ -116,7 +140,7 @@ export class ProdutosComponent implements OnInit {
     this.produtoService.deleteProduto(id).subscribe({
       next: () => {
         this.toastr.success(`Produto ${id} deletado com sucesso`);
-        this.loadProducts(); // Atualiza a lista
+        this.loadProducts();
       },
       error: (error: any) => {
         this.toastr.error('Erro ao deletar produto');
@@ -138,5 +162,30 @@ export class ProdutosComponent implements OnInit {
       this.currentPage--;
       this.loadProducts();
     }
+  }
+
+  getPages(): number[] {
+    const pages: number[] = [];
+    for (let i = 0; i < this.totalPages; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  goToPage(page: number): void {
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadProducts();
+    }
+  }
+
+  onSortChanged(): void {
+    this.currentPage = 0;
+    this.loadProducts();
+  }
+
+  onPageSizeChanged(): void {
+    this.currentPage = 0;
+    this.loadProducts();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -16,14 +16,14 @@ declare global {
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 
   errorMessage: string = '';
-  
+
   constructor(
     private router: Router,
     private toastService: ToastrService,
@@ -33,14 +33,34 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     window.handleGoogleLogin = this.handleGoogleLogin.bind(this);
-    this.initGoogleAuth();
+  }
+
+  ngAfterViewInit(): void {
+    this.loadGoogleScript().then(() => {
+      this.initGoogleAuth();
+    });
+  }
+
+  /**
+   * Carrega o script do Google de forma assíncrona.
+   * @returns Promise que resolve quando o script é carregado.
+   */
+  loadGoogleScript(): Promise<void> {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      document.head.appendChild(script);
+    });
   }
 
   initGoogleAuth() {
     const google = (window as any).google;
     if (google) {
       google.accounts.id.initialize({
-        client_id: '896759291407-b4lj38il3b7lilp4vkme6852frae2ov8.apps.googleusercontent.com', // ⚠️ Substitua pela sua Client ID
+        client_id: '896759291407-b4lj38il3b7lilp4vkme6852frae2ov8.apps.googleusercontent.com',
         callback: window.handleGoogleLogin,
         cancel_on_tap_outside: false
       });
@@ -51,6 +71,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  // Restante do código do componente...
   handleGoogleLogin(response: any) {
     if (response?.credential) {
       this.authService.loginWithGoogle(response.credential).subscribe({

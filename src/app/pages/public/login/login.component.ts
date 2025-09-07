@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -23,12 +23,17 @@ export class LoginComponent implements OnInit, AfterViewInit {
   });
 
   errorMessage: string = '';
+  isLoading: boolean = false;
+  isGoogleLoading: boolean = false;
+  googleScriptLoaded: boolean = false;
 
   constructor(
     private router: Router,
     private toastService: ToastrService,
     private authService: AuthService,
-    private cartService: CartService
+    private cartService: CartService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -36,9 +41,12 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.loadGoogleScript().then(() => {
-      this.initGoogleAuth();
-    });
+    // Aguardar um pouco para garantir que o DOM está pronto
+    setTimeout(() => {
+      this.loadGoogleScript().then(() => {
+        this.initGoogleAuth();
+      });
+    }, 300);
   }
 
   /**
@@ -47,45 +55,113 @@ export class LoginComponent implements OnInit, AfterViewInit {
    */
   loadGoogleScript(): Promise<void> {
     return new Promise((resolve) => {
+      // Verificar se já foi carregado
+      if (this.googleScriptLoaded || (window as any).google) {
+        this.googleScriptLoaded = true;
+        resolve();
+        return;
+      }
+
+      // Remover script existente se houver
+      const existingScript = document.querySelector('script[src*="accounts.google.com"]');
+      if (existingScript) {
+        existingScript.remove();
+      }
+
       const script = document.createElement('script');
       script.src = 'https://accounts.google.com/gsi/client';
       script.async = true;
       script.defer = true;
-      script.onload = () => resolve();
+      
+      script.onload = () => {
+        this.googleScriptLoaded = true;
+        console.log('✅ Google script carregado com sucesso');
+        resolve();
+      };
+      
+      script.onerror = (error) => {
+        console.error('❌ Erro ao carregar Google script:', error);
+        resolve(); // Resolve mesmo com erro para não travar
+      };
+      
       document.head.appendChild(script);
     });
   }
 
   initGoogleAuth() {
     const google = (window as any).google;
-    if (google) {
+    
+    if (!google || !google.accounts) {
+      console.error('Google accounts não disponível');
+      return;
+    }
+
+    try {
       google.accounts.id.initialize({
         client_id: '896759291407-b4lj38il3b7lilp4vkme6852frae2ov8.apps.googleusercontent.com',
-        callback: window.handleGoogleLogin,
-        cancel_on_tap_outside: false
+        callback: (response: any) => {
+          // Executar dentro da zona do Angular para garantir detecção de mudanças
+          this.ngZone.run(() => {
+            this.handleGoogleLogin(response);
+          });
+        },
+        auto_select: false,
+        cancel_on_tap_outside: false,
+        use_fedcm_for_prompt: false
       });
-      google.accounts.id.renderButton(
-        document.getElementById('google-button'),
-        { theme: 'outline', size: 'large' }
-      );
+
+      const buttonElement = document.getElementById('google-button');
+      if (buttonElement) {
+        google.accounts.id.renderButton(buttonElement, {
+          theme: 'outline',
+          size: 'large',
+          type: 'standard',
+          width: '100%',
+          logo_alignment: 'left'
+        });
+        console.log('✅ Botão Google renderizado com sucesso');
+      } else {
+        console.error('❌ Elemento google-button não encontrado');
+      }
+
+    } catch (error) {
+      console.error('❌ Erro ao inicializar Google Sign-In:', error);
     }
   }
 
-  // Restante do código do componente...
   handleGoogleLogin(response: any) {
+    console.log('🔵 Google callback iniciado');
+    
     if (response?.credential) {
+      // Ativar loading state
+      this.isGoogleLoading = true;
+      this.cdr.detectChanges();
+      
+      console.log('🔵 Enviando credencial para o backend...');
+      
       this.authService.loginWithGoogle(response.credential).subscribe({
         next: (res) => {
+          console.log('🔵 Resposta do backend recebida');
+          this.isGoogleLoading = false;
+          this.cdr.detectChanges();
+          
           if (res) {
+            console.log('✅ Login com Google bem-sucedido');
             this.toastService.success("Login com Google feito com sucesso");
-            this.cartService.promptAndSyncOnLogin();
-            this.navigateToDashboard();
+            
+            // Aguardar um pouco antes de executar ações pós-login
+            setTimeout(() => {
+              this.cartService.promptAndSyncOnLogin();
+              this.navigateToDashboard();
+            }, 500);
           } else {
             this.toastService.error("Falha no login com Google");
           }
         },
         error: (err) => {
-          console.error('Erro no login com Google:', err);
+          console.error('❌ Erro no login com Google:', err);
+          this.isGoogleLoading = false;
+          this.cdr.detectChanges();
           this.toastService.error("Falha no login com Google");
         }
       });
@@ -95,21 +171,42 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   submit() {
+    if (this.loginForm.invalid) {
+      this.toastService.error("Por favor, preencha todos os campos corretamente");
+      return;
+    }
+
+    this.isLoading = true;
     const { email, password } = this.loginForm.value;
     
     this.authService.login(email, password).subscribe({
       next: (res) => {
+        this.isLoading = false;
+        
         if (res) {
           this.toastService.success("Login feito com sucesso");
-          this.cartService.promptAndSyncOnLogin();
-          this.navigateToDashboard();
+          
+          // Aguardar um pouco antes de executar ações pós-login
+          setTimeout(() => {
+            this.cartService.promptAndSyncOnLogin();
+            this.navigateToDashboard();
+          }, 500);
         } else {
           this.toastService.error("Credenciais inválidas");
         }
       },
       error: (err) => {
+        this.isLoading = false;
         console.error('Erro:', err);
-        this.toastService.error("Erro ao fazer login");
+        
+        // Mensagem de erro mais específica
+        if (err.status === 401) {
+          this.toastService.error("Email ou senha incorretos");
+        } else if (err.status === 0) {
+          this.toastService.error("Erro de conexão. Verifique sua internet");
+        } else {
+          this.toastService.error("Erro ao fazer login. Tente novamente");
+        }
       }
     });
   }
@@ -128,5 +225,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   navigate() {
     this.router.navigate([""]);
+  }
+
+  // Método para verificar se algum loading está ativo
+  get isAnyLoading(): boolean {
+    return this.isLoading || this.isGoogleLoading;
   }
 }

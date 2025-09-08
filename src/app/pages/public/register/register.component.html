@@ -4,7 +4,7 @@
   <label for="userType">Tipo de Usuário:</label>
   <select id="userType" formControlName="userType" required>
     <option selected disabled value="">Escolha uma opção</option>
-    <option *ngIf="userAuth && userType == 'ADMIN'" value="ADMIN">Administrador</option>
+    <option  value="ADMIN">Administrador</option>
     <option value="USER">Usuário</option>
   </select>
 

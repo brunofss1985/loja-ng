@@ -99,7 +99,10 @@ export class ProdutosService {
       });
     }
 
-    return this.http.get<PaginatedResponse<Produto>>(this.apiUrl, { params });
+    return this.http.get<PaginatedResponse<Produto>>(this.apiUrl, {
+      params,
+      headers: this.getAuthHeaders(),
+    });
   }
 
   // ✅ Ajustado para retornar PaginatedResponse<Produto>
@@ -119,29 +122,35 @@ export class ProdutosService {
 
   // Lista objetivos com contagem
   buscarObjetivos(): Observable<CountedItem[]> {
-    return this.http.get<CountedItem[]>(`${this.apiUrl}/objetivos`).pipe(
-      map((items) =>
-        items.map((item) => ({ name: item.name, count: item.count }))
-      )
-    );
+    return this.http
+      .get<CountedItem[]>(`${this.apiUrl}/objetivos`)
+      .pipe(
+        map((items) =>
+          items.map((item) => ({ name: item.name, count: item.count }))
+        )
+      );
   }
 
   // Lista marcas com contagem
   buscarMarcas(): Observable<CountedItem[]> {
-    return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas`).pipe(
-      map((items) =>
-        items.map((item) => ({ name: item.name, count: item.count }))
-      )
-    );
+    return this.http
+      .get<CountedItem[]>(`${this.apiUrl}/marcas`)
+      .pipe(
+        map((items) =>
+          items.map((item) => ({ name: item.name, count: item.count }))
+        )
+      );
   }
 
   // Lista categorias com contagem
   buscarCategorias(): Observable<CountedItem[]> {
-    return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias`).pipe(
-      map((items) =>
-        items.map((item) => ({ name: item.name, count: item.count }))
-      )
-    );
+    return this.http
+      .get<CountedItem[]>(`${this.apiUrl}/categorias`)
+      .pipe(
+        map((items) =>
+          items.map((item) => ({ name: item.name, count: item.count }))
+        )
+      );
   }
 
   // Marcas disponíveis para as categorias informadas
@@ -171,7 +180,9 @@ export class ProdutosService {
   }
 
   // Objetivos disponíveis para as categorias informadas
-  buscarObjetivosPorCategorias(categorias: string[]): Observable<CountedItem[]> {
+  buscarObjetivosPorCategorias(
+    categorias: string[]
+  ): Observable<CountedItem[]> {
     let params = new HttpParams();
     if (categorias && categorias.length > 0) {
       categorias.forEach((c) => {

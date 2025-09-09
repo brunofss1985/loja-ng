@@ -66,7 +66,7 @@ export class ProdutosService {
   }
 
   // Busca com filtros
-  buscarComFiltros(
+ buscarComFiltros(
     categorias?: string[],
     marcas?: string[],
     objetivos?: string[],
@@ -75,36 +75,35 @@ export class ProdutosService {
     page: number = 0,
     size: number = 10,
     sort: string = 'relevance'
-  ): Observable<PaginatedResponse<Produto>> {
+): Observable<PaginatedResponse<Produto>> {
     let params = new HttpParams()
-      .set('minPreco', minPreco.toString())
-      .set('maxPreco', maxPreco.toString())
-      .set('page', page.toString())
-      .set('size', size.toString())
-      .set('sort', sort);
+        .set('minPreco', minPreco.toString())
+        .set('maxPreco', maxPreco.toString())
+        .set('page', page.toString())
+        .set('size', size.toString())
+        .set('sort', sort);
 
     if (categorias && categorias.length > 0) {
-      categorias.forEach((categoria) => {
-        params = params.append('categorias', categoria);
-      });
+        categorias.forEach((categoria) => {
+            params = params.append('categorias', categoria);
+        });
     }
     if (marcas && marcas.length > 0) {
-      marcas.forEach((marca) => {
-        params = params.append('marcas', marca);
-      });
+        marcas.forEach((marca) => {
+            params = params.append('marcas', marca);
+        });
     }
     if (objetivos && objetivos.length > 0) {
-      objetivos.forEach((objetivo) => {
-        params = params.append('objetivos', objetivo);
-      });
+        objetivos.forEach((objetivo) => {
+            params = params.append('objetivos', objetivo);
+        });
     }
 
     return this.http.get<PaginatedResponse<Produto>>(this.apiUrl, {
-      params,
-      headers: this.getAuthHeaders(), // mesmo que não tenha token
-      withCredentials: false, // ou true, se estiver usando cookies
+        params,
+        withCredentials: false,
     });
-  }
+}
 
   // ✅ Ajustado para retornar PaginatedResponse<Produto>
   buscarProdutosEmDestaque(

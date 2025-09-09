@@ -1,5 +1,3 @@
-// src/app/core/services/produtosService/produtos.service.ts
-
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -42,9 +40,8 @@ export class ProdutosService {
     }
 
     return headers;
-  }
+  } // Busca por termo (paginação) - NÃO precisa de autenticação
 
-  // Busca por termo (paginação)
   buscarPorTermo(
     termo: string,
     page: number,
@@ -63,10 +60,9 @@ export class ProdutosService {
     return this.http.get<PaginatedResponse<Produto>>(`${this.apiUrl}/search`, {
       params,
     });
-  }
+  } // Busca com filtros - NÃO precisa de autenticação
 
-  // Busca com filtros
- buscarComFiltros(
+  buscarComFiltros(
     categorias?: string[],
     marcas?: string[],
     objetivos?: string[],
@@ -75,37 +71,36 @@ export class ProdutosService {
     page: number = 0,
     size: number = 10,
     sort: string = 'relevance'
-): Observable<PaginatedResponse<Produto>> {
+  ): Observable<PaginatedResponse<Produto>> {
     let params = new HttpParams()
-        .set('minPreco', minPreco.toString())
-        .set('maxPreco', maxPreco.toString())
-        .set('page', page.toString())
-        .set('size', size.toString())
-        .set('sort', sort);
+      .set('minPreco', minPreco.toString())
+      .set('maxPreco', maxPreco.toString())
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', sort);
 
     if (categorias && categorias.length > 0) {
-        categorias.forEach((categoria) => {
-            params = params.append('categorias', categoria);
-        });
+      categorias.forEach((categoria) => {
+        params = params.append('categorias', categoria);
+      });
     }
     if (marcas && marcas.length > 0) {
-        marcas.forEach((marca) => {
-            params = params.append('marcas', marca);
-        });
+      marcas.forEach((marca) => {
+        params = params.append('marcas', marca);
+      });
     }
     if (objetivos && objetivos.length > 0) {
-        objetivos.forEach((objetivo) => {
-            params = params.append('objetivos', objetivo);
-        });
+      objetivos.forEach((objetivo) => {
+        params = params.append('objetivos', objetivo);
+      });
     }
 
     return this.http.get<PaginatedResponse<Produto>>(this.apiUrl, {
-        params,
-        withCredentials: false,
+      params,
+      withCredentials: false,
     });
-}
+  } // Busca produtos em destaque - NÃO precisa de autenticação
 
-  // ✅ Ajustado para retornar PaginatedResponse<Produto>
   buscarProdutosEmDestaque(
     page: number = 0,
     size: number = 10
@@ -118,9 +113,8 @@ export class ProdutosService {
       `${this.apiUrl}/destaques`,
       { params }
     );
-  }
+  } // Lista objetivos com contagem - NÃO precisa de autenticação
 
-  // Lista objetivos com contagem
   buscarObjetivos(): Observable<CountedItem[]> {
     return this.http
       .get<CountedItem[]>(`${this.apiUrl}/objetivos`)
@@ -129,9 +123,8 @@ export class ProdutosService {
           items.map((item) => ({ name: item.name, count: item.count }))
         )
       );
-  }
+  } // Lista marcas com contagem - NÃO precisa de autenticação
 
-  // Lista marcas com contagem
   buscarMarcas(): Observable<CountedItem[]> {
     return this.http
       .get<CountedItem[]>(`${this.apiUrl}/marcas`)
@@ -140,9 +133,8 @@ export class ProdutosService {
           items.map((item) => ({ name: item.name, count: item.count }))
         )
       );
-  }
+  } // Lista categorias com contagem - NÃO precisa de autenticação
 
-  // Lista categorias com contagem
   buscarCategorias(): Observable<CountedItem[]> {
     return this.http
       .get<CountedItem[]>(`${this.apiUrl}/categorias`)
@@ -151,9 +143,8 @@ export class ProdutosService {
           items.map((item) => ({ name: item.name, count: item.count }))
         )
       );
-  }
+  } // Marcas disponíveis para as categorias informadas - NÃO precisa de autenticação
 
-  // Marcas disponíveis para as categorias informadas
   buscarMarcasPorCategorias(categorias: string[]): Observable<CountedItem[]> {
     let params = new HttpParams();
     if (categorias && categorias.length > 0) {
@@ -164,9 +155,8 @@ export class ProdutosService {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas-por-categoria`, {
       params,
     });
-  }
+  } // Categorias disponíveis para as marcas informadas - NÃO precisa de autenticação
 
-  // Categorias disponíveis para as marcas informadas
   buscarCategoriasPorMarcas(marcas: string[]): Observable<CountedItem[]> {
     let params = new HttpParams();
     if (marcas && marcas.length > 0) {
@@ -177,9 +167,8 @@ export class ProdutosService {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias-por-marca`, {
       params,
     });
-  }
+  } // Objetivos disponíveis para as categorias informadas - NÃO precisa de autenticação
 
-  // Objetivos disponíveis para as categorias informadas
   buscarObjetivosPorCategorias(
     categorias: string[]
   ): Observable<CountedItem[]> {
@@ -195,9 +184,8 @@ export class ProdutosService {
         params,
       }
     );
-  }
+  } // Totais (contagens globais) - NÃO precisa de autenticação
 
-  // Totais (contagens globais)
   buscarTotalMarcas(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/marcas/count`);
   }
@@ -208,9 +196,8 @@ export class ProdutosService {
 
   buscarTotalObjetivos(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/objetivos/count`);
-  }
+  } // CRUD básico - Exige autenticação, MANTENHA o getAuthHeaders()
 
-  // CRUD básico
   buscarPorId(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }

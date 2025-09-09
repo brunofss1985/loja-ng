@@ -101,7 +101,8 @@ export class ProdutosService {
 
     return this.http.get<PaginatedResponse<Produto>>(this.apiUrl, {
       params,
-      headers: this.getAuthHeaders(),
+      headers: this.getAuthHeaders(), // mesmo que não tenha token
+      withCredentials: false, // ou true, se estiver usando cookies
     });
   }
 

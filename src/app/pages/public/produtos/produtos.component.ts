@@ -8,7 +8,8 @@ import { ToastrService } from 'ngx-toastr';
 interface ProdutoResponse {
   content: Produto[];
   totalPages: number;
-  totalElements: number; // Outros metadados de paginação que a API do Spring envia
+  totalElements: number;
+  // Outros metadados de paginação que a API do Spring envia
   last: boolean;
   first: boolean;
   number: number;
@@ -39,8 +40,9 @@ export class ProdutosComponent implements OnInit {
     nome: 'Nome',
     categorias: 'Categoria',
     preco: 'Preco',
-  }; // Variáveis para paginação
+  };
 
+  // Variáveis para paginação
   currentPage: number = 0;
   totalPages: number = 0;
   totalElements: number = 0; // Adicionado para exibir total de elementos
@@ -50,8 +52,9 @@ export class ProdutosComponent implements OnInit {
     { nome: '20', valor: 20 },
     { nome: '30', valor: 30 },
     { nome: 'Todos', valor: 999999 },
-  ]; // Variáveis de ordenação
+  ];
 
+  // Variáveis de ordenação
   ordenacaoSelecionada: string = 'relevance';
   opcoesOrdenacao = [
     { nome: 'Relevância', valor: 'relevance' },
@@ -144,8 +147,9 @@ export class ProdutosComponent implements OnInit {
         console.error('Erro ao deletar produto:', error);
       },
     });
-  } // Métodos de paginação
+  }
 
+  // Métodos de paginação
   proximaPagina(): void {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;

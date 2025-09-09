@@ -1,3 +1,5 @@
+// src/app/core/services/produtosService/produtos.service.ts
+
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -40,8 +42,9 @@ export class ProdutosService {
     }
 
     return headers;
-  } // Busca por termo (paginação) - NÃO precisa de autenticação
+  }
 
+  // Busca por termo (paginação)
   buscarPorTermo(
     termo: string,
     page: number,
@@ -60,8 +63,9 @@ export class ProdutosService {
     return this.http.get<PaginatedResponse<Produto>>(`${this.apiUrl}/search`, {
       params,
     });
-  } // Busca com filtros - NÃO precisa de autenticação
+  }
 
+  // Busca com filtros
   buscarComFiltros(
     categorias?: string[],
     marcas?: string[],
@@ -95,12 +99,10 @@ export class ProdutosService {
       });
     }
 
-    return this.http.get<PaginatedResponse<Produto>>(this.apiUrl, {
-      params,
-      withCredentials: false,
-    });
-  } // Busca produtos em destaque - NÃO precisa de autenticação
+    return this.http.get<PaginatedResponse<Produto>>(this.apiUrl, { params });
+  }
 
+  // ✅ Ajustado para retornar PaginatedResponse<Produto>
   buscarProdutosEmDestaque(
     page: number = 0,
     size: number = 10
@@ -113,38 +115,36 @@ export class ProdutosService {
       `${this.apiUrl}/destaques`,
       { params }
     );
-  } // Lista objetivos com contagem - NÃO precisa de autenticação
+  }
 
+  // Lista objetivos com contagem
   buscarObjetivos(): Observable<CountedItem[]> {
-    return this.http
-      .get<CountedItem[]>(`${this.apiUrl}/objetivos`)
-      .pipe(
-        map((items) =>
-          items.map((item) => ({ name: item.name, count: item.count }))
-        )
-      );
-  } // Lista marcas com contagem - NÃO precisa de autenticação
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/objetivos`).pipe(
+      map((items) =>
+        items.map((item) => ({ name: item.name, count: item.count }))
+      )
+    );
+  }
 
+  // Lista marcas com contagem
   buscarMarcas(): Observable<CountedItem[]> {
-    return this.http
-      .get<CountedItem[]>(`${this.apiUrl}/marcas`)
-      .pipe(
-        map((items) =>
-          items.map((item) => ({ name: item.name, count: item.count }))
-        )
-      );
-  } // Lista categorias com contagem - NÃO precisa de autenticação
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas`).pipe(
+      map((items) =>
+        items.map((item) => ({ name: item.name, count: item.count }))
+      )
+    );
+  }
 
+  // Lista categorias com contagem
   buscarCategorias(): Observable<CountedItem[]> {
-    return this.http
-      .get<CountedItem[]>(`${this.apiUrl}/categorias`)
-      .pipe(
-        map((items) =>
-          items.map((item) => ({ name: item.name, count: item.count }))
-        )
-      );
-  } // Marcas disponíveis para as categorias informadas - NÃO precisa de autenticação
+    return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias`).pipe(
+      map((items) =>
+        items.map((item) => ({ name: item.name, count: item.count }))
+      )
+    );
+  }
 
+  // Marcas disponíveis para as categorias informadas
   buscarMarcasPorCategorias(categorias: string[]): Observable<CountedItem[]> {
     let params = new HttpParams();
     if (categorias && categorias.length > 0) {
@@ -155,8 +155,9 @@ export class ProdutosService {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/marcas-por-categoria`, {
       params,
     });
-  } // Categorias disponíveis para as marcas informadas - NÃO precisa de autenticação
+  }
 
+  // Categorias disponíveis para as marcas informadas
   buscarCategoriasPorMarcas(marcas: string[]): Observable<CountedItem[]> {
     let params = new HttpParams();
     if (marcas && marcas.length > 0) {
@@ -167,11 +168,10 @@ export class ProdutosService {
     return this.http.get<CountedItem[]>(`${this.apiUrl}/categorias-por-marca`, {
       params,
     });
-  } // Objetivos disponíveis para as categorias informadas - NÃO precisa de autenticação
+  }
 
-  buscarObjetivosPorCategorias(
-    categorias: string[]
-  ): Observable<CountedItem[]> {
+  // Objetivos disponíveis para as categorias informadas
+  buscarObjetivosPorCategorias(categorias: string[]): Observable<CountedItem[]> {
     let params = new HttpParams();
     if (categorias && categorias.length > 0) {
       categorias.forEach((c) => {
@@ -184,8 +184,9 @@ export class ProdutosService {
         params,
       }
     );
-  } // Totais (contagens globais) - NÃO precisa de autenticação
+  }
 
+  // Totais (contagens globais)
   buscarTotalMarcas(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/marcas/count`);
   }
@@ -196,8 +197,9 @@ export class ProdutosService {
 
   buscarTotalObjetivos(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/objetivos/count`);
-  } // CRUD básico - Exige autenticação, MANTENHA o getAuthHeaders()
+  }
 
+  // CRUD básico
   buscarPorId(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }

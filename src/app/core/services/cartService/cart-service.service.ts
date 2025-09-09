@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, tap, switchMap, map } from 'rxjs/operators';
 import { CartItem } from '../../models/cart-item.model';
 import { AuthService } from '../authService/auth.service';
+import { environment } from 'src/environments/environment';
 
 const STORAGE_KEY = 'cart_items';
 
@@ -14,7 +15,7 @@ export class CartService implements OnDestroy {
 
   private appliedDiscount = 0;
   private shippingCost = 0;
-  private readonly API_URL = 'http://localhost:8080/api/cart';
+  private readonly API_URL = `${environment.apiUrl}//api/cart`;
   private currentSessionId: string | null = null;
   private currentUserId: string | null = null;
   private backendEnabled = true;

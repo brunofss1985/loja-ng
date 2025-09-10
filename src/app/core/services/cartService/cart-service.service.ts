@@ -15,7 +15,7 @@ export class CartService implements OnDestroy {
 
   private appliedDiscount = 0;
   private shippingCost = 0;
-  private readonly API_URL = `${environment.apiUrl}//api/cart`;
+  private readonly API_URL = `${environment.apiUrl}/api/cart`;
   private currentSessionId: string | null = null;
   private currentUserId: string | null = null;
   private backendEnabled = true;

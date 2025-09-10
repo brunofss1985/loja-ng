@@ -43,8 +43,9 @@ export class DetalheProdutoComponent implements OnInit {
   }
 
   selecionarImagemPrincipal() {
-    if (this.produto?.imagem && this.produto?.imagemMimeType) {
-      this.imagemSelecionada = `data:${this.produto.imagemMimeType};base64,${this.produto.imagem}`;
+    // ✅ CORREÇÃO 1: Usando 'this.produto.imagemBase64'
+    if (this.produto?.imagemBase64 && this.produto?.imagemMimeType) {
+      this.imagemSelecionada = `data:${this.produto.imagemMimeType};base64,${this.produto.imagemBase64}`;
     } else {
       this.imagemSelecionada = '';
     }
@@ -70,8 +71,9 @@ export class DetalheProdutoComponent implements OnInit {
 
     const icon =
       this.imagemSelecionada ||
-      (this.produto.imagem && this.produto.imagemMimeType
-        ? `data:${this.produto.imagemMimeType};base64,${this.produto.imagem}`
+      // ✅ CORREÇÃO 2: Usando 'this.produto.imagemBase64'
+      (this.produto.imagemBase64 && this.produto.imagemMimeType
+        ? `data:${this.produto.imagemMimeType};base64,${this.produto.imagemBase64}`
         : 'https://via.placeholder.com/64');
 
     const item: CartItem = {

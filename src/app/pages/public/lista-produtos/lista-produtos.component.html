@@ -4,24 +4,14 @@
     <ng-container *ngIf="produtos && produtos.length > 0; else noProducts">
       <div class="product-header-sort">
         <label for="sort-select">Ordenar por:</label>
-        <select 
-          id="sort-select" 
-          class="form-select" 
-          [(ngModel)]="ordenacaoSelecionada" 
-          (change)="onSortChanged()"
-        >
+        <select id="sort-select" class="form-select" [(ngModel)]="ordenacaoSelecionada" (change)="onSortChanged()">
           <option *ngFor="let opcao of opcoesOrdenacao" [ngValue]="opcao.valor">
             {{ opcao.nome }}
           </option>
         </select>
-        
+
         <label for="size-select" class="ms-3">Exibir:</label>
-        <select 
-          id="size-select" 
-          class="form-select" 
-          [(ngModel)]="pageSize" 
-          (change)="onPageSizeChanged()"
-        >
+        <select id="size-select" class="form-select" [(ngModel)]="pageSize" (change)="onPageSizeChanged()">
           <option *ngFor="let opcao of opcoesTamanhoPagina" [ngValue]="opcao.valor">
             {{ opcao.nome }}
           </option>
@@ -29,46 +19,30 @@
       </div>
 
       <div class="product-cards-container">
-        <app-product-card
-          *ngFor="let produto of produtos"
-          [productId]="produto.id"
-          [productNome]="produto.nome"
-          [productModelo]="produto.descricaoCurta"
-          [productPeso]="produto.peso + 'g'"
-          [productImage]="'data:' + produto.imagemMimeType + ';base64,' + produto.imagem"
-          [productPreco]="produto.preco"
-          [productMarca]="produto.marca"
-          [productPrecoDesconto]="produto.precoDesconto"
+        <app-product-card *ngFor="let produto of produtos" [productId]="produto.id" [productNome]="produto.nome"
+          [productModelo]="produto.descricaoCurta" [productPeso]="produto.peso + 'g'"
+          [productImage]="'data:' + produto.imagemMimeType + ';base64,' + produto.imagemBase64"
+          [productPreco]="produto.preco" [productMarca]="produto.marca" [productPrecoDesconto]="produto.precoDesconto"
           [productPorcentagemDesconto]="produto.porcentagemDesconto"
-          [productDisponibilidade]="produto.disponibilidade"
-        ></app-product-card>
+          [productDisponibilidade]="produto.disponibilidade"></app-product-card>
       </div>
 
       <div class="pagination">
         <div class="d-flex justify-content-center align-items-center mt-4">
-          <button
-            class="btn btn-outline-secondary me-2"
-            (click)="paginaAnterior()"
-            [disabled]="currentPage === 0"
-          >
+          <button class="btn btn-outline-secondary me-2" (click)="paginaAnterior()" [disabled]="currentPage === 0">
             Anterior
           </button>
 
           <ng-container *ngFor="let page of getPages()">
-            <button
-              class="btn mx-1"
+            <button class="btn mx-1"
               [ngClass]="{'btn-primary': currentPage === page, 'btn-outline-secondary': currentPage !== page}"
-              (click)="goToPage(page)"
-            >
+              (click)="goToPage(page)">
               {{ page + 1 }}
             </button>
           </ng-container>
 
-          <button
-            class="btn btn-outline-secondary ms-2"
-            (click)="proximaPagina()"
-            [disabled]="currentPage >= totalPages - 1"
-          >
+          <button class="btn btn-outline-secondary ms-2" (click)="proximaPagina()"
+            [disabled]="currentPage >= totalPages - 1">
             Próxima
           </button>
         </div>

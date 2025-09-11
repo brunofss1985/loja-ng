@@ -40,3 +40,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Ignora o arquivo sobrescrito por scripts de ambiente
+src/environments/environment.ts

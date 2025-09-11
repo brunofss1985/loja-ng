@@ -6,7 +6,9 @@
     <div class="media">
       <div class="media-inner">
         <a [routerLink]="['/produto', productId]">
-          <img [src]="productImage" alt="{{ productNome }}" class="product-image" loading="lazy" />
+        <img  class="product-image" [src]="imageUrl" alt="Imagem do produto" />
+
+
         </a>
       </div>
     </div>

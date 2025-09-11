@@ -1,4 +1,3 @@
-// src/app/pages/public/detalhe-produto/detalhe-produto.component.ts
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -43,20 +42,15 @@ export class DetalheProdutoComponent implements OnInit {
   }
 
   selecionarImagemPrincipal() {
-    // ✅ CORREÇÃO 1: Usando 'this.produto.imagemBase64'
     if (this.produto?.imagemBase64 && this.produto?.imagemMimeType) {
       this.imagemSelecionada = `data:${this.produto.imagemMimeType};base64,${this.produto.imagemBase64}`;
     } else {
-      this.imagemSelecionada = '';
+      this.imagemSelecionada = 'https://via.placeholder.com/300x300';
     }
   }
 
-  selecionarImagem(imagem: string, mimeType: string) {
-    this.imagemSelecionada = `data:${mimeType};base64,${imagem}`;
-  }
-
   selecionarImagemGaleria(imagem: string, mimeType: string) {
-    this.selecionarImagem(imagem, mimeType);
+    this.imagemSelecionada = `data:${mimeType};base64,${imagem}`;
   }
 
   calcularDesconto(precoAtual: any, precoAntigo: any) {
@@ -71,7 +65,6 @@ export class DetalheProdutoComponent implements OnInit {
 
     const icon =
       this.imagemSelecionada ||
-      // ✅ CORREÇÃO 2: Usando 'this.produto.imagemBase64'
       (this.produto.imagemBase64 && this.produto.imagemMimeType
         ? `data:${this.produto.imagemMimeType};base64,${this.produto.imagemBase64}`
         : 'https://via.placeholder.com/64');
@@ -87,15 +80,14 @@ export class DetalheProdutoComponent implements OnInit {
 
     this.cartService.addToCart(item);
 
-    // ✅ Toast com ngx-toastr
     this.toastr.success('Produto adicionado ao carrinho!', 'Sucesso', {
       timeOut: 3000,
       positionClass: 'toast-top-right',
     });
   }
 
-  addTocartAndNavigte(){
-    this.addToCart()
+  addTocartAndNavigte() {
+    this.addToCart();
     this.router.navigate(['/cart']);
   }
 }

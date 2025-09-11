@@ -23,8 +23,10 @@
           [productModelo]="produto.descricaoCurta" [productPeso]="produto.peso + 'g'"
           [productImage]="'data:' + produto.imagemMimeType + ';base64,' + produto.imagemBase64"
           [productPreco]="produto.preco" [productMarca]="produto.marca" [productPrecoDesconto]="produto.precoDesconto"
-          [productPorcentagemDesconto]="produto.porcentagemDesconto"
-          [productDisponibilidade]="produto.disponibilidade"></app-product-card>
+          [productPorcentagemDesconto]="produto.porcentagemDesconto" [productDisponibilidade]="produto.disponibilidade"
+          [productImagemMimeType]="produto.imagemMimeType" [productImagemBase64]="produto.imagemBase64">
+        </app-product-card>
+
       </div>
 
       <div class="pagination">

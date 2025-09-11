@@ -1,95 +1,82 @@
 <div class="container product-container" *ngIf="produto">
-    <div class="row">
-        <!-- Coluna da Imagem -->
-        <div class="col-lg-5 mb-4">
-            <!-- Imagem Principal com Badge -->
-            <div class="product-image-container">
-                <span class="product-badge" *ngIf="produto.precoDesconto">OFERTA</span>
-                <img [src]="imagemSelecionada || 'data:' + produto.imagemMimeType + ';base64,' + produto.imagem"
-                    alt="Imagem do Produto" class="product-image">
-            </div>
+  <div class="row">
+    <!-- Coluna da Imagem -->
+    <div class="col-lg-5 mb-4">
+      <div class="product-image-container">
+        <span class="product-badge" *ngIf="produto.precoDesconto">OFERTA</span>
+        <img [src]="imagemSelecionada" alt="Imagem do Produto" class="product-image" />
+      </div>
 
-            <!-- Galeria de Miniaturas -->
-            <div class="gallery-thumbnails" *ngIf="produto.galeria?.length">
-                <!-- Miniatura da imagem principal -->
-                <img [src]="'data:' + produto.imagemMimeType + ';base64,' + produto.imagem" class="gallery-thumbnail"
-                    [class.active]="!imagemSelecionada" alt="Imagem principal" (click)="selecionarImagemPrincipal()">
+      <!-- Galeria de Miniaturas -->
+      <div class="gallery-thumbnails" *ngIf="produto.galeriaBase64?.length">
+        <!-- Miniatura da imagem principal -->
+        <img
+          [src]="'data:' + produto.imagemMimeType + ';base64,' + produto.imagemBase64"
+          class="gallery-thumbnail"
+          [class.active]="imagemSelecionada === 'data:' + produto.imagemMimeType + ';base64,' + produto.imagemBase64"
+          alt="Imagem principal"
+          (click)="selecionarImagemPrincipal()" />
 
-                <!-- Miniaturas da galeria -->
-                <img *ngFor="let img of produto.galeria; let i = index"
-                    [src]="'data:' + produto.galeriaMimeTypes[i] + ';base64,' + img" class="gallery-thumbnail"
-                    [class.active]="imagemSelecionada === 'data:' + produto.galeriaMimeTypes[i] + ';base64,' + img"
-                    alt="Imagem da galeria" (click)="selecionarImagemGaleria(img, produto.galeriaMimeTypes[i])">
-            </div>
-        </div>
-
-        <!-- Coluna de Informações -->
-        <div class="col-lg-7">
-            <!-- Título e Descrição Curta -->
-            <h1 class="product-title">{{ produto.nome }}</h1>
-            <h1 class="product-title">{{ produto.marca }}</h1>
-            <p class="product-short-desc">{{ produto.descricaoCurta }}</p>
-
-            <!-- Status do Produto -->
-            <div class="product-status">
-                <span *ngIf="produto.statusAprovacao === 'pendente'" class="status-badge status-pending">Pendente</span>
-                <span *ngIf="produto.ativo" class="status-badge status-active">Ativo</span>
-            </div>
-
-            <!-- Metadados do Produto -->
-            <div class="product-meta">
-                <span><i class="bi bi-tag"></i> SKU: {{ produto.slug }}</span>
-                <span><i class="bi bi-upc"></i> Código de Barras: {{ produto.codigoBarras }}</span>
-                <span><i class="bi bi-folder"></i> Categoria: {{ produto.categoria }}</span>
-            </div>
-
-            <!-- Avaliação -->
-            <div class="product-rating">
-                <div class="rating-stars">
-                    <span *ngFor="let star of [1,2,3,4,5]">
-                        <span *ngIf="star <= (produto.avaliacaoMedia || 0)">★</span>
-                        <span *ngIf="star > (produto.avaliacaoMedia || 0)">☆</span>
-                    </span>
-                </div>
-                <div class="rating-count">
-                    {{ produto.avaliacaoMedia || 'Sem' }} de 5 ({{ produto.quantidadeAvaliacoes || 0 }} avaliações)
-                </div>
-            </div>
-
-            <!-- Preço -->
-            <div class="product-price">
-                <span class="current-price">R$ {{ produto.preco | number:'1.2-2' }}</span>
-                <span *ngIf="produto.precoDesconto" class="old-price">
-                    R$ {{ produto.precoDesconto | number:'1.2-2' }}
-                </span>
-                <span *ngIf="produto.precoDesconto" class="discount-badge">
-                    {{ calcularDesconto(produto.preco, produto.precoDesconto) }}% OFF
-                </span>
-            </div>
-
-            <!-- Botões de Ação -->
-            <div class="product-actions">
-                <button class="btn-add-cart" (click)="addToCart()">
-                    <!-- ...ícone... -->
-                    Adicionar ao Carrinho
-                </button>
-                    <button (click)="addTocartAndNavigte()" class="btn-buy-now">Comprar Agora</button>
-            </div>
-
-            <!-- Vendas -->
-            <div class="sales-info">
-                <div class="sales-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path
-                            d="M16,6H8A3,3 0 0,0 5,9V21H19V9A3,3 0 0,0 16,6M14,14H10V12H14V14M3,9A3,3 0 0,1 6,6H7V4H17V6H18A3,3 0 0,1 21,9V21A2,2 0 0,1 19,23H5A2,2 0 0,1 3,21V9Z" />
-                    </svg>
-                </div>
-                <div class="sales-text">
-                    {{ produto.quantidadeVendida || 0 }} unidades vendidas
-                </div>
-            </div>
-        </div>
+        <!-- Miniaturas da galeria -->
+        <img
+          *ngFor="let img of produto.galeriaBase64; let i = index"
+          [src]="'data:' + produto.galeriaMimeTypes[i] + ';base64,' + img"
+          class="gallery-thumbnail"
+          [class.active]="imagemSelecionada === ('data:' + produto.galeriaMimeTypes[i] + ';base64,' + img)"
+          (click)="selecionarImagemGaleria(img, produto.galeriaMimeTypes[i])"
+          alt="Imagem da galeria" />
+      </div>
     </div>
+
+    <!-- Coluna de Informações -->
+    <div class="col-lg-7">
+      <h1 class="product-title">{{ produto.nome }}</h1>
+      <h1 class="product-title">{{ produto.marca }}</h1>
+      <p class="product-short-desc">{{ produto.descricaoCurta }}</p>
+
+      <div class="product-status">
+        <span *ngIf="produto.statusAprovacao === 'pendente'" class="status-badge status-pending">Pendente</span>
+        <span *ngIf="produto.ativo" class="status-badge status-active">Ativo</span>
+      </div>
+
+      <div class="product-meta">
+        <span><i class="bi bi-tag"></i> SKU: {{ produto.slug }}</span>
+        <span><i class="bi bi-upc"></i> Código de Barras: {{ produto.codigoBarras }}</span>
+        <span><i class="bi bi-folder"></i> Categoria: {{ produto.categorias?.join(', ') }}</span>
+      </div>
+
+      <div class="product-rating">
+        <div class="rating-stars">
+          <span *ngFor="let star of [1,2,3,4,5]">
+            <span *ngIf="star <= (produto.avaliacaoMedia || 0)">★</span>
+            <span *ngIf="star > (produto.avaliacaoMedia || 0)">☆</span>
+          </span>
+        </div>
+        <div class="rating-count">
+          {{ produto.avaliacaoMedia || 'Sem' }} de 5 ({{ produto.quantidadeAvaliacoes || 0 }} avaliações)
+        </div>
+      </div>
+
+      <div class="product-price">
+        <span class="current-price">R$ {{ produto.preco | number:'1.2-2' }}</span>
+        <span *ngIf="produto.precoDesconto" class="old-price">R$ {{ produto.precoDesconto | number:'1.2-2' }}</span>
+        <span *ngIf="produto.precoDesconto" class="discount-badge">
+          {{ calcularDesconto(produto.preco, produto.precoDesconto) }}% OFF
+        </span>
+      </div>
+
+      <div class="product-actions">
+        <button class="btn-add-cart" (click)="addToCart()">Adicionar ao Carrinho</button>
+        <button (click)="addTocartAndNavigte()" class="btn-buy-now">Comprar Agora</button>
+      </div>
+
+      <div class="sales-info">
+        <div class="sales-text">
+          {{ produto.quantidadeVendida || 0 }} unidades vendidas
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!-- Seções de Informações -->
     <div class="row mt-5">

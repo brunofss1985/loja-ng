@@ -51,39 +51,52 @@
 
 <section class="featured-products" id="ofertas">
   <div class="container">
-    <div class="section-title">
+    <!-- Título da Seção -->
+    <div class="section-title text-center mb-4">
       <h2>✨ Produtos em Destaque</h2>
       <p>Confira nossos produtos mais vendidos e as melhores ofertas</p>
     </div>
 
-    <div *ngIf="isLoading" class="loading-state">
+    <!-- Estado de Carregamento -->
+    <div *ngIf="isLoading" class="loading-state text-center">
       <p>Carregando produtos...</p>
     </div>
-    <div *ngIf="hasError" class="error-state">
+
+    <!-- Estado de Erro -->
+    <div *ngIf="hasError" class="error-state text-center text-danger">
       <p>Erro ao carregar produtos. Por favor, tente novamente mais tarde. 😢</p>
     </div>
 
+    <!-- Carrossel de Produtos -->
     <div class="carousel-container" *ngIf="!isLoading && produtosEmDestaque.length > 0">
-      <button class="nav-btn prev" (click)="prevSlide()" [disabled]="isPrevDisabled">&lt;</button>
+      <!-- Botão Anterior -->
+      <button class="nav-btn prev" (click)="prevSlide()" [disabled]="isPrevDisabled" aria-label="Produto anterior">
+        &lt;
+      </button>
+
+      <!-- Wrapper do Carrossel -->
       <div class="carousel-wrapper">
-        <div class="carousel-track" [ngStyle]="{'transform': 'translateX(-' + currentIndex * (100 / visibleCards) + '%)'}">
+        <div class="carousel-track" [ngStyle]="{
+            transform: 'translateX(-' + currentIndex * (100 / visibleCards) + '%)'
+          }">
+          <!-- Cards dos Produtos -->
           <div class="produto-card" *ngFor="let produto of produtosEmDestaque">
-            <app-product-card 
-              [productId]="produto.id ?? 0"
-              [productNome]="produto.nome"
-              [productModelo]="produto.descricaoCurta ?? ''"
-              [productPeso]="(produto.peso) + 'g'"
-              [productImage]="produto.imagem ? 'data:' + produto.imagemMimeType + ';base64,' + produto.imagem : 'assets/img/no-image.png'"
-              [productPreco]="produto.preco"
-              [productMarca]="produto.marca"
-              [productPrecoDesconto]="produto.precoDesconto ?? 0"
+            <app-product-card [productId]="produto.id ?? 0" [productNome]="produto.nome"
+              [productModelo]="produto.descricaoCurta ?? ''" [productPeso]="produto.peso + 'g'" [productImage]="
+  produto.imagemBase64
+    ? 'data:' + produto.imagemMimeType + ';base64,' + produto.imagemBase64
+    : 'assets/img/no-image.png'
+" [productPreco]="produto.preco" [productMarca]="produto.marca" [productPrecoDesconto]="produto.precoDesconto ?? 0"
               [productPorcentagemDesconto]="produto.porcentagemDesconto ?? '0%'"
-              [productDisponibilidade]="produto.disponibilidade ?? 'indisponível'">
-            </app-product-card>
+              [productDisponibilidade]="produto.disponibilidade ?? 'indisponível'"></app-product-card>
           </div>
         </div>
       </div>
-      <button class="nav-btn next" (click)="nextSlide()" [disabled]="isNextDisabled">&gt;</button>
+
+      <!-- Botão Próximo -->
+      <button class="nav-btn next" (click)="nextSlide()" [disabled]="isNextDisabled" aria-label="Próximo produto">
+        &gt;
+      </button>
     </div>
   </div>
 </section>

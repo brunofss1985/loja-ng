@@ -15,7 +15,6 @@ export class PublicHomeComponent implements OnInit {
   currentIndex: number = 0;
   visibleCards: number = 4;
 
-  // Propriedades para controlar o estado dos botões
   isPrevDisabled: boolean = true;
   isNextDisabled: boolean = false;
 
@@ -27,7 +26,6 @@ export class PublicHomeComponent implements OnInit {
     window.addEventListener('resize', this.onResize.bind(this));
   }
 
-  // Novo método para o evento de redimensionamento
   onResize(): void {
     this.definirCardsVisiveis();
     this.updateButtonStates();
@@ -41,7 +39,6 @@ export class PublicHomeComponent implements OnInit {
       next: (response: PaginatedResponse<Produto>) => {
         this.produtosEmDestaque = response.content || [];
         this.isLoading = false;
-        // Atualiza o estado dos botões após carregar os dados
         this.updateButtonStates();
       },
       error: (err) => {
@@ -85,12 +82,8 @@ export class PublicHomeComponent implements OnInit {
     return `translateX(-${this.currentIndex * cardWidth}%)`;
   }
 
-  // Adiciona a lógica para desabilitar os botões
   updateButtonStates(): void {
-    // Desabilita o botão "Anterior" se o carrossel estiver no primeiro item
     this.isPrevDisabled = this.currentIndex === 0;
-
-    // Desabilita o botão "Próximo" se o último item visível for o último da lista
     this.isNextDisabled = this.currentIndex >= this.produtosEmDestaque.length - this.visibleCards;
   }
 }

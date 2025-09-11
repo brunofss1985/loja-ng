@@ -1,5 +1,3 @@
-// src/app/pages/admin/produtos/produto-form/produto-form.component.ts
-
 import {
   ChangeDetectorRef,
   Component,
@@ -46,7 +44,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       descricao: ['', Validators.required],
       descricaoCurta: [''],
       categorias: [[]],
-      objetivos: [[]], // <<< NOVO CAMPO
+      objetivos: [[]],
       peso: ['', Validators.required],
       sabor: [''],
       preco: [0, [Validators.required, Validators.min(0)]],
@@ -59,7 +57,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       tamanhoPorcao: [''],
       galeria: [[]],
       ativo: [true],
-      destaque: [false], // <<< NOVO CAMPO
+      destaque: [false],
       disponibilidade: ['em_estoque'],
       estoque: [null],
       estoqueMinimo: [null],
@@ -111,13 +109,18 @@ export class ProductFormComponent implements OnInit, OnChanges {
   }
 
   patchFormFromProduct(edit: Produto): void {
-    const { imagem, imagemMimeType, galeria, galeriaMimeTypes, ...formValues } =
-      edit;
+    const {
+      imagemBase64,
+      imagemMimeType,
+      galeriaBase64,
+      galeriaMimeTypes,
+      ...formValues
+    } = edit;
 
     this.form.patchValue({
       ...formValues,
-      categorias: edit.categorias?.join(', ') ?? '', // Converta arrays para string
-      objetivos: edit.objetivos?.join(', ') ?? '', // Converta arrays para string
+      categorias: edit.categorias?.join(', ') ?? '',
+      objetivos: edit.objetivos?.join(', ') ?? '',
       dimensoes: edit.dimensoes ?? {
         altura: null,
         largura: null,
@@ -135,13 +138,15 @@ export class ProductFormComponent implements OnInit, OnChanges {
         : '0%',
     });
 
-    if (imagem && imagemMimeType && !this.imagemSelecionada) {
-      this.imagemPreview = `data:${imagemMimeType};base64,${imagem}`;
+    // ✅ Imagem principal
+    if (imagemBase64 && imagemMimeType && !this.imagemSelecionada) {
+      this.imagemPreview = `data:${imagemMimeType};base64,${imagemBase64}`;
     }
 
+    // ✅ Galeria de imagens
     this.galeriaPreviewUrls = [];
-    if (Array.isArray(galeria) && galeria.length > 0) {
-      this.galeriaPreviewUrls = galeria.map(
+    if (Array.isArray(galeriaBase64) && galeriaBase64.length > 0) {
+      this.galeriaPreviewUrls = galeriaBase64.map(
         (base64Data, i) =>
           `data:${galeriaMimeTypes?.[i] || 'image/jpeg'};base64,${base64Data}`
       );
@@ -270,31 +275,15 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
     const formValue = this.form.getRawValue();
 
-    // Ações para converter strings de inputs em arrays de strings.
-    if (typeof formValue.categorias === 'string') {
-      formValue.categorias = formValue.categorias
-        .split(',')
-        .map((c: string) => c.trim())
-        .filter((c: string) => c.length > 0);
-    }
-    if (typeof formValue.objetivos === 'string') {
-      formValue.objetivos = formValue.objetivos
-        .split(',')
-        .map((o: string) => o.trim())
-        .filter((o: string) => o.length > 0);
-    }
-    if (typeof formValue.restricoes === 'string') {
-      formValue.restricoes = formValue.restricoes
-        .split(',')
-        .map((r: string) => r.trim())
-        .filter((r: string) => r.length > 0);
-    }
-    if (typeof formValue.palavrasChave === 'string') {
-      formValue.palavrasChave = formValue.palavrasChave
-        .split(',')
-        .map((p: string) => p.trim())
-        .filter((p: string) => p.length > 0);
-    }
+    // Conversões de string para arrays
+    ['categorias', 'objetivos', 'restricoes', 'palavrasChave'].forEach((campo) => {
+      if (typeof formValue[campo] === 'string') {
+        formValue[campo] = formValue[campo]
+          .split(',')
+          .map((v: string) => v.trim())
+          .filter((v: string) => v.length > 0);
+      }
+    });
 
     if (typeof formValue.vendasMensais === 'string') {
       formValue.vendasMensais = formValue.vendasMensais
@@ -324,8 +313,8 @@ export class ProductFormComponent implements OnInit, OnChanges {
       restricoes: formValue.restricoes,
       palavrasChave: formValue.palavrasChave,
       vendasMensais: formValue.vendasMensais,
-      objetivos: formValue.objetivos, // <<< Campo 'objetivos'
-      destaque: formValue.destaque, // <<< Campo 'destaque'
+      objetivos: formValue.objetivos,
+      destaque: formValue.destaque,
     };
 
     const formData = new FormData();
@@ -361,15 +350,5 @@ export class ProductFormComponent implements OnInit, OnChanges {
         this.toastService.error('Erro ao salvar o produto.');
       },
     });
-  }
-
-  arrayBufferToBase64(buffer: ArrayBuffer | Uint8Array): string {
-    const bytes =
-      buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
-    let binary = '';
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
   }
 }

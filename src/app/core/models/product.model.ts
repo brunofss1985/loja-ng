@@ -1,5 +1,3 @@
-// src/app/core/models/product.model.ts
-
 export interface Produto {
   id?: number;
   nome: string;
@@ -8,7 +6,7 @@ export interface Produto {
   descricao: string;
   descricaoCurta?: string;
   categorias?: string[];
-  objetivos?: string[]; // <<< NOVO CAMPO
+  objetivos?: string[];
   peso: string;
   sabor?: string;
   preco: number;
@@ -19,12 +17,14 @@ export interface Produto {
   lucroEstimado?: number;
   statusAprovacao?: string;
   tamanhoPorcao?: string;
+  imagemMimeType?: string;
+  imagemBase64?: string;
+  galeriaMimeTypes?: string[];
+  galeriaBase64?: string[];
   galeria?: string[];
   imagem?: string;
-  imagemMimeType?: string;
-  galeriaMimeTypes?: string[];
   ativo?: boolean;
-  destaque?: boolean; // <<< NOVO CAMPO
+  destaque?: boolean;
   disponibilidade?: 'em_estoque' | 'por_encomenda' | 'nao_disponivel';
   estoque?: number;
   estoqueMinimo?: number;

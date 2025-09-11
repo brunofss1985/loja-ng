@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-branch=$(git rev-parse --abbrev-ref HEAD)
+# Usa a vari√°vel de ambiente do Netlify, se dispon√≠vel, caso contr√°rio, usa a branch do Git
+if [ -z "$BRANCH" ]; then
+    branch=$(git rev-parse --abbrev-ref HEAD)
+else
+    branch=$BRANCH
+fi
 
-echo "üîÅ Branch atual: '$branch'"
-echo "üîß Atualizando o ambiente do Angular..."
+echo "Ì¥Å Branch atual: '$branch'"
+echo "Ì¥ß Atualizando o ambiente do Angular..."
 
 case "$branch" in
   dev)
@@ -20,5 +25,8 @@ case "$branch" in
     ;;
   *)
     echo "‚ö†Ô∏è Nenhum ambiente correspondente para a branch '$branch'. Nenhuma altera√ß√£o feita."
+    exit 1  # Adicione esta linha para garantir que o build falhe se o ambiente n√£o for encontrado
     ;;
 esac
+
+exit 0

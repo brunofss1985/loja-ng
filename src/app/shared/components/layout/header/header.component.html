@@ -42,7 +42,7 @@
                     </ng-container>
                 </a>
 
-                <div *ngIf="userType === null">
+                <div *ngIf="!isAuthenticated">
                   <a class="li-a" href="/default-login/login" aria-label="Login">
     <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 -960 960 960" width="24" fill="currentColor">
         <path d="M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm0-160L240-480l240-240v160h320v160H480v160Z" />
@@ -51,7 +51,7 @@
 </a>
                 </div>
 
-                <div *ngIf="userType === 'USER'" class="profile-dropdown">
+                <div *ngIf="userType === 'USER' && isAuthenticated" class="profile-dropdown">
                     <div class="li-a profile-toggle" (click)="toggleProfileDropdown($event)"
                         [class.active]="isProfileDropdownOpen" aria-label="Menu do Perfil">
                         <svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 24 24" width="24"

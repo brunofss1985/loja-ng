@@ -24,6 +24,7 @@ import {
 })
 export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   userType = this.authService.getUserType();
+  isAuthenticated = this.authService.isAuthenticated();
 
   public cartItemCount$: Observable<number> = this.cartService.cartItems$.pipe(
     map((items) => items.length)

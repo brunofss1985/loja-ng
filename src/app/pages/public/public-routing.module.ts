@@ -11,21 +11,22 @@ import { CartComponent } from './cart-component/cart-component.component';
 import { PaymentComponent } from 'src/app/pages/public/payment-component/payment-component.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { PaymentResultComponent } from './payment-result/payment-result.component';
+import { SessionExpiredGuard } from 'src/app/core/guards/sessionExpiredGuard';
 
 const routes: Routes = [
   {
     path: '',
     component: PublicComponent,
     children: [
-      { path: '', component: PublicHomeComponent },
-      { path: 'produtos', component: ListaProdutosComponent },
-      { path: 'produtos/:categoria', component: ListaProdutosComponent },
-      { path: 'produtos/buscar/:termo', component: ListaProdutosComponent },
-      { path: 'produto/:id', component: DetalheProdutoComponent },
-      { path: 'cart', component: CartComponent },
-      { path: 'payment', component: PaymentComponent },
-      { path: 'payment-result', component: PaymentResultComponent },
-      { path: 'perfil', component: PerfilComponent },
+      { path: '', component: PublicHomeComponent, canActivate: [SessionExpiredGuard] },
+      { path: 'produtos', component: ListaProdutosComponent, canActivate: [SessionExpiredGuard] },
+      { path: 'produtos/:categoria', component: ListaProdutosComponent, canActivate: [SessionExpiredGuard] },
+      { path: 'produtos/buscar/:termo', component: ListaProdutosComponent, canActivate: [SessionExpiredGuard] },
+      { path: 'produto/:id', component: DetalheProdutoComponent, canActivate: [SessionExpiredGuard] },
+      { path: 'cart', component: CartComponent, canActivate: [SessionExpiredGuard] },
+      { path: 'payment', component: PaymentComponent, canActivate: [SessionExpiredGuard] },
+      { path: 'payment-result', component: PaymentResultComponent, canActivate: [SessionExpiredGuard] },
+      { path: 'perfil', component: PerfilComponent, canActivate: [SessionExpiredGuard] },
     ],
   },
   {

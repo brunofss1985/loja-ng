@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap, catchError, of } from 'rxjs';
+import { Observable, tap, catchError, of, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'jwtToken';
   private readonly SESSION_ID_KEY = 'sessionId';
+  private readonly RETURN_URL_KEY = 'returnUrl';
   private readonly API_URL = `${environment.apiUrl}/auth`;
+
+  private sessionExpiredSubject = new BehaviorSubject<boolean>(false);
+  public sessionExpired$ = this.sessionExpiredSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -90,18 +94,6 @@ export class AuthService {
     }
   }
 
-  getUserType(): string | null {
-    const token = this.getToken();
-    if (!token) return null;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.userType || null;
-    } catch (e) {
-      console.error('Erro ao decodificar token:', e);
-      return null;
-    }
-  }
-
   getUser(): any | null {
     const token = this.getToken();
     if (!token) return null;
@@ -120,9 +112,41 @@ export class AuthService {
     }
   }
 
-  clearSession(): void {
+  clearSession(redirect: boolean = true): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.SESSION_ID_KEY);
-    this.router.navigate(['']);
+    if (redirect) {
+      this.router.navigate(['/']);
+    }
   }
+
+  // 🔁 Sessão Expirada
+  handleSessionExpired(currentUrl?: string): void {
+    if (currentUrl) this.setReturnUrl(currentUrl);
+    this.sessionExpiredSubject.next(true);
+    this.clearSession(false);
+  }
+
+  setReturnUrl(url: string): void {
+    localStorage.setItem(this.RETURN_URL_KEY, url);
+  }
+
+  getReturnUrl(): string {
+    return localStorage.getItem(this.RETURN_URL_KEY) || '/';
+  }
+
+  clearReturnUrl(): void {
+    localStorage.removeItem(this.RETURN_URL_KEY);
+  }
+
+  // ✅ NOVO MÉTODO: utilizado no LoginComponent
+  getUserType(): string | null {
+    const user = this.getUser();
+    return user?.userType || null;
+  }
+
+  resetSessionExpired(): void {
+  this.sessionExpiredSubject.next(false);
+}
+
 }

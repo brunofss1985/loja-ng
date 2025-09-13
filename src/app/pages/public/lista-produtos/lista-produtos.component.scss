@@ -284,3 +284,96 @@
 .d-flex {
     display: block !important;
 }
+/* === FILTROS E SELECTS MOBILE === */
+.filters-bar-mobile {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.filters-bar-mobile > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.btn-filtrar-mobile {
+  background: var(--cor-primaria);
+  color: var(--branco);
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.select-mobile {
+  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid var(--borda);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  width: 100%;
+}
+
+/* === MODAL FILTRO MOBILE === */
+.filtro-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(16, 24, 32, 0.4);
+  z-index: 999;
+}
+
+.filtro-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 90%;
+  max-width: 340px;
+  height: 100%;
+  background: white;
+  z-index: 1000;
+  padding: 0;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  animation: slideInRight 0.3s ease forwards;
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.filtro-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: var(--cor-primaria);
+  color: var(--branco);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.filtro-modal-header .btn-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--branco);
+  cursor: pointer;
+  line-height: 1;
+}

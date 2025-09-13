@@ -2,26 +2,37 @@
 
   <!-- TELAS MENORES -->
   <ng-container *ngIf="isMobile; else desktopLayout">
-    <div class="filters-and-sort d-flex gap-3 mb-3">
-      <app-filtro (filtersChanged)="onFiltersChanged($event)"></app-filtro>
 
-      <div class="product-header-sort">
-        <label for="sort-select">Ordenar por:</label>
-        <select id="sort-select" class="form-select" [(ngModel)]="ordenacaoSelecionada" (change)="onSortChanged()">
-          <option *ngFor="let opcao of opcoesOrdenacao" [ngValue]="opcao.valor">
-            {{ opcao.nome }}
-          </option>
-        </select>
+    <!-- 🔹 Barra com FILTRAR | ORDENAR | EXIBIR -->
+    <div class="filters-bar-mobile">
+      <button class="btn btn-filtrar-mobile" (click)="abrirFiltroMobile()">
+        <i class="fas fa-filter me-1"></i> Filtrar
+      </button>
 
-        <label for="size-select" class="ms-3">Exibir:</label>
-        <select id="size-select" class="form-select" [(ngModel)]="pageSize" (change)="onPageSizeChanged()">
-          <option *ngFor="let opcao of opcoesTamanhoPagina" [ngValue]="opcao.valor">
-            {{ opcao.nome }}
-          </option>
-        </select>
-      </div>
+      <select class="form-select select-mobile" [(ngModel)]="ordenacaoSelecionada" (change)="onSortChanged()">
+        <option *ngFor="let opcao of opcoesOrdenacao" [ngValue]="opcao.valor">
+          {{ opcao.nome }}
+        </option>
+      </select>
+
+      <select class="form-select select-mobile" [(ngModel)]="pageSize" (change)="onPageSizeChanged()">
+        <option *ngFor="let opcao of opcoesTamanhoPagina" [ngValue]="opcao.valor">
+          {{ opcao.nome }}
+        </option>
+      </select>
     </div>
 
+    <!-- 🔹 Modal lateral de filtro (mobile) -->
+    <div class="filtro-modal-backdrop" *ngIf="isFiltroAberto" (click)="fecharFiltroMobile()"></div>
+    <div class="filtro-modal" *ngIf="isFiltroAberto">
+      <div class="filtro-modal-header">
+        <h5>Filtros</h5>
+        <button class="btn-close" (click)="fecharFiltroMobile()">&times;</button>
+      </div>
+      <app-filtro (filtersChanged)="onFiltersChanged($event)"></app-filtro>
+    </div>
+
+    <!-- 🔹 Produtos e Paginação -->
     <div class="products-and-pagination-container">
       <ng-container *ngIf="produtos && produtos.length > 0; else noProductsMobile">
         <div class="product-cards-container">
@@ -79,6 +90,7 @@
     <app-filtro class="filter-container" (filtersChanged)="onFiltersChanged($event)"></app-filtro>
 
     <div class="products-and-pagination-container">
+
       <div class="product-header-sort">
         <label for="sort-select">Ordenar por:</label>
         <select id="sort-select" class="form-select" [(ngModel)]="ordenacaoSelecionada" (change)="onSortChanged()">

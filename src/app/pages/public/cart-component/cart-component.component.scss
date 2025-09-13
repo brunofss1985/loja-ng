@@ -2,20 +2,20 @@
   display: block;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  min-height: 100vh;
+  min-height: 72vh;
   color: #333;
 }
 
 .container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 70px auto;
   padding: 20px;
 }
 
 .header {
   background: var(--cor-base);
   padding: 20px 0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
 }
 
@@ -63,7 +63,7 @@
   background: var(--cor-base);
   border-radius: 12px;
   padding: 25px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .cart-item {
@@ -83,16 +83,19 @@
   width: 80px;
   height: 80px;
   border-radius: 8px;
-  overflow: hidden; /* impede a imagem de vazar */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  background: var(--cor-base); /* fundo neutro caso a imagem não carregue */
+  overflow: hidden;
+  /* impede a imagem de vazar */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  background: var(--cor-base);
+  /* fundo neutro caso a imagem não carregue */
 }
 
 /* AQUI está a correção principal: regra GLOBAL, não só no mobile */
 .item-thumb {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* preenche sem distorcer */
+  object-fit: cover;
+  /* preenche sem distorcer */
   display: block;
 }
 
@@ -169,7 +172,7 @@
   background: var(--cor-base);
   border-radius: 12px;
   padding: 25px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   height: fit-content;
   position: sticky;
   top: 20px;
@@ -271,7 +274,7 @@
   padding: 60px 20px;
   background: var(--cor-base);
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .empty-cart-icon {
@@ -311,25 +314,25 @@
   .cart-container {
     grid-template-columns: 1fr;
   }
-  
+
   .cart-item {
     grid-template-columns: 60px 1fr;
     gap: 10px;
   }
-  
+
   .item-image {
     width: 60px;
     height: 60px;
   }
 
   /* Removido o .item-thumb daqui para evitar conflito — já está global */
-  
+
   .quantity-controls {
     grid-column: 1 / -1;
     justify-content: space-between;
     margin-top: 10px;
   }
-  
+
   .item-price {
     text-align: left;
   }

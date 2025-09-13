@@ -149,19 +149,48 @@
                 onclick="document.getElementById('menu-toggle').checked = false">×</button>
         </div>
         <div class="mobile-menu-content">
-            <div class="mobile-menu-section">
-                <h3>Categorias</h3>
-                <ul>
-                    <li><a routerLink="#">📦 Todas as categorias</a></li>
-                    <li><a routerLink="/produtos">🛍️ Todos os produtos</a></li>
-                    <li><a routerLink="#">✨ Novidades</a></li>
-                    <li><a [routerLink]="['/produtos']" [queryParams]="{ marcas: '' }">🏷️ Marcas</a></li>
-                    <li><a [routerLink]="['/produtos']" [queryParams]="{ objetivos: '' }">🎯 Objetivos</a></li>
-                    <li><a [routerLink]="['/produtos']" [queryParams]="{ objetivos: 'pre treino' }">🔥 Promoções</a>
-                    </li>
-                    <li><a routerLink="/produtos" [queryParams]="{ categorias: 'Kit' }">📦 Kits Promocionais</a></li>
-                </ul>
-            </div>
+<div class="mobile-menu-section">
+  <h3>Menu</h3>
+  <ul class="mobile-cascade-list">
+    <li>
+      <button (click)="toggleMobileSubmenu('categorias')">📦 Todas as Categorias</button>
+      <ul *ngIf="mobileSubmenus.categorias">
+        <li *ngFor="let categoria of categorias">
+          <a (click)="onCategorySelected(categoria.name)">{{ categoria.name }}</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a routerLink="/produtos">🛍️ Todos os produtos</a>
+    </li>
+    <li>
+      <a routerLink="#">✨ Novidades</a>
+    </li>
+    <li>
+      <button (click)="toggleMobileSubmenu('marcas')">🏷️ Marcas</button>
+      <ul *ngIf="mobileSubmenus.marcas">
+        <li *ngFor="let marca of marcas">
+          <a (click)="onBrandSelected(marca.name)">{{ marca.name }}</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <button (click)="toggleMobileSubmenu('objetivos')">🎯 Objetivos</button>
+      <ul *ngIf="mobileSubmenus.objetivos">
+        <li *ngFor="let objetivo of objetivos">
+          <a (click)="onObjectiveSelected(objetivo.name)">{{ objetivo.name }}</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a [routerLink]="['/produtos']" [queryParams]="{ objetivos: 'pre treino' }">🔥 Promoções</a>
+    </li>
+    <li>
+      <a routerLink="/produtos" [queryParams]="{ categorias: 'Kit' }">📦 Kits Promocionais</a>
+    </li>
+  </ul>
+</div>
+
             <div class="mobile-menu-section" *ngIf="userType === null">
                 <h3>Conta</h3>
                 <ul>

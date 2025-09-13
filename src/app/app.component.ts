@@ -11,10 +11,7 @@ import { AuthService } from './core/services/authService/auth.service';
 export class AppComponent implements OnInit {
   title = 'loja';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.authService.sessionExpired$.subscribe((expired) => {
@@ -29,7 +26,8 @@ export class AppComponent implements OnInit {
     Swal.fire({
       icon: 'warning',
       title: 'Sessão Expirada',
-      text: 'Sua sessão expirou. Deseja fazer login novamente?',
+      html: `<p>Sua sessão expirou. Deseja fazer login novamente?</p>
+            <p>🔒 Não se preocupe, seu carrinho e suas informações estão salvos.</p>`,
       showCancelButton: true,
       confirmButtonText: 'Sim, quero entrar',
       cancelButtonText: 'Não, voltar para home',

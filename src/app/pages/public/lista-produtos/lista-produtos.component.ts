@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { combineLatest } from 'rxjs';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
@@ -14,6 +14,7 @@ export class ListaProdutosComponent implements OnInit {
   currentPage: number = 0;
   totalPages: number = 0;
   totalElements: number = 0;
+  isMobile: boolean = false;
 
   pageSize: number = 8;
   opcoesTamanhoPagina = [
@@ -46,6 +47,8 @@ export class ListaProdutosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+        this.checkScreenSize();
+
     combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
       ([params, query]) => {
         // 🚨 PASSO 1: Limpar todos os filtros existentes
@@ -60,7 +63,9 @@ export class ListaProdutosComponent implements OnInit {
           // Caso seja uma busca por filtro, preenche os filtros a partir da URL
           const categoriasFromUrl = query.get('categorias');
           if (categoriasFromUrl) {
-            this.filtroCategorias = categoriasFromUrl.split(',').map((c) => c.trim());
+            this.filtroCategorias = categoriasFromUrl
+              .split(',')
+              .map((c) => c.trim());
           }
 
           const marcasFromUrl = query.get('marcas');
@@ -70,14 +75,20 @@ export class ListaProdutosComponent implements OnInit {
 
           const objetivosFromUrl = query.get('objetivos');
           if (objetivosFromUrl) {
-            this.filtroObjetivos = objetivosFromUrl.split(',').map((o) => o.trim());
+            this.filtroObjetivos = objetivosFromUrl
+              .split(',')
+              .map((o) => o.trim());
           }
 
           const minPrecoFromUrl = query.get('minPreco');
-          this.filtroPrecoMin = minPrecoFromUrl ? parseFloat(minPrecoFromUrl) : 0;
+          this.filtroPrecoMin = minPrecoFromUrl
+            ? parseFloat(minPrecoFromUrl)
+            : 0;
 
           const maxPrecoFromUrl = query.get('maxPreco');
-          this.filtroPrecoMax = maxPrecoFromUrl ? parseFloat(maxPrecoFromUrl) : 999999;
+          this.filtroPrecoMax = maxPrecoFromUrl
+            ? parseFloat(maxPrecoFromUrl)
+            : 999999;
         }
 
         // 🚀 PASSO 3: Inicia a busca com o estado atual da URL
@@ -176,5 +187,13 @@ export class ListaProdutosComponent implements OnInit {
       this.currentPage = page;
       this.carregarProdutos();
     }
+  }
+   @HostListener('window:resize', [])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+   this.isMobile = window.innerWidth <= 754; 
   }
 }

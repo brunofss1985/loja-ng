@@ -29,28 +29,23 @@ export class FiltroComponent implements OnInit {
     maxPreco: number;
   }>();
 
-  // listas totais (vindas da API)
   allMarcas: CountedItem[] = [];
   allCategorias: CountedItem[] = [];
   allObjetivos: CountedItem[] = [];
 
-  // listas filtradas (usadas no template)
   filteredMarcas: CountedItem[] = [];
   filteredCategorias: CountedItem[] = [];
   filteredObjetivos: CountedItem[] = [];
 
-  // selecionados
   selectedMarcas: string[] = [];
   selectedCategorias: string[] = [];
   selectedObjetivos: string[] = [];
 
-  // totais globais (para referência, caso precise)
   totalMarcasAll: number = 0;
   totalCategoriasAll: number = 0;
   totalObjetivosAll: number = 0;
   totalProdutosAll: number = 0;
 
-  // preços
   minPrice: number = 0;
   maxPrice: number = 999999;
 
@@ -61,7 +56,6 @@ export class FiltroComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Carrega listas completas (contagem incluída)
     this.produtoService.buscarCategorias().subscribe((categorias) => {
       this.allCategorias = categorias;
       this.filteredCategorias = [...this.allCategorias];
@@ -75,7 +69,6 @@ export class FiltroComponent implements OnInit {
       this.filteredObjetivos = [...this.allObjetivos];
     });
 
-    // Carrega totais globais
     this.produtoService.buscarTotalCategorias().subscribe((c) => {
       this.totalCategoriasAll = c;
     });
@@ -85,15 +78,13 @@ export class FiltroComponent implements OnInit {
     this.produtoService.buscarTotalObjetivos().subscribe((o) => {
       this.totalObjetivosAll = o;
     });
-    
-    // Busca o total de produtos quando a página carrega
+
     this.produtoService.buscarComFiltros().subscribe(response => {
       this.totalProdutosAll = response.totalElements;
     });
 
     this.checkScreenSize();
 
-    // Ler estado inicial da URL (se houver filtros aplicados)
     combineLatest([
       this.activatedRoute.paramMap,
       this.activatedRoute.queryParamMap,
@@ -113,13 +104,13 @@ export class FiltroComponent implements OnInit {
     });
   }
 
-  @HostListener('window:resize', ['$event'])
-  checkScreenSize(): void {
-    this.isMobile = window.innerWidth <= 768;
-    this.isCollapsedAll = this.isMobile;
-  }
+checkScreenSize(): void {
+  this.isMobile = window.innerWidth <= 768;
 
-  // Toggle marca
+  // 👇 se for mobile, deixa o filtro SEMPRE expandido (sem collapsed-all)
+  this.isCollapsedAll = false;
+}
+
   toggleMarca(marca: string): void {
     const index = this.selectedMarcas.indexOf(marca);
     if (index > -1) {
@@ -127,12 +118,10 @@ export class FiltroComponent implements OnInit {
     } else {
       this.selectedMarcas.push(marca);
     }
-
     this.applyFiltersToLists();
     this.updateUrl();
   }
 
-  // Toggle categoria
   toggleCategoria(categoria: string): void {
     const index = this.selectedCategorias.indexOf(categoria);
     if (index > -1) {
@@ -140,12 +129,10 @@ export class FiltroComponent implements OnInit {
     } else {
       this.selectedCategorias.push(categoria);
     }
-
     this.applyFiltersToLists();
     this.updateUrl();
   }
 
-  // Toggle objetivo
   toggleObjetivo(objetivo: string): void {
     const index = this.selectedObjetivos.indexOf(objetivo);
     if (index > -1) {
@@ -153,28 +140,22 @@ export class FiltroComponent implements OnInit {
     } else {
       this.selectedObjetivos.push(objetivo);
     }
-    
     this.updateUrl();
   }
 
-  // Aplica filtros e atualiza as listas filtradas usando os endpoints já disponíveis
   private applyFiltersToLists(): void {
-    // 1) Se existem marcas selecionadas -> atualiza categorias compatíveis
     if (this.selectedMarcas.length > 0) {
       this.produtoService
         .buscarCategoriasPorMarcas(this.selectedMarcas)
         .subscribe((cats) => {
           this.filteredCategorias = cats;
         }, () => {
-          // fallback
           this.filteredCategorias = [...this.allCategorias];
         });
     } else {
-      // sem marcas selecionadas → mostra todas as categorias
       this.filteredCategorias = [...this.allCategorias];
     }
 
-    // 2) Se existem categorias selecionadas -> atualiza marcas compatíveis e objetivos compatíveis
     if (this.selectedCategorias.length > 0) {
       this.produtoService
         .buscarMarcasPorCategorias(this.selectedCategorias)
@@ -192,25 +173,17 @@ export class FiltroComponent implements OnInit {
           this.filteredObjetivos = [...this.allObjetivos];
         });
     } else {
-      // sem categorias selecionadas → mostra todas marcas e objetivos
       this.filteredMarcas = [...this.allMarcas];
       this.filteredObjetivos = [...this.allObjetivos];
     }
   }
 
-  // Atualiza a URL com os filtros
   updateUrl() {
     this.router.navigate(['/produtos'], {
       queryParams: {
-        categorias: this.selectedCategorias.length
-          ? this.selectedCategorias.join(',')
-          : null,
-        marcas: this.selectedMarcas.length
-          ? this.selectedMarcas.join(',')
-          : null,
-        objetivos: this.selectedObjetivos.length
-          ? this.selectedObjetivos.join(',')
-          : null,
+        categorias: this.selectedCategorias.length ? this.selectedCategorias.join(',') : null,
+        marcas: this.selectedMarcas.length ? this.selectedMarcas.join(',') : null,
+        objetivos: this.selectedObjetivos.length ? this.selectedObjetivos.join(',') : null,
         minPreco: this.minPrice > 0 ? this.minPrice : null,
         maxPreco: this.maxPrice < 999999 ? this.maxPrice : null,
       },
@@ -218,7 +191,6 @@ export class FiltroComponent implements OnInit {
     });
   }
 
-  // Limpa filtros e restaura listas
   clearFilters(): void {
     this.selectedCategorias = [];
     this.selectedMarcas = [];
@@ -253,7 +225,6 @@ export class FiltroComponent implements OnInit {
     this.isCollapsedAll = !this.isCollapsedAll;
   }
 
-  // Getters corrigidos: agora contam a quantidade de itens nas listas
   get totalCategorias(): number {
     return this.filteredCategorias.length;
   }
@@ -266,17 +237,18 @@ export class FiltroComponent implements OnInit {
     return this.filteredObjetivos.length;
   }
 
-  // Getter para o total de produtos no título principal, usando a contagem de produtos
   get totalProdutos(): number {
-      if (this.selectedMarcas.length > 0) {
-          return this.filteredMarcas.reduce((acc, item) => acc + (item.count || 0), 0);
-      }
-      if (this.selectedCategorias.length > 0) {
-          return this.filteredCategorias.reduce((acc, item) => acc + (item.count || 0), 0);
-      }
-      if (this.selectedObjetivos.length > 0) {
-          return this.filteredObjetivos.reduce((acc, item) => acc + (item.count || 0), 0);
-      }
-      return this.totalProdutosAll;
+    if (this.selectedMarcas.length > 0) {
+      return this.filteredMarcas.reduce((acc, item) => acc + (item.count || 0), 0);
+    }
+    if (this.selectedCategorias.length > 0) {
+      return this.filteredCategorias.reduce((acc, item) => acc + (item.count || 0), 0);
+    }
+    if (this.selectedObjetivos.length > 0) {
+      return this.filteredObjetivos.reduce((acc, item) => acc + (item.count || 0), 0);
+    }
+    return this.totalProdutosAll;
   }
+
+
 }

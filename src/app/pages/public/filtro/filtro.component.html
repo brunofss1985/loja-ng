@@ -1,5 +1,7 @@
 <div class="filter-card" [ngClass]="{'collapsed-all': isCollapsedAll}">
-  <div class="filter-card-header" (click)="toggleAllFilters()">
+  
+  <!-- Cabeçalho visível apenas no desktop -->
+  <div *ngIf="!isMobile" class="filter-card-header" (click)="toggleAllFilters()">
     <h4>
       <span class="filter-icon">
         <i class="fas fa-filter"></i>

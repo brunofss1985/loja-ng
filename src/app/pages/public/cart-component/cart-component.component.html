@@ -1,15 +1,4 @@
-<header class="header">
-  <div class="header-content">
-    <div class="logo">💪 SupleMax</div>
-    <div class="breadcrumb">
-      <a href="#" (click)="goToProducts()">Produtos</a> > Carrinho
-    </div>
-  </div>
-</header>
-
 <div class="container">
-  <h1 class="cart-title">Seu Carrinho</h1>
-
   <div *ngIf="cartItems.length > 0; else emptyCartTemplate">
     <div class="cart-container">
       <div class="cart-items">

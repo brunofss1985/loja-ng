@@ -226,4 +226,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.searchTerm = '';
   }
+
+  mobileSubmenus = {
+    categorias: false,
+    marcas: false,
+    objetivos: false,
+  };
+
+  toggleMobileSubmenu(section: 'categorias' | 'marcas' | 'objetivos') {
+    this.mobileSubmenus[section] = !this.mobileSubmenus[section];
+  }
 }

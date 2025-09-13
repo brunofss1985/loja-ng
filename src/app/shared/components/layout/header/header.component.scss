@@ -772,6 +772,50 @@
             }
         }
 
-        // .header {
-        //     animation: fadeIn 0.5s ease-out;
-        // }
+        .mobile-cascade-list > li {
+  margin-bottom: 10px;
+}
+
+.mobile-cascade-list button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: var(--texto);
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.mobile-cascade-list button:hover {
+  background: #f8fafc;
+  color: var(--cor-primaria);
+}
+
+.mobile-cascade-list ul {
+  margin-top: 6px;
+  padding-left: 14px;
+  border-left: 2px solid var(--cor-primaria);
+  animation: fadeIn 0.3s ease;
+}
+
+.mobile-cascade-list ul li {
+  margin-bottom: 4px;
+}
+
+.mobile-cascade-list ul li a {
+  display: block;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--texto-suave);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+.mobile-cascade-list ul li a:hover {
+  background: #f8fafc;
+  color: var(--cor-primaria);
+}

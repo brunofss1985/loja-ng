@@ -17,6 +17,10 @@ export class ListaProdutosComponent implements OnInit {
   isMobile: boolean = false;
 
   pageSize: number = 8;
+  ordenacaoSelecionada: string = 'relevance';
+
+  isFiltroAberto: boolean = false;
+
   opcoesTamanhoPagina = [
     { nome: '4', valor: 4 },
     { nome: '8', valor: 8 },
@@ -25,7 +29,6 @@ export class ListaProdutosComponent implements OnInit {
     { nome: 'Todos', valor: 999999 },
   ];
 
-  ordenacaoSelecionada: string = 'relevance';
   opcoesOrdenacao = [
     { nome: 'Relevância', valor: 'relevance' },
     { nome: 'Mais recentes', valor: 'dataCadastro,desc' },
@@ -47,25 +50,17 @@ export class ListaProdutosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-        this.checkScreenSize();
+    this.checkScreenSize();
 
     combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
       ([params, query]) => {
-        // 🚨 PASSO 1: Limpar todos os filtros existentes
         this.limparFiltros();
-
-        // 🔎 PASSO 2: Detectar o tipo de busca
         this.termoDeBusca = params.get('termo') || undefined;
 
-        if (this.termoDeBusca) {
-          // Caso seja uma busca por termo, apenas a propriedade `termoDeBusca` será preenchida.
-        } else {
-          // Caso seja uma busca por filtro, preenche os filtros a partir da URL
+        if (!this.termoDeBusca) {
           const categoriasFromUrl = query.get('categorias');
           if (categoriasFromUrl) {
-            this.filtroCategorias = categoriasFromUrl
-              .split(',')
-              .map((c) => c.trim());
+            this.filtroCategorias = categoriasFromUrl.split(',').map((c) => c.trim());
           }
 
           const marcasFromUrl = query.get('marcas');
@@ -75,27 +70,29 @@ export class ListaProdutosComponent implements OnInit {
 
           const objetivosFromUrl = query.get('objetivos');
           if (objetivosFromUrl) {
-            this.filtroObjetivos = objetivosFromUrl
-              .split(',')
-              .map((o) => o.trim());
+            this.filtroObjetivos = objetivosFromUrl.split(',').map((o) => o.trim());
           }
 
           const minPrecoFromUrl = query.get('minPreco');
-          this.filtroPrecoMin = minPrecoFromUrl
-            ? parseFloat(minPrecoFromUrl)
-            : 0;
+          this.filtroPrecoMin = minPrecoFromUrl ? parseFloat(minPrecoFromUrl) : 0;
 
           const maxPrecoFromUrl = query.get('maxPreco');
-          this.filtroPrecoMax = maxPrecoFromUrl
-            ? parseFloat(maxPrecoFromUrl)
-            : 999999;
+          this.filtroPrecoMax = maxPrecoFromUrl ? parseFloat(maxPrecoFromUrl) : 999999;
         }
 
-        // 🚀 PASSO 3: Inicia a busca com o estado atual da URL
         this.currentPage = 0;
         this.carregarProdutos();
       }
     );
+  }
+
+  @HostListener('window:resize', [])
+  onResize() {
+    this.checkScreenSize();
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth <= 754;
   }
 
   limparFiltros() {
@@ -114,10 +111,10 @@ export class ListaProdutosComponent implements OnInit {
     minPreco: number;
     maxPreco: number;
   }): void {
-    // Este método agora apenas propaga os filtros do componente filho, que já atualiza a URL.
-    // O `combineLatest` no `ngOnInit` irá detectar a mudança e chamar `carregarProdutos`
-    // automaticamente, seguindo a nova lógica.
     this.carregarProdutos();
+    if (this.isMobile) {
+      this.fecharFiltroMobile();
+    }
   }
 
   onSortChanged(): void {
@@ -175,11 +172,7 @@ export class ListaProdutosComponent implements OnInit {
   }
 
   getPages(): number[] {
-    const pages: number[] = [];
-    for (let i = 0; i < this.totalPages; i++) {
-      pages.push(i);
-    }
-    return pages;
+    return Array.from({ length: this.totalPages }, (_, i) => i);
   }
 
   goToPage(page: number): void {
@@ -188,12 +181,12 @@ export class ListaProdutosComponent implements OnInit {
       this.carregarProdutos();
     }
   }
-   @HostListener('window:resize', [])
-  onResize() {
-    this.checkScreenSize();
+
+  abrirFiltroMobile() {
+    this.isFiltroAberto = true;
   }
 
-  checkScreenSize() {
-   this.isMobile = window.innerWidth <= 754; 
+  fecharFiltroMobile() {
+    this.isFiltroAberto = false;
   }
 }

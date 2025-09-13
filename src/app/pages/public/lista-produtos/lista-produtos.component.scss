@@ -198,13 +198,17 @@
   .product-cards-container {
     grid-template-columns: repeat(3, 1fr);
   }
-}
-
-@media (max-width: 901px) {
   .main-container {
     padding-top: 40px;
   }
-    .form-select {
+}
+
+@media (max-width: 903px) {
+  .main-container {
+    padding-top: 40px;
+  }
+
+  .form-select {
     min-width: 0 !important;
   }
 }
@@ -225,6 +229,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .filter-container,
   .pagination .btn,
   .product-cards-container *,
@@ -234,46 +239,40 @@
   }
 }
 
+
+.d-flex {
+  display: block !important;
+}
+
+      /* === MOBILE - */
 @media (max-width: 755px) {
-  .main-container {
+
+    .main-container {
+    flex-direction: column !important;
     // margin: auto;
     padding: 15px;
     margin-top: 50px;
-     gap: 20px;
+    gap: 0;
   }
 
-  .product-cards-container{
+  .product-cards-container {
     gap: 7px !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px;
+    margin-top: 16px;
+    padding: 0;
   }
-
-.product-header-sort{
-  margin-top: 20px;
-}
-}
-
-/* === MOBILE - até 739px === */
-@media (max-width: 755px) {
-
-  .main-container {
-    flex-direction: column !important;
-  }
-
+  
   .filters-and-sort {
     flex-direction: column !important;
     width: 100%;
     gap: 16px;
   }
-
+  
   .product-header-sort {
+    margin-top: 20px;
     flex-wrap: wrap;
     justify-content: flex-start;
-  }
-
-  .product-cards-container {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px;
-    margin-top: 16px;
-    padding: 0;
   }
 
   .pagination {
@@ -281,9 +280,7 @@
   }
 }
 
-.d-flex {
-    display: block !important;
-}
+
 /* === FILTROS E SELECTS MOBILE === */
 .filters-bar-mobile {
   display: flex;
@@ -293,7 +290,7 @@
   justify-content: space-between;
 }
 
-.filters-bar-mobile > * {
+.filters-bar-mobile>* {
   flex: 1 1 0;
   min-width: 0;
 }
@@ -353,6 +350,7 @@
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(0);
   }
@@ -377,5 +375,3 @@
   cursor: pointer;
   line-height: 1;
 }
-
-

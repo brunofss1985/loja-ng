@@ -1,34 +1,53 @@
 <div class="card">
-  <div class="card-header">
-    <div>
-      {{title}}
-    </div>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div>{{ title }}</div>
     <div *ngIf="showCreateButton">
-      <button (click)="openModal()">{{createButtonLabel}}</button>
+      <button class="btn btn-primary" (click)="onCreateButtonClick()">
+        {{ createButtonLabel }}
+      </button>
     </div>
   </div>
 
-  <div class="card-body">
-    <table>
+  <div class="d-flex align-items-center justify-content-end px-3 pt-2">
+    <label class="me-2">Exibir:</label>
+    <select class="form-select form-select-sm w-auto" [ngModel]="pageSize" (ngModelChange)="onChangePageSize($event)">
+      <option [value]="4">4</option>
+      <option [value]="10">10</option>
+      <option [value]="20">20</option>
+      <option [value]="50">50</option>
+      <option [value]="999999">Todos</option>
+    </select>
+  </div>
+
+  <div class="card-body table-responsive">
+    <table class="table table-striped">
       <thead>
         <tr>
-          <th *ngFor="let column of columns">
+          <th *ngFor="let column of columns"
+              (click)="clientSidePagination && sortableColumns.includes(column) && onSort(column)"
+              style="cursor: pointer">
             {{ columnLabels[column] || column }}
+            <span *ngIf="clientSidePagination && sortableColumns.includes(column)">
+              <span *ngIf="sortColumn === column">
+                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+              </span>
+              <span *ngIf="sortColumn !== column">⇅</span>
+            </span>
           </th>
           <th *ngIf="showActionButtons">Ações</th>
         </tr>
       </thead>
-      <tbody *ngIf="rows.length > 0; else tabelaVazia">
-        <tr *ngFor="let row of rows">
+      <tbody *ngIf="paginatedRows.length > 0; else tabelaVazia">
+        <tr *ngFor="let row of paginatedRows">
           <td *ngFor="let header of columns">
             {{ cellFormatter ? cellFormatter(header, row[header]) : row[header] }}
           </td>
           <td *ngIf="showActionButtons">
-            <button class="delete-button" (click)="onDeleteRow(row['id'])">
-              <span class="material-symbols-outlined">delete</span>
+            <button class="btn btn-sm btn-outline-danger me-1" (click)="onDeleteRow(row['id'])">
+              <span class="material-symbols-outlined">delete_forever</span>
             </button>
-            <button class="edit-button" *ngIf="showEditButton" (click)="onEditRow(row)">
-              <span class="material-symbols-outlined">edit_square</span>
+            <button class="btn btn-sm btn-outline-primary" *ngIf="showEditButton" (click)="onEditRow(row)">
+              <span class="material-symbols-outlined">edit</span>
             </button>
           </td>
         </tr>
@@ -36,9 +55,33 @@
     </table>
   </div>
 
+  <div *ngIf="getTotalPages() > 1" class="pagination d-flex justify-content-center mb-3">
+    <button class="btn btn-sm btn-outline-secondary me-2" (click)="onChangePage(currentPage - 1)"
+            [disabled]="currentPage === 0">
+      Anterior
+    </button>
+
+    <ng-container *ngFor="let pageIndex of getDisplayedPages()">
+      <button class="btn btn-sm mx-1"
+              [ngClass]="{
+                'btn-primary': currentPage === pageIndex,
+                'btn-outline-secondary': currentPage !== pageIndex
+              }"
+              [attr.aria-current]="currentPage === pageIndex ? 'page' : null"
+              (click)="onChangePage(pageIndex)">
+        {{ pageIndex + 1 }}
+      </button>
+    </ng-container>
+
+    <button class="btn btn-sm btn-outline-secondary ms-2" (click)="onChangePage(currentPage + 1)"
+            [disabled]="currentPage >= getTotalPages() - 1">
+      Próxima
+    </button>
+  </div>
+
   <ng-template #tabelaVazia>
     <tr>
-      <td colspan="100%">Nenhum dado disponível.</td>
+      <td colspan="100%" class="text-center p-3 text-muted">Nenhum dado disponível.</td>
     </tr>
   </ng-template>
 </div>

@@ -69,6 +69,9 @@ export class ProdutosComponent implements OnInit {
     this.loadProducts();
   }
 
+  onClickCadastrar(): void {
+  this.novoProduto(); // já faz tudo que precisa: abre modal e reseta formulário
+}
   novoProduto(): void {
     this.produtoSelecionado = undefined;
     this.modalAberto = true;
@@ -106,25 +109,22 @@ export class ProdutosComponent implements OnInit {
   }
 
   loadProducts(): void {
-    // Agora a chamada ao serviço de produtos inclui ordenação e tamanho da página
     this.produtoService
       .buscarComFiltros(
         undefined,
         undefined,
         undefined,
         0,
+        999999, // 🔥 traz todos os produtos
+        0,
         999999,
-        this.currentPage,
-        this.pageSize,
         this.ordenacaoSelecionada
       )
       .subscribe({
         next: (data: ProdutoResponse) => {
           this.allProducts = data.content;
-          this.totalPages = data.totalPages;
-          this.totalElements = data.totalElements;
         },
-        error: (err: any) => console.error('Erro ao carregar produtos:', err),
+        error: (err) => console.error('Erro ao carregar produtos:', err),
       });
   }
 
@@ -149,20 +149,6 @@ export class ProdutosComponent implements OnInit {
     });
   }
 
-  // Métodos de paginação
-  proximaPagina(): void {
-    if (this.currentPage < this.totalPages - 1) {
-      this.currentPage++;
-      this.loadProducts();
-    }
-  }
-
-  paginaAnterior(): void {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-      this.loadProducts();
-    }
-  }
 
   getPages(): number[] {
     const pages: number[] = [];
@@ -177,15 +163,5 @@ export class ProdutosComponent implements OnInit {
       this.currentPage = page;
       this.loadProducts();
     }
-  }
-
-  onSortChanged(): void {
-    this.currentPage = 0;
-    this.loadProducts();
-  }
-
-  onPageSizeChanged(): void {
-    this.currentPage = 0;
-    this.loadProducts();
   }
 }

@@ -4,7 +4,7 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpErrorResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -22,7 +22,9 @@ export class TokenInterceptor implements HttpInterceptor {
     const token = this.authService.getToken();
 
     const authReq = token
-      ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+      ? req.clone({
+          setHeaders: { Authorization: `Bearer ${token}` }
+        })
       : req;
 
     return next.handle(authReq).pipe(

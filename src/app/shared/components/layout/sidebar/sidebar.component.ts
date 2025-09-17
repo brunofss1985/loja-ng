@@ -22,7 +22,10 @@ export class SidebarComponent implements OnInit {
     { icon: 'fas fa-box', label: 'Estoque', route: '/admin/estoque' },
     { icon: 'fas fa-shopping-cart', label: 'Compras', route: '/admin/compras' },
     { icon: 'fas fa-clipboard-list', label: 'Produtos em falta', route: '/admin/produtos-em-falta' },
-    { icon: 'fas fa-home', label: 'caixa', route: '/admin/caixa' }
+    { icon: 'fas fa-home', label: 'caixa', route: '/admin/caixa' },
+    { icon: 'fas fa-home', label: 'lotes', route: '/admin/lotes' },
+    { icon: 'fas fa-home', label: 'movimentações', route: '/admin/movimentacoes' },
+    { icon: 'fas fa-home', label: 'validades', route: '/admin/validade-alerta' },
   ];
 
   userMenu = [

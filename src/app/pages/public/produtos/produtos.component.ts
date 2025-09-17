@@ -9,7 +9,6 @@ interface ProdutoResponse {
   content: Produto[];
   totalPages: number;
   totalElements: number;
-  // Outros metadados de paginação que a API do Spring envia
   last: boolean;
   first: boolean;
   number: number;
@@ -30,7 +29,9 @@ export class ProdutosComponent implements OnInit {
     private toastr: ToastrService
   ) {}
 
-  produtoSelecionado: any = null;
+  // ✅ Ajustado para usar `undefined` em vez de `null`
+  produtoSelecionado: Produto | undefined = undefined;
+
   allProducts: Produto[] = [];
   modalAberto: boolean = false;
   isAdmin: boolean = false;
@@ -39,13 +40,13 @@ export class ProdutosComponent implements OnInit {
     id: 'ID',
     nome: 'Nome',
     categorias: 'Categoria',
-    preco: 'Preco',
+    preco: 'Preço',
   };
 
-  // Variáveis para paginação
+  // Paginação
   currentPage: number = 0;
   totalPages: number = 0;
-  totalElements: number = 0; // Adicionado para exibir total de elementos
+  totalElements: number = 0;
   pageSize: number = 10;
   opcoesTamanhoPagina = [
     { nome: '10', valor: 10 },
@@ -54,7 +55,7 @@ export class ProdutosComponent implements OnInit {
     { nome: 'Todos', valor: 999999 },
   ];
 
-  // Variáveis de ordenação
+  // Ordenação
   ordenacaoSelecionada: string = 'relevance';
   opcoesOrdenacao = [
     { nome: 'Relevância', valor: 'relevance' },
@@ -70,8 +71,9 @@ export class ProdutosComponent implements OnInit {
   }
 
   onClickCadastrar(): void {
-  this.novoProduto(); // já faz tudo que precisa: abre modal e reseta formulário
-}
+    this.novoProduto();
+  }
+
   novoProduto(): void {
     this.produtoSelecionado = undefined;
     this.modalAberto = true;
@@ -88,7 +90,7 @@ export class ProdutosComponent implements OnInit {
 
     if (!valor && this.productFormComponent) {
       this.productFormComponent.resetFormToDefaults();
-      this.produtoSelecionado = null;
+      this.produtoSelecionado = undefined;
     }
   }
 
@@ -103,7 +105,7 @@ export class ProdutosComponent implements OnInit {
     this.modalAberto = true;
   }
 
-  onProdutoSalvo(produto: any): void {
+  onProdutoSalvo(produto: Produto): void {
     this.loadProducts();
     this.modalAberto = false;
   }
@@ -148,7 +150,6 @@ export class ProdutosComponent implements OnInit {
       },
     });
   }
-
 
   getPages(): number[] {
     const pages: number[] = [];

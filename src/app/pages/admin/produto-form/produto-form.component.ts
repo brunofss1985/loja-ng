@@ -59,9 +59,12 @@ export class ProductFormComponent implements OnInit, OnChanges {
       ativo: [true],
       destaque: [false],
       disponibilidade: ['em_estoque'],
-      estoque: [null],
+
+      // ✅ estoqueTotal agora é readonly
+      estoqueTotal: [{ value: 0, disabled: true }],
       estoqueMinimo: [null],
       estoqueMaximo: [null],
+
       localizacaoFisica: [''],
       codigoBarras: [''],
       dimensoes: this.fb.group({
@@ -119,6 +122,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
     this.form.patchValue({
       ...formValues,
+      estoqueTotal: edit.estoqueTotal ?? 0,
       categorias: edit.categorias?.join(', ') ?? '',
       objetivos: edit.objetivos?.join(', ') ?? '',
       dimensoes: edit.dimensoes ?? {
@@ -138,12 +142,12 @@ export class ProductFormComponent implements OnInit, OnChanges {
         : '0%',
     });
 
-    // ✅ Imagem principal
+    // ✅ imagem principal
     if (imagemBase64 && imagemMimeType && !this.imagemSelecionada) {
       this.imagemPreview = `data:${imagemMimeType};base64,${imagemBase64}`;
     }
 
-    // ✅ Galeria de imagens
+    // ✅ galeria de imagens
     this.galeriaPreviewUrls = [];
     if (Array.isArray(galeriaBase64) && galeriaBase64.length > 0) {
       this.galeriaPreviewUrls = galeriaBase64.map(
@@ -180,7 +184,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       ativo: true,
       destaque: false,
       disponibilidade: 'em_estoque',
-      estoque: null,
+      estoqueTotal: 0,
       estoqueMinimo: null,
       estoqueMaximo: null,
       localizacaoFisica: '',
@@ -275,15 +279,16 @@ export class ProductFormComponent implements OnInit, OnChanges {
 
     const formValue = this.form.getRawValue();
 
-    // Conversões de string para arrays
-    ['categorias', 'objetivos', 'restricoes', 'palavrasChave'].forEach((campo) => {
-      if (typeof formValue[campo] === 'string') {
-        formValue[campo] = formValue[campo]
-          .split(',')
-          .map((v: string) => v.trim())
-          .filter((v: string) => v.length > 0);
+    ['categorias', 'objetivos', 'restricoes', 'palavrasChave'].forEach(
+      (campo) => {
+        if (typeof formValue[campo] === 'string') {
+          formValue[campo] = formValue[campo]
+            .split(',')
+            .map((v: string) => v.trim())
+            .filter((v: string) => v.length > 0);
+        }
       }
-    });
+    );
 
     if (typeof formValue.vendasMensais === 'string') {
       formValue.vendasMensais = formValue.vendasMensais

@@ -25,6 +25,7 @@
           (change)="onImagemSelecionada($event)"
         />
       </div>
+
       <div class="col-md-9 col-sm-12">
         <div class="row">
           <div class="col-md-4">
@@ -84,6 +85,7 @@
         </div>
       </div>
     </div>
+
     <div class="row mt-4">
       <div class="col-md-4">
         <label class="mt-2">Preço</label>
@@ -147,13 +149,21 @@
           id="destaque"
           formControlName="destaque"
         />
-        <label class="form-check-label" for="destaque">Produto em Destaque</label>
+        <label class="form-check-label" for="destaque"
+          >Produto em Destaque</label
+        >
       </div>
     </div>
+
     <div class="row mt-4">
       <div class="col-md-4">
-        <label class="mt-2">Estoque</label>
-        <input class="form-control" formControlName="estoque" type="number" />
+        <label class="mt-2">Estoque Total</label>
+        <input
+          class="form-control"
+          formControlName="estoqueTotal"
+          type="number"
+          readonly
+        />
       </div>
       <div class="col-md-4">
         <label class="mt-2">Estoque Mínimo</label>
@@ -180,6 +190,7 @@
         <input class="form-control" formControlName="codigoBarras" />
       </div>
     </div>
+
     <div [formGroup]="dimensoesGroup">
       <div class="row mt-4">
         <div class="col-md-4">

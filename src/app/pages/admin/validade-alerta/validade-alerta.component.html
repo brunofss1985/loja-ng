@@ -1,0 +1,34 @@
+
+<div class="validade-container">
+  <h2>📅 Produtos com Validade Próxima</h2>
+
+  <div class="dias-input">
+    <label for="dias">Dias de antecedência:</label>
+    <input type="number" id="dias" [(ngModel)]="dias" min="1" />
+    <button (click)="carregarProdutos()">Atualizar</button>
+  </div>
+
+  <div *ngIf="carregando">⏳ Carregando...</div>
+  <div *ngIf="erro" class="erro">{{ erro }}</div>
+
+  <table *ngIf="produtos.length > 0">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Marca</th>
+        <th>Data de Validade</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of produtos">
+        <td>{{ p.nome }}</td>
+        <td>{{ p.marca }}</td>
+        <td>{{ p.dataValidade | date: 'shortDate' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!carregando && produtos.length === 0">
+    Nenhum produto com validade próxima.
+  </div>
+</div>

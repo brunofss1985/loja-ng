@@ -15,6 +15,9 @@ import { PublicModule } from '../public/public.module';
 import { ProdutosComponent } from '../public/produtos/produtos.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductFormComponent } from './produto-form/produto-form.component';
+import { ValidadeAlertaComponent } from './validade-alerta/validade-alerta.component';
+import { MovimentacoesComponent } from './movimentações/movimentacoes.component';
+import { LotesComponent } from './lotes/lotes.component';
 // import { ProdutosEmFaltaFormComponent } from './produtos-em-falta/produtos-em-falta-form/produtos-em-falta-form.component';
 
 @NgModule({
@@ -30,6 +33,10 @@ import { ProductFormComponent } from './produto-form/produto-form.component';
     ProdutosComponent,
     ProductFormComponent,
     // ProdutosEmFaltaFormComponent
+    ValidadeAlertaComponent,
+    MovimentacoesComponent,
+    LotesComponent
+    
   ],
   imports: [
     CommonModule,

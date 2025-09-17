@@ -17,40 +17,51 @@ export interface Produto {
   lucroEstimado?: number;
   statusAprovacao?: string;
   tamanhoPorcao?: string;
+
   imagemMimeType?: string;
   imagemBase64?: string;
   galeriaMimeTypes?: string[];
   galeriaBase64?: string[];
   galeria?: string[];
   imagem?: string;
+
   ativo?: boolean;
   destaque?: boolean;
   disponibilidade?: 'em_estoque' | 'por_encomenda' | 'nao_disponivel';
-  estoque?: number;
+
+  // ✅ Alterado: estoque agora vem do backend como estoqueTotal
+  estoqueTotal?: number;
   estoqueMinimo?: number;
   estoqueMaximo?: number;
+
   localizacaoFisica?: string;
   codigoBarras?: string;
+
   dimensoes?: {
     altura: number | null;
     largura: number | null;
     profundidade: number | null;
   };
+
   restricoes?: string[];
   tabelaNutricional?: any;
   modoDeUso?: string;
   palavrasChave?: string[];
+
   avaliacoes?: {
     media: number | null;
     comentarios: string[];
   };
+
   dataCadastro?: string | Date;
   dataUltimaAtualizacao?: string | Date;
   dataValidade?: string | Date;
+
   fornecedorId?: number;
   cnpjFornecedor?: string;
   contatoFornecedor?: string;
   prazoEntregaFornecedor?: string;
+
   quantidadeVendida?: number;
   vendasMensais?: number[];
 }

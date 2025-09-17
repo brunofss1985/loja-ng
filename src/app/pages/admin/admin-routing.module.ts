@@ -10,6 +10,9 @@ import { PerfilAdminComponent } from './perfil-admin/perfil-admin.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { AdminGuard } from 'src/app/core/guards/admin-guard';
 import { ProdutosComponent } from '../public/produtos/produtos.component';
+import { MovimentacoesComponent } from './movimentações/movimentacoes.component';
+import { ValidadeAlertaComponent } from './validade-alerta/validade-alerta.component';
+import { LotesComponent } from './lotes/lotes.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent,
@@ -23,6 +26,9 @@ const routes: Routes = [
       { path: 'estoque', component: EstoqueComponent },
       { path: 'orcamentos', component: OrcamentosComponent },
       { path: 'produtos', component: ProdutosComponent },
+      { path: 'movimentacoes', component: MovimentacoesComponent },
+      { path: 'validade-alerta', component: ValidadeAlertaComponent },
+      { path: 'lotes', component: LotesComponent },
       // { path: 'produtos-em-falta', component: ProdutosEmFaltaComponent },
   ]}
 ];

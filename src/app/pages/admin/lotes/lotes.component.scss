@@ -1,0 +1,41 @@
+.lotes-container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+}
+
+.lote-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  input {
+    flex: 1 1 200px;
+    padding: 8px;
+  }
+
+  button {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+}
+
+.lote-tabela {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+
+  th {
+    background-color: #f4f4f4;
+  }
+
+  button {
+    margin: 0 5px;
+  }
+}

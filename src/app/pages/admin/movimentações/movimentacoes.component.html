@@ -1,0 +1,39 @@
+
+<div class="estoque-container">
+  <h2>🔍 Movimentações por Lote</h2>
+
+  <div class="input-group">
+    <input [(ngModel)]="lote" placeholder="Digite o código do lote" />
+    <button (click)="buscarMovimentacoes()" [disabled]="!lote || carregando">Buscar</button>
+  </div>
+
+  <div *ngIf="carregando">⏳ Carregando...</div>
+  <div *ngIf="erro" class="erro">{{ erro }}</div>
+
+  <table *ngIf="movimentacoes.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Produto</th>
+        <th>Tipo</th>
+        <th>Quantidade</th>
+        <th>Lote</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let mov of movimentacoes">
+        <td>{{ mov.id }}</td>
+        <td>{{ mov.produtoId }}</td>
+        <td>{{ mov.tipo }}</td>
+        <td>{{ mov.quantidade }}</td>
+        <td>{{ mov.lote }}</td>
+        <td>{{ mov.dataMovimentacao | date: 'shortDate' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!carregando && movimentacoes.length === 0 && lote">
+    Nenhuma movimentação encontrada para o lote informado.
+  </div>
+</div>

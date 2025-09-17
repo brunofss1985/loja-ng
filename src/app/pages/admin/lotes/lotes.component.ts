@@ -1,34 +1,43 @@
-import { Component, OnInit } from '@angular/core';
-import { Lote, LotesService } from 'src/app/core/services/lotesService/lotes.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { LotesService, Lote } from 'src/app/core/services/lotesService/lotes.service';
+import { ToastrService } from 'ngx-toastr';
+import { LoteFormComponent } from '../lotes-form/lote-form.component';
+import { SharedModule } from "src/app/shared/shared.module";
 
 @Component({
   selector: 'app-lotes',
   templateUrl: './lotes.component.html',
-  styleUrls: ['./lotes.component.scss']
+  styleUrls: ['./lotes.component.scss'],
 })
 export class LotesComponent implements OnInit {
-  lotes: Lote[] = [];
+  @ViewChild(LoteFormComponent) loteFormComponent!: LoteFormComponent;
 
-  form: Lote = {
-    codigo: '',
-    produtoId: 0,
-    quantidade: 0,
-    dataValidade: '',
-
-    fornecedor: '',
-    custoPorUnidade: 0,
-    localArmazenamento: '',
-    statusLote: '',
-    dataRecebimento: '',
-    valorVendaSugerido: 0,
-    notaFiscalEntrada: '',
-    contatoVendedor: ''
+  allLotes: Lote[] = [];
+  columns: string[] = [
+    'id', 'codigo', 'produtoId', 'quantidade', 'dataValidade', 'fornecedor',
+    'custoPorUnidade', 'localArmazenamento', 'statusLote', 'dataRecebimento',
+    'valorVendaSugerido', 'notaFiscalEntrada', 'contatoVendedor'
+  ];
+  columnLabels: { [key: string]: string } = {
+    id: 'ID',
+    codigo: 'Código',
+    produtoId: 'Produto ID',
+    quantidade: 'Quantidade',
+    dataValidade: 'Validade',
+    fornecedor: 'Fornecedor',
+    custoPorUnidade: 'Custo/Unid',
+    localArmazenamento: 'Local',
+    statusLote: 'Status',
+    dataRecebimento: 'Recebimento',
+    valorVendaSugerido: 'Venda Sug.',
+    notaFiscalEntrada: 'Nota Fiscal',
+    contatoVendedor: 'Contato'
   };
 
-  editando: boolean = false;
-  idEditando?: number;
+  loteSelecionado?: Lote;
+  modalAberto: boolean = false;
 
-  constructor(private loteService: LotesService) {}
+  constructor(private loteService: LotesService, private toast: ToastrService) {}
 
   ngOnInit(): void {
     this.carregarLotes();
@@ -36,69 +45,62 @@ export class LotesComponent implements OnInit {
 
   carregarLotes(): void {
     this.loteService.listar().subscribe({
-      next: (data) => (this.lotes = data),
+      next: (data) => (this.allLotes = data),
       error: (err) => console.error('Erro ao carregar lotes', err)
     });
   }
 
-  onSubmit(): void {
-    if (this.editando && this.idEditando) {
-      this.loteService.atualizar(this.idEditando, this.form).subscribe({
-        next: () => {
-          this.cancelarEdicao();
-          this.carregarLotes();
-        },
-        error: (err) => console.error('Erro ao atualizar lote', err)
-      });
-    } else {
-      this.loteService.criar(this.form).subscribe({
-        next: () => {
-          this.resetForm();
-          this.carregarLotes();
-        },
-        error: (err) => console.error('Erro ao criar lote', err)
-      });
+  onClickCadastrar(): void {
+    this.loteSelecionado = undefined;
+    this.modalAberto = true;
+  }
+
+  onModalAbertoChange(valor: boolean): void {
+    this.modalAberto = valor;
+    if (!valor) {
+      this.loteSelecionado = undefined;
     }
   }
 
-  editar(lote: Lote): void {
-    this.form = { ...lote };
-    this.editando = true;
-    this.idEditando = lote.id;
+  onLoteSalvo(lote: Lote): void {
+    const request = lote.id
+      ? this.loteService.atualizar(lote.id, lote)
+      : this.loteService.criar(lote);
+
+    request.subscribe({
+      next: () => {
+        this.toast.success(`Lote ${lote.id ? 'atualizado' : 'cadastrado'} com sucesso!`);
+        this.modalAberto = false;
+        this.carregarLotes();
+      },
+      error: (err) => {
+        this.toast.error('Erro ao salvar lote.');
+        console.error(err);
+      }
+    });
   }
 
-  cancelarEdicao(): void {
-    this.resetForm();
-    this.editando = false;
-    this.idEditando = undefined;
-  }
-
-  remover(id?: number): void {
-    if (!id) return;
-
+  onDeleteLote(id: number): void {
     if (confirm('Tem certeza que deseja excluir este lote?')) {
       this.loteService.remover(id).subscribe({
-        next: () => this.carregarLotes(),
-        error: (err) => console.error('Erro ao excluir lote', err)
+        next: () => {
+          this.toast.success('Lote excluído com sucesso!');
+          this.carregarLotes();
+        },
+        error: (err) => {
+          this.toast.error('Erro ao excluir lote.');
+          console.error(err);
+        }
       });
     }
   }
 
-  private resetForm(): void {
-    this.form = {
-      codigo: '',
-      produtoId: 0,
-      quantidade: 0,
-      dataValidade: '',
+  onEditLote(lote: Lote): void {
+    this.loteSelecionado = lote;
+    this.modalAberto = true;
+  }
 
-      fornecedor: '',
-      custoPorUnidade: 0,
-      localArmazenamento: '',
-      statusLote: '',
-      dataRecebimento: '',
-      valorVendaSugerido: 0,
-      notaFiscalEntrada: '',
-      contatoVendedor: ''
-    };
+  save(): void {
+    this.loteFormComponent.submit();
   }
 }

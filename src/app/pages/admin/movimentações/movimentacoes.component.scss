@@ -1,53 +1,81 @@
-
 .estoque-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 16px;
+  margin: 1.5rem;
+  border: 1px solid var(--borda);
+  border-radius: var(--radius);
+  box-shadow: var(--sombra);
+  background-color: var(--cor-base);
+  padding: 1rem 1.5rem;
 }
 
-.input-group {
+.estoque-container h2 {
+  background-color: var(--cor-secundaria);
+  color: var(--branco);
+  padding: 1rem 1.5rem;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  margin: -1rem -1.5rem 1rem -1.5rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.estoque-container .input-group {
   display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
-
-  input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
-  button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    border: none;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:disabled {
-      background-color: #ccc;
-    }
-  }
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-table {
+.estoque-container input {
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--borda);
+}
+
+.estoque-container button {
+  background-color: var(--cor-secundaria);
+  color: var(--branco);
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 6px 12px;
+  border: none;
+  box-shadow: var(--sombra);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.estoque-container button:hover {
+  background-color: var(--cor-hover);
+}
+
+.estoque-container table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-
-  th, td {
-    padding: 8px;
-    border: 1px solid #ccc;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f0f0f0;
-  }
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.9rem;
+  background-color: var(--branco);
+  box-shadow: var(--sombra);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
-.erro {
+.estoque-container thead {
+  background-color: var(--cor-secundaria);
+  color: var(--branco);
+}
+
+.estoque-container th,
+.estoque-container td {
+  padding: 0.4rem 0.75rem;
+  line-height: 1.2;
+  border-bottom: 1px solid var(--borda);
+  text-align: left;
+}
+
+.estoque-container tbody tr:hover {
+  background-color: #f7faff;
+}
+
+.estoque-container .erro {
   color: red;
-  margin-top: 10px;
+  margin-bottom: 1rem;
 }

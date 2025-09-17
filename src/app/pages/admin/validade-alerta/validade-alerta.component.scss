@@ -1,48 +1,82 @@
-
 .validade-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 16px;
+  margin: 1.5rem;
+  border: 1px solid var(--borda);
+  border-radius: var(--radius);
+  box-shadow: var(--sombra);
+  background-color: var(--cor-base);
+  padding: 1rem 1.5rem;
 }
 
-.dias-input {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-
-  input {
-    width: 80px;
-    padding: 6px;
-  }
-
-  button {
-    padding: 6px 12px;
-    background-color: #28a745;
-    border: none;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+.validade-container h2 {
+  background-color: var(--cor-secundaria);
+  color: var(--branco) !important;
+  padding: 1rem 1.5rem;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  margin: -1rem -1.5rem 1rem -1.5rem;
+  font-size: 1.25rem;
 }
 
-table {
+.validade-container table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 16px;
-
-  th, td {
-    padding: 8px;
-    border: 1px solid #ccc;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f9f9f9;
-  }
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.9rem;
+  background-color: var(--branco);
+  box-shadow: var(--sombra);
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
-.erro {
-  color: red;
-  margin-top: 10px;
+.validade-container thead {
+  background-color: var(--cor-secundaria);
+  color: var(--branco);
+}
+
+.validade-container th,
+.validade-container td {
+  padding: 0.4rem 0.75rem;
+  line-height: 1.2;
+  border-bottom: 1px solid var(--borda);
+  text-align: left;
+}
+
+.validade-container tbody tr:hover {
+  background-color: #f7faff;
+}
+
+.validade-container .dias-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.validade-container input[type="number"],
+.validade-container button {
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 6px 12px;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.validade-container input[type="number"] {
+  border: 1px solid var(--borda);
+}
+
+.validade-container button {
+  background-color: var(--cor-secundaria);
+  color: var(--branco);
+  box-shadow: var(--sombra);
+}
+
+.validade-container button:hover {
+  background-color: var(--cor-hover);
+}
+
+.validade-container h2 {
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: var(--texto);
 }

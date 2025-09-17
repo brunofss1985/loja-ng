@@ -1,76 +1,32 @@
-<div class="lotes-container">
-  <h2>📦 Gerenciamento de Lotes</h2>
+<div class="main-container">
+  <h5>📦 Gerenciamento de Lotes</h5>
 
-  <!-- 🔄 Formulário de cadastro / edição -->
-  <form (ngSubmit)="onSubmit()" #loteForm="ngForm" class="lote-form">
-    <input type="text" name="codigo" [(ngModel)]="form.codigo" required placeholder="Código do Lote" />
-    <input type="number" name="produtoId" [(ngModel)]="form.produtoId" required placeholder="ID do Produto" />
-    <input type="number" name="quantidade" [(ngModel)]="form.quantidade" required placeholder="Quantidade" />
-    <input type="date" name="dataValidade" [(ngModel)]="form.dataValidade" required placeholder="Validade" />
-
-    <!-- Novos campos -->
-    <input type="text" name="fornecedor" [(ngModel)]="form.fornecedor" required placeholder="Fornecedor" />
-    <input type="number" name="custoPorUnidade" [(ngModel)]="form.custoPorUnidade" required placeholder="Custo por Unidade" />
-    <input type="text" name="localArmazenamento" [(ngModel)]="form.localArmazenamento" required placeholder="Local de Armazenamento" />
-    <input type="text" name="statusLote" [(ngModel)]="form.statusLote" required placeholder="Status do Lote" />
-    <input type="date" name="dataRecebimento" [(ngModel)]="form.dataRecebimento" required placeholder="Data de Recebimento" />
-    <input type="number" name="valorVendaSugerido" [(ngModel)]="form.valorVendaSugerido" required placeholder="Valor de Venda Sugerido" />
-    <input type="text" name="notaFiscalEntrada" [(ngModel)]="form.notaFiscalEntrada" required placeholder="Nota Fiscal de Entrada" />
-    <input type="text" name="contatoVendedor" [(ngModel)]="form.contatoVendedor" required placeholder="Contato do Vendedor" />
-
-    <button type="submit" [disabled]="loteForm.invalid">
-      {{ editando ? 'Salvar Alterações' : 'Adicionar Lote' }}
-    </button>
-    <button type="button" *ngIf="editando" (click)="cancelarEdicao()">Cancelar</button>
-  </form>
-
-  <hr />
-
-  <!-- 📋 Tabela de Lotes -->
-  <table class="lote-tabela" *ngIf="lotes.length > 0; else nenhumLote">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Código</th>
-        <th>Produto ID</th>
-        <th>Quantidade</th>
-        <th>Validade</th>
-        <th>Fornecedor</th>
-        <th>Custo/Unid</th>
-        <th>Local</th>
-        <th>Status</th>
-        <th>Recebimento</th>
-        <th>Venda Sug.</th>
-        <th>Nota Fiscal</th>
-        <th>Contato</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let lote of lotes">
-        <td>{{ lote.id }}</td>
-        <td>{{ lote.codigo }}</td>
-        <td>{{ lote.produtoId }}</td>
-        <td>{{ lote.quantidade }}</td>
-        <td>{{ lote.dataValidade | date }}</td>
-        <td>{{ lote.fornecedor }}</td>
-        <td>{{ lote.custoPorUnidade }}</td>
-        <td>{{ lote.localArmazenamento }}</td>
-        <td>{{ lote.statusLote }}</td>
-        <td>{{ lote.dataRecebimento | date }}</td>
-        <td>{{ lote.valorVendaSugerido }}</td>
-        <td>{{ lote.notaFiscalEntrada }}</td>
-        <td>{{ lote.contatoVendedor }}</td>
-        <td>
-          <button (click)="editar(lote)">Editar</button>
-          <button (click)="remover(lote.id)">Excluir</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- 🔔 Caso não existam lotes -->
-  <ng-template #nenhumLote>
-    <p>Nenhum lote encontrado.</p>
-  </ng-template>
+  <app-tables
+    [title]="'Tabela de Lotes'"
+    [rows]="allLotes"
+    [columns]="columns"
+    [columnLabels]="columnLabels"
+    [clientSidePagination]="true"
+    [sortableColumns]="['id', 'codigo', 'produtoId']"
+    [showCreateButton]="true"
+    [createButtonLabel]="'Cadastrar Lote'"
+    [showActionButtons]="true"
+    (editRow)="onEditLote($event)"
+    (deleteRow)="onDeleteLote($event)"
+    (createButtonClicked)="onClickCadastrar()"
+  >
+  </app-tables>
 </div>
+
+<app-modal
+  [tittleModal]="!loteSelecionado ? 'Cadastrar Lote' : 'Editar Lote'"
+  [size]="'large'"
+  [isOpen]="modalAberto"
+  (isOpenChange)="onModalAbertoChange($event)"
+  (saveClick)="save()"
+>
+  <app-lote-form
+    [loteToEdit]="loteSelecionado"
+    (loteSalvo)="onLoteSalvo($event)"
+  ></app-lote-form>
+</app-modal>

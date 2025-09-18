@@ -14,6 +14,14 @@ export class AdminPedidoDetalhesComponent implements OnInit {
   statusHistory: OrderStatusHistory[] = [];
   errorMessage: string = '';
 
+  mapaStatus: { [key: string]: string } = {
+  'CREATED': 'status-created',
+  'PAID': 'status-paid',
+  'CANCELED': 'status-canceled'
+};
+
+
+
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService

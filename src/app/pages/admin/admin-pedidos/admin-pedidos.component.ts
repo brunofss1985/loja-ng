@@ -12,6 +12,14 @@ export class AdminPedidosComponent implements OnInit {
   pedidos: Order[] = [];
   errorMessage: string = '';
 
+mapaStatus: { [key: string]: string } = {
+  'CREATED': 'status-created',
+  'PAID': 'status-paid',
+  'CANCELED': 'status-canceled'
+};
+
+
+
   constructor(private orderService: OrderService) { }
 
   ngOnInit(): void {

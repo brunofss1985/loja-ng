@@ -11,20 +11,24 @@ import { AuthService } from '../services/authService/auth.service';
 export class SessionExpiredGuard implements CanActivate {
   constructor(private authService: AuthService) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> {
-    const hasToken = !!this.authService.getToken(); // 👈 verifica se tem token
-    const isValid = this.authService.isAuthenticated();
+canActivate(
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+): Observable<boolean> {
+  const token = this.authService.getToken();
+  const isValid = this.authService.isAuthenticated();
 
-    if (hasToken && !isValid) {
-      console.log('⚠️ Token presente mas expirado. Disparando alerta...');
-      this.authService.handleSessionExpired(state.url);
-    } else {
-      console.log('✅ Sessão válida OU usuário deslogado — sem alerta');
-    }
+  console.log('%c[GUARD] Token:', 'color: cyan', token);
+  console.log('%c[GUARD] isAuthenticated():', 'color: yellow', isValid);
 
-    return of(true);
+  if (token && !isValid) {
+    console.warn('⚠️ Token presente mas inválido. Disparando alerta de sessão expirada.');
+    this.authService.handleSessionExpired(state.url);
+  } else {
+    console.log('✅ Sessão válida OU usuário deslogado — navegação permitida.');
   }
+
+  return of(true);
+}
+
 }

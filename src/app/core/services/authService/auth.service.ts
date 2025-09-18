@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap, catchError, of, BehaviorSubject } from 'rxjs';
+import { Observable, tap, catchError, of, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -11,7 +11,7 @@ export class AuthService {
   private readonly RETURN_URL_KEY = 'returnUrl';
   private readonly API_URL = `${environment.apiUrl}/auth`;
 
-  private sessionExpiredSubject = new BehaviorSubject<boolean>(false);
+private sessionExpiredSubject = new ReplaySubject<boolean>(1);
   public sessionExpired$ = this.sessionExpiredSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -23,7 +23,7 @@ export class AuthService {
         this.saveSessionId(response.sessionId.toString());
       }),
       catchError(error => {
-        console.error('Login failed:', error);
+        console.error('❌ Login failed:', error);
         return of(null);
       })
     );
@@ -36,7 +36,7 @@ export class AuthService {
         this.saveSessionId(response.sessionId.toString());
       }),
       catchError(err => {
-        console.error('Google login failed on backend:', err);
+        console.error('❌ Google login failed on backend:', err);
         return of(null);
       })
     );
@@ -55,7 +55,7 @@ export class AuthService {
         this.router.navigate(['/private/dashboard']);
       },
       error: (err: any) => {
-        console.error('Register failed:', err);
+        console.error('❌ Register failed:', err);
         alert('Erro ao criar conta');
       },
     });
@@ -81,22 +81,32 @@ export class AuthService {
     return localStorage.getItem(this.SESSION_ID_KEY);
   }
 
-  isAuthenticated(): boolean {
-    const token = this.getToken();
-    if (!token) return false;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const exp = payload.exp;
-      const now = Math.floor(Date.now() / 1000);
-      return exp && exp > now;
-    } catch {
-      return false;
-    }
+isAuthenticated(): boolean {
+  const token = this.getToken();
+  if (!token) {
+    console.log('[AuthService] ❌ Nenhum token encontrado.');
+    return false;
   }
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const exp = payload.exp;
+    const now = Math.floor(Date.now() / 1000);
+
+    console.log('[AuthService] Token exp:', exp, '| now:', now);
+
+    return exp && exp > now - 30;
+  } catch (e) {
+    console.warn('[AuthService] ❌ Erro ao decodificar token:', e);
+    return false;
+  }
+}
+
 
   getUser(): any | null {
     const token = this.getToken();
     if (!token) return null;
+
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       return {
@@ -105,9 +115,10 @@ export class AuthService {
         email: payload.sub,
         userType: payload.userType,
         exp: payload.exp,
+        iat: payload.iat // opcional para debug
       };
     } catch (e) {
-      console.error('Erro ao extrair dados do usuário:', e);
+      console.error('⚠️ Erro ao extrair dados do usuário:', e);
       return null;
     }
   }
@@ -139,14 +150,12 @@ export class AuthService {
     localStorage.removeItem(this.RETURN_URL_KEY);
   }
 
-  // ✅ NOVO MÉTODO: utilizado no LoginComponent
   getUserType(): string | null {
     const user = this.getUser();
     return user?.userType || null;
   }
 
   resetSessionExpired(): void {
-  this.sessionExpiredSubject.next(false);
-}
-
+    this.sessionExpiredSubject.next(false);
+  }
 }

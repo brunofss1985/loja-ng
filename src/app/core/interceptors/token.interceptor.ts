@@ -29,9 +29,15 @@ export class TokenInterceptor implements HttpInterceptor {
 
     return next.handle(authReq).pipe(
       catchError((err: HttpErrorResponse) => {
-        if (err.status === 401) {
+        const isCartRequest = req.url.includes('/api/cart');
+        const isLoginRequest = req.url.includes('/auth/login') || req.url.includes('/auth/google-login');
+
+        // ✅ Evita exibir modal de sessão expirada em falha de login
+        if (err.status === 401 && !isCartRequest && !isLoginRequest) {
+          console.warn('⚠️ 401 em rota protegida. Sessão expirada.');
           this.authService.handleSessionExpired(this.router.url);
         }
+
         return throwError(() => err);
       })
     );

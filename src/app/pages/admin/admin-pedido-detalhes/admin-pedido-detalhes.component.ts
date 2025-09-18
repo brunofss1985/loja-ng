@@ -1,9 +1,8 @@
 // admin-pedido-detalhes.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { OrderService } from 'src/app/core/services/orderService/order-service';
+import { OrderService, OrderStatusHistory } from 'src/app/core/services/orderService/order-service';
 import { Order } from 'src/app/core/models/order.model ';
-import { OrderStatusHistory } from 'src/app/core/models/order-status-history.model';
 
 @Component({
   selector: 'app-admin-pedido-detalhes',

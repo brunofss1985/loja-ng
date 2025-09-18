@@ -2,9 +2,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Order } from 'src/app/core/models/order.model ';
-import { OrderService } from 'src/app/core/services/orderService/order-service';
+import { OrderService, OrderStatusHistory } from 'src/app/core/services/orderService/order-service';
 import { AuthService } from 'src/app/core/services/authService/auth.service';
-import { OrderStatusHistory } from 'src/app/core/models/order-status-history.model';
 
 @Component({
   selector: 'app-user-pedido-detalhes',

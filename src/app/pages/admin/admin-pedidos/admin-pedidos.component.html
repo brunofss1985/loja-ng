@@ -1,0 +1,24 @@
+<h2>Todos os Pedidos (Admin)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Cliente</th>
+      <th>Status</th>
+      <th>Total</th>
+      <th>Data</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pedido of pedidos">
+      <td>#{{ pedido.id }}</td>
+      <td>{{ pedido.customer.fullName }} ({{ pedido.customer.email }})</td>
+      <td>{{ pedido.status }}</td>
+      <td>R$ {{ pedido.total | number:'1.2-2' }}</td>
+      <td>{{ pedido.createdAt | date:'short' }}</td>
+      <td><a [routerLink]="['/admin/pedidos', pedido.id]">Ver detalhes</a></td>
+    </tr>
+  </tbody>
+</table>

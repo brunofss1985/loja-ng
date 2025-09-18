@@ -19,6 +19,8 @@ import { ValidadeAlertaComponent } from './validade-alerta/validade-alerta.compo
 import { MovimentacoesComponent } from './movimentações/movimentacoes.component';
 import { LotesComponent } from './lotes/lotes.component';
 import { LoteFormComponent } from './lotes-form/lote-form.component';
+import { AdminPedidosComponent } from './admin-pedidos/admin-pedidos.component';
+import { AdminPedidoDetalhesComponent } from './admin-pedido-detalhes/admin-pedido-detalhes.component';
 // import { ProdutosEmFaltaFormComponent } from './produtos-em-falta/produtos-em-falta-form/produtos-em-falta-form.component';
 
 @NgModule({
@@ -37,7 +39,9 @@ import { LoteFormComponent } from './lotes-form/lote-form.component';
     ValidadeAlertaComponent,
     MovimentacoesComponent,
     LotesComponent,
-    LoteFormComponent
+    LoteFormComponent,
+    AdminPedidosComponent,
+    AdminPedidoDetalhesComponent,
     
   ],
   imports: [

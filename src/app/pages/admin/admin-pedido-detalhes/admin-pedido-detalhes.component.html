@@ -1,0 +1,28 @@
+<h2>Detalhes do Pedido #{{ order?.id }}</h2>
+
+<div *ngIf="order">
+  <p><strong>Cliente:</strong> {{ order.customer.fullName }} - {{ order.customer.email }}</p>
+  <p><strong>Status:</strong> {{ order.status }}</p>
+  <p><strong>Total:</strong> R$ {{ order.total | number:'1.2-2' }}</p>
+  <p><strong>Pagamento:</strong> {{ order.paymentMethod }}</p>
+  <p><strong>Entrega:</strong> {{ order.deliveryMethod }} - Estimado: {{ order.estimatedDelivery }}</p>
+  <p><strong>Código de rastreio:</strong> {{ order.trackingCode || 'Não informado' }}</p>
+  <p><strong>Presente:</strong> {{ order.isGift ? 'Sim' : 'Não' }}</p>
+  <p *ngIf="order.giftMessage"><strong>Mensagem:</strong> {{ order.giftMessage }}</p>
+
+  <h3>Itens do Pedido</h3>
+  <ul>
+    <li *ngFor="let item of order.items">
+      {{ item.name }} (x{{ item.quantity }}) - R$ {{ item.price | number:'1.2-2' }}
+    </li>
+  </ul>
+
+  <h3>Histórico de Status</h3>
+  <ul>
+    <li *ngFor="let hist of statusHistory">
+      {{ hist.status }} - {{ hist.changedAt | date:'short' }}
+    </li>
+  </ul>
+</div>
+
+<p *ngIf="errorMessage">{{ errorMessage }}</p>

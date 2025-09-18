@@ -26,6 +26,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'fas fa-home', label: 'lotes', route: '/admin/lotes' },
     { icon: 'fas fa-home', label: 'movimentações', route: '/admin/movimentacoes' },
     { icon: 'fas fa-home', label: 'validades', route: '/admin/validade-alerta' },
+    { icon: 'fas fa-home', label: 'pedidos', route: '/admin/pedidos' },
   ];
 
   userMenu = [

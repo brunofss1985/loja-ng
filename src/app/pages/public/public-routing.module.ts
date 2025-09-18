@@ -13,6 +13,9 @@ import { PerfilComponent } from './perfil/perfil.component';
 import { PaymentResultComponent } from './payment-result/payment-result.component';
 import { SessionExpiredGuard } from 'src/app/core/guards/sessionExpiredGuard';
 
+import { UserPedidosComponent } from './user-pedidos/user-pedidos.component';
+import { UserPedidoDetalhesComponent } from './user-pedido-detalhes/user-pedido-detalhes.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -27,6 +30,10 @@ const routes: Routes = [
       { path: 'payment', component: PaymentComponent, canActivate: [SessionExpiredGuard] },
       { path: 'payment-result', component: PaymentResultComponent, canActivate: [SessionExpiredGuard] },
       { path: 'perfil', component: PerfilComponent, canActivate: [SessionExpiredGuard] },
+
+      // 👤 Novas rotas do usuário:
+      { path: 'meus-pedidos', component: UserPedidosComponent, canActivate: [SessionExpiredGuard] },
+      { path: 'pedido/:id', component: UserPedidoDetalhesComponent, canActivate: [SessionExpiredGuard] },
     ],
   },
   {

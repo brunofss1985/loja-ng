@@ -13,6 +13,8 @@ import { CartComponent } from './cart-component/cart-component.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { OrderStatusComponent } from '../../shared/components/ui/order-status/order-status.component';
 import { PaymentResultComponent } from './payment-result/payment-result.component';
+import { UserPedidosComponent } from './user-pedidos/user-pedidos.component';
+import { UserPedidoDetalhesComponent } from './user-pedido-detalhes/user-pedido-detalhes.component';
 
 
 
@@ -26,7 +28,9 @@ import { PaymentResultComponent } from './payment-result/payment-result.componen
     CartComponent,
     PerfilComponent,
     OrderStatusComponent,
-    PaymentResultComponent
+    PaymentResultComponent,
+    UserPedidosComponent,
+    UserPedidoDetalhesComponent
   ],
   imports: [
     CommonModule,

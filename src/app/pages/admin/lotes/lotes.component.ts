@@ -14,7 +14,7 @@ export class LotesComponent implements OnInit {
 
   allLotes: Lote[] = [];
   columns: string[] = [
-    'id', 'codigo', 'produtoId', 'quantidade', 'dataValidade', 'fornecedor',
+    'id', 'codigo', 'produtoId', 'produtoNome', 'quantidade', 'dataValidade', 'fornecedor',
     'custoPorUnidade', 'localArmazenamento', 'statusLote', 'dataRecebimento',
     'valorVendaSugerido', 'notaFiscalEntrada', 'contatoVendedor'
   ];
@@ -22,7 +22,8 @@ export class LotesComponent implements OnInit {
     id: 'ID',
     codigo: 'Código',
     produtoId: 'Produto ID',
-    quantidade: 'Quantidade',
+      produtoNome: 'Produto',
+      quantidade: 'Quantidade',
     dataValidade: 'Validade',
     fornecedor: 'Fornecedor',
     custoPorUnidade: 'Custo/Unid',

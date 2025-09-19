@@ -3,5 +3,5 @@ import { IEnvironment } from './environment.interface';
 export const environment: IEnvironment = {
   production: false,
   apiUrl: 'https://loja-api-558ec62c308a.herokuapp.com',
-  mercadoPagoPublicKey: 'TEST-ca476526-1d41-4d7e-a55c-a43c21fbe404',
+  mercadoPagoPublicKey: 'APP_USR-e5c4a25f-0871-4603-86c2-a988adac84dc',
 };

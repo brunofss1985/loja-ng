@@ -234,4 +234,12 @@ export class PerfilComponent implements OnInit {
   openModal(): void {
     this.isModalOpen = true;
   }
+
+scrollTabs(direction: 'left' | 'right') {
+  const header = document.querySelector('.tabs-header');
+  if (!header) return;
+  const scrollAmount = 150;
+  header.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+}
+
 }

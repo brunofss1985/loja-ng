@@ -51,14 +51,20 @@
           </div>
         </aside>
 
-        <section class="tabs-wrap">
-          <div class="tabs-header">
-            <button [ngClass]="{'active': activeTab === 'visao-geral'}" (click)="setTab('visao-geral')">Visão
-              Geral</button>
-            <button [ngClass]="{'active': activeTab === 'pedidos'}" (click)="setTab('pedidos')">Pedidos</button>
-            <button [ngClass]="{'active': activeTab === 'enderecos'}" (click)="setTab('enderecos')">Endereços</button>
-            <button [ngClass]="{'active': activeTab === 'seguranca'}" (click)="setTab('seguranca')">Segurança</button>
-          </div>
+<section class="tabs-wrap">
+  <div class="tabs-header-wrapper">
+    <div class="tabs-nav-controls tabs-nav-left" (click)="scrollTabs('left')">◀</div>
+
+    <div class="tabs-header">
+      <button [ngClass]="{'active': activeTab === 'visao-geral'}" (click)="setTab('visao-geral')">Visão Geral</button>
+      <button [ngClass]="{'active': activeTab === 'pedidos'}" (click)="setTab('pedidos')">Pedidos</button>
+      <button [ngClass]="{'active': activeTab === 'enderecos'}" (click)="setTab('enderecos')">Endereços</button>
+      <button [ngClass]="{'active': activeTab === 'seguranca'}" (click)="setTab('seguranca')">Segurança</button>
+    </div>
+
+    <div class="tabs-nav-controls tabs-nav-right" (click)="scrollTabs('right')">▶</div>
+  </div>
+
 
           <div class="tab-panel" *ngIf="activeTab === 'visao-geral'">
             <h3>Resumo rápido</h3>

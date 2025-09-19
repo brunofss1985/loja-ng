@@ -1,24 +1,18 @@
-<div class="main-container">
-  <div class="products-and-pagination-container">
-    <h5>Produtos</h5>
-
-    <app-tables
-      [title]="'Tabela de Produtos'"
-      [rows]="allProducts"
-      [columns]="columns"
-      [columnLabels]="columnLabels"
-      [clientSidePagination]="true"
-      [sortableColumns]="['id', 'nome', 'preco']"
-      [showCreateButton]="true"
-      [createButtonLabel]="'Cadastrar'"
-      [showActionButtons]="true"
-      (editRow)="onEditProduct($event)"
-      (deleteRow)="onDeleteProducts($event)"
-      (createButtonClicked)="onClickCadastrar()"
-    >
-    </app-tables>
-  </div>
-</div>
+<app-tables
+  [title]="'Tabela de Produtos'"
+  [rows]="allProducts"
+  [columns]="columns"
+  [columnLabels]="columnLabels"
+  [clientSidePagination]="true"
+  [sortableColumns]="['id', 'nome', 'preco']"
+  [showCreateButton]="true"
+  [createButtonLabel]="'Cadastrar'"
+  [showActionButtons]="true"
+  (editRow)="onEditProduct($event)"
+  (deleteRow)="onDeleteProducts($event)"
+  (createButtonClicked)="onClickCadastrar()"
+>
+</app-tables>
 
 <app-modal
   [tittleModal]="!produtoSelecionado ? 'Cadastrar Produto' : 'Editar Produto'"

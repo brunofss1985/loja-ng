@@ -1,8 +1,5 @@
-<div class="main-container">
-  <h5>📦 Gerenciamento de Lotes</h5>
-
   <app-tables
-    [title]="'Tabela de Lotes'"
+    [title]="'Gerenciamento de Lotes'"
     [rows]="allLotes"
     [columns]="columns"
     [columnLabels]="columnLabels"
@@ -16,7 +13,6 @@
     (createButtonClicked)="onClickCadastrar()"
   >
   </app-tables>
-</div>
 
 <app-modal
   [tittleModal]="!loteSelecionado ? 'Cadastrar Lote' : 'Editar Lote'"

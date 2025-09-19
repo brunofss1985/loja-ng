@@ -118,3 +118,42 @@
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--borda);
 }
+
+
+.validade-container .bloco {
+  margin-bottom: 1.5rem;
+}
+
+.validade-container h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--cor-secundaria);
+  border-bottom: 1px solid var(--borda);
+  padding-bottom: 0.3rem;
+}
+
+.btn-voltar {
+  background-color: transparent;
+  border: 1px solid var(--cor-secundaria);
+  color: var(--cor-secundaria);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-voltar:hover {
+  background-color: var(--cor-secundaria);
+  color: var(--branco);
+}
+
+.flex-voltar {
+  display: flex;
+  justify-content: flex-end; /* Alinha à direita */
+}
+
+.flex-voltar.left {
+  justify-content: flex-start; /* Alinha à esquerda */
+}

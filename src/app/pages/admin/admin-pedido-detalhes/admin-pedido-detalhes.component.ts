@@ -1,6 +1,6 @@
 // admin-pedido-detalhes.component.ts
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService, OrderStatusHistory } from 'src/app/core/services/orderService/order-service';
 import { Order } from 'src/app/core/models/order.model ';
 
@@ -24,7 +24,8 @@ export class AdminPedidoDetalhesComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -43,4 +44,8 @@ export class AdminPedidoDetalhesComponent implements OnInit {
       this.errorMessage = 'ID do pedido inválido';
     }
   }
+
+  voltar(): void {
+  this.router.navigate(['/admin/pedidos']);
+}
 }

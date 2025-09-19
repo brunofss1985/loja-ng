@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { EstoqueService } from 'src/app/core/services/estoqueService/estoque.service';
 
@@ -12,6 +11,14 @@ export class ValidadeAlertaComponent implements OnInit {
   dias: number = 30;
   carregando = false;
   erro: string | null = null;
+
+  // Configuração da tabela reutilizável
+  columns: string[] = ['nome', 'marca', 'dataValidade'];
+  columnLabels: { [key: string]: string } = {
+    nome: 'Nome',
+    marca: 'Marca',
+    dataValidade: 'Validade'
+  };
 
   constructor(private estoqueService: EstoqueService) {}
 
@@ -32,5 +39,13 @@ export class ValidadeAlertaComponent implements OnInit {
         this.carregando = false;
       }
     });
+  }
+
+  formatarCelula(header: string, value: any): string {
+    if (header === 'dataValidade') {
+      return new Date(value).toLocaleDateString('pt-BR');
+    }
+
+    return value;
   }
 }

@@ -1,14 +1,13 @@
-<div class="card">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <div>{{ title }}</div>
-    <div *ngIf="showCreateButton">
-      <button class="btn btn-primary" (click)="onCreateButtonClick()">
-        {{ createButtonLabel }}
-      </button>
-    </div>
+<div class="validade-container">
+  <h2>{{ title }}</h2>
+
+  <div *ngIf="showCreateButton" class="d-flex justify-content-end mb-2">
+    <button class="btn btn-primary" (click)="onCreateButtonClick()">
+      {{ createButtonLabel }}
+    </button>
   </div>
 
-  <div class="d-flex align-items-center justify-content-end px-3 pt-2">
+  <div class="d-flex align-items-center justify-content-end mb-2">
     <label class="me-2">Exibir:</label>
     <select class="form-select form-select-sm w-auto" [ngModel]="pageSize" (ngModelChange)="onChangePageSize($event)">
       <option [value]="4">4</option>
@@ -19,43 +18,41 @@
     </select>
   </div>
 
-  <div class="card-body table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th *ngFor="let column of columns"
-              (click)="clientSidePagination && sortableColumns.includes(column) && onSort(column)"
-              style="cursor: pointer">
-            {{ columnLabels[column] || column }}
-            <span *ngIf="clientSidePagination && sortableColumns.includes(column)">
-              <span *ngIf="sortColumn === column">
-                {{ sortDirection === 'asc' ? '▲' : '▼' }}
-              </span>
-              <span *ngIf="sortColumn !== column">⇅</span>
+  <table *ngIf="paginatedRows.length > 0; else tabelaVazia">
+    <thead>
+      <tr>
+        <th *ngFor="let column of columns"
+            (click)="clientSidePagination && sortableColumns.includes(column) && onSort(column)"
+            style="cursor: pointer">
+          {{ columnLabels[column] || column }}
+          <span *ngIf="clientSidePagination && sortableColumns.includes(column)">
+            <span *ngIf="sortColumn === column">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
-          </th>
-          <th *ngIf="showActionButtons">Ações</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="paginatedRows.length > 0; else tabelaVazia">
-        <tr *ngFor="let row of paginatedRows">
-          <td *ngFor="let header of columns">
-            {{ cellFormatter ? cellFormatter(header, row[header]) : row[header] }}
-          </td>
-          <td *ngIf="showActionButtons">
-            <button class="btn btn-sm btn-outline-danger me-1" (click)="onDeleteRow(row['id'])">
-              <span class="material-symbols-outlined">delete_forever</span>
-            </button>
-            <button class="btn btn-sm btn-outline-primary" *ngIf="showEditButton" (click)="onEditRow(row)">
-              <span class="material-symbols-outlined">edit</span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+            <span *ngIf="sortColumn !== column">⇅</span>
+          </span>
+        </th>
+        <th *ngIf="showActionButtons">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of paginatedRows">
+        <td *ngFor="let header of columns">
+          {{ cellFormatter ? cellFormatter(header, row[header]) : row[header] }}
+        </td>
+        <td *ngIf="showActionButtons">
+          <button class="btn btn-sm btn-outline-danger me-1" (click)="onDeleteRow(row['id'])">
+            <span class="material-symbols-outlined">delete_forever</span>
+          </button>
+          <button class="btn btn-sm btn-outline-primary" *ngIf="showEditButton" (click)="onEditRow(row)">
+            <span class="material-symbols-outlined">edit</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-  <div *ngIf="getTotalPages() > 1" class="pagination d-flex justify-content-center mb-3">
+  <div *ngIf="getTotalPages() > 1" class="pagination d-flex justify-content-center my-3">
     <button class="btn btn-sm btn-outline-secondary me-2" (click)="onChangePage(currentPage - 1)"
             [disabled]="currentPage === 0">
       Anterior
@@ -80,8 +77,6 @@
   </div>
 
   <ng-template #tabelaVazia>
-    <tr>
-      <td colspan="100%" class="text-center p-3 text-muted">Nenhum dado disponível.</td>
-    </tr>
+    <div class="text-center text-muted py-3">Nenhum dado disponível.</div>
   </ng-template>
 </div>

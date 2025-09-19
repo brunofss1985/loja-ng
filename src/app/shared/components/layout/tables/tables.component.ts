@@ -22,8 +22,12 @@ export class TablesComponent implements OnInit, OnChanges {
   @Input() createButtonLabel!: string;
   @Input() rows: any[] = [];
   @Input() showActionButtons: boolean = false;
-  @Input() actionButtonsLabel!: string;
+
   @Input() showEditButton: boolean = true;
+  @Input() showViewButton: boolean = false;
+  @Input() showDeleteButton: boolean = true;
+
+  @Input() actionButtonsLabel!: string;
   @Input() cellFormatter?: (header: string, value: any) => string;
 
   @Input() clientSidePagination: boolean = true;
@@ -33,9 +37,10 @@ export class TablesComponent implements OnInit, OnChanges {
   @Input() pageSize: number = 10;
   @Input() totalPages: number = 1;
 
-  @Output() editRow = new EventEmitter<any>();
   @Output() createButtonClicked = new EventEmitter<void>();
+  @Output() editRow = new EventEmitter<any>();
   @Output() deleteRow = new EventEmitter<any>();
+  @Output() viewRow = new EventEmitter<any>();
   @Output() pageChange = new EventEmitter<number>();
   @Output() pageSizeChange = new EventEmitter<number>();
 
@@ -59,12 +64,16 @@ export class TablesComponent implements OnInit, OnChanges {
     this.createButtonClicked.emit();
   }
 
+  onEditRow(row: any): void {
+    this.editRow.emit(row);
+  }
+
   onDeleteRow(id: any): void {
     this.deleteRow.emit(id);
   }
 
-  onEditRow(row: any): void {
-    this.editRow.emit(row);
+  onViewRow(row: any): void {
+    this.viewRow.emit(row);
   }
 
   onSort(column: string): void {

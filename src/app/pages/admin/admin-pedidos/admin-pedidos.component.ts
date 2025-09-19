@@ -1,5 +1,5 @@
-// admin-pedidos.component.ts
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Order } from 'src/app/core/models/order.model ';
 import { OrderService } from 'src/app/core/services/orderService/order-service';
 
@@ -12,30 +12,55 @@ export class AdminPedidosComponent implements OnInit {
   pedidos: Order[] = [];
   errorMessage: string = '';
 
-mapaStatus: { [key: string]: string } = {
-  'CREATED': 'status-created',
-  'PAID': 'status-paid',
-  'CANCELED': 'status-canceled'
-};
+  columns: string[] = ['id', 'customer', 'status', 'total', 'createdAt'];
+  columnLabels: { [key: string]: string } = {
+    id: 'ID',
+    customer: 'Cliente',
+    status: 'Status',
+    total: 'Total',
+    createdAt: 'Data'
+  };
 
+  mapaStatus: { [key: string]: string } = {
+    'CREATED': 'status-created',
+    'PAID': 'status-paid',
+    'CANCELED': 'status-canceled'
+  };
 
-
-  constructor(private orderService: OrderService) { }
+  constructor(private orderService: OrderService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadAllOrders();
   }
 
   loadAllOrders(): void {
-    // Supondo que exista um endpoint /orders/all que o backend precisa ter
     this.orderService.getAllOrdersForAdmin().subscribe({
       next: orders => this.pedidos = orders,
       error: err => this.errorMessage = 'Erro ao carregar pedidos: ' + err.message
     });
   }
 
-  verDetalhes(orderId: number): void {
-    // redireciona para página de detalhes do admin
-    // Ex: router.navigate(['/admin/pedidos', orderId]);
+  verDetalhes(order: Order): void {
+    this.router.navigate(['/admin/pedidos', order.id]);
+  }
+
+  formatarCelula(header: string, value: any): string {
+    if (header === 'customer') {
+      return `${value?.fullName} (${value?.email})`;
+    }
+
+    if (header === 'total') {
+      return `R$ ${value.toFixed(2)}`;
+    }
+
+    if (header === 'createdAt') {
+      return new Date(value).toLocaleString();
+    }
+
+    if (header === 'status') {
+      return value;
+    }
+
+    return value;
   }
 }

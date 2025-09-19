@@ -41,11 +41,19 @@
           {{ cellFormatter ? cellFormatter(header, row[header]) : row[header] }}
         </td>
         <td *ngIf="showActionButtons">
-          <button class="btn btn-sm btn-outline-danger me-1" (click)="onDeleteRow(row['id'])">
-            <span class="material-symbols-outlined">delete_forever</span>
+          <!-- Botão de visualizar -->
+          <button *ngIf="showViewButton" class="btn btn-sm btn-outline-info me-1" (click)="onViewRow(row)">
+            <span class="material-symbols-outlined">visibility</span>
           </button>
-          <button class="btn btn-sm btn-outline-primary" *ngIf="showEditButton" (click)="onEditRow(row)">
+
+          <!-- Botão de editar -->
+          <button *ngIf="showEditButton" class="btn btn-sm btn-outline-primary me-1" (click)="onEditRow(row)">
             <span class="material-symbols-outlined">edit</span>
+          </button>
+
+          <!-- Botão de deletar -->
+          <button *ngIf="showDeleteButton" class="btn btn-sm btn-outline-danger" (click)="onDeleteRow(row['id'])">
+            <span class="material-symbols-outlined">delete_forever</span>
           </button>
         </td>
       </tr>

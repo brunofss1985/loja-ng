@@ -1,0 +1,19 @@
+<div class="container">
+  <button class="btn btn-secondary mb-3" (click)="voltar()">
+    ← Voltar para Lotes
+  </button>
+
+  <h3 *ngIf="lote">Editando Lote #{{ lote.id }}</h3>
+
+  <div *ngIf="loading">Carregando...</div>
+
+  <app-lote-form 
+  *ngIf="!loading"
+   [loteToEdit]="lote"
+    (loteSalvo)="onLoteSalvo($event)">
+  </app-lote-form>
+
+  <div class="mt-3">
+    <button class="btn btn-primary" (click)="salvar()">Salvar Alterações</button>
+  </div>
+</div>

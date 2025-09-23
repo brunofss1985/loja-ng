@@ -7,10 +7,8 @@ export interface Lote {
   id?: number;
   codigo: string;
   produtoId: number;
-  quantidade: number;
   dataValidade: string | Date;
 
-  // Novos campos
   fornecedor: string;
   custoPorUnidade: number;
   localArmazenamento: string;
@@ -20,6 +18,7 @@ export interface Lote {
   notaFiscalEntrada: string;
   contatoVendedor: string;
 }
+
 
 @Injectable({ providedIn: 'root' })
 export class LotesService {
@@ -61,4 +60,5 @@ export class LotesService {
       headers: this.getAuthHeaders(),
     });
   }
+  
 }

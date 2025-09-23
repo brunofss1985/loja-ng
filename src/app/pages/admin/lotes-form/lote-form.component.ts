@@ -28,23 +28,21 @@ export class LoteFormComponent implements OnInit, OnChanges {
     if (this.loteToEdit) this.patchForm(this.loteToEdit);
   }
 
-ngOnChanges(changes: SimpleChanges): void {
-  if (!this.form || !changes['loteToEdit']) return;
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!this.form || !changes['loteToEdit']) return;
 
-  if (this.loteToEdit) {
-    this.patchForm(this.loteToEdit);
-  } else {
-    this.resetForm();
+    if (this.loteToEdit) {
+      this.patchForm(this.loteToEdit);
+    } else {
+      this.resetForm();
+    }
   }
-}
-
 
   createForm(): void {
     this.form = this.fb.group({
       id: [null],
       codigo: ['', Validators.required],
       produtoId: [0, Validators.required],
-      quantidade: [0, Validators.required],
       dataValidade: ['', Validators.required],
       fornecedor: ['', Validators.required],
       contatoVendedor: ['', Validators.required],
@@ -64,7 +62,6 @@ ngOnChanges(changes: SimpleChanges): void {
   resetForm(): void {
     this.form.reset({
       produtoId: 0,
-      quantidade: 0,
       custoPorUnidade: 0,
       valorVendaSugerido: 0,
       statusLote: 'ativo'

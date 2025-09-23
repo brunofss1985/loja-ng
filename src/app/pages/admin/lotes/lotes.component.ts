@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { LotesService, Lote } from 'src/app/core/services/lotesService/lotes.service';
+import {
+  LotesService,
+  Lote,
+} from 'src/app/core/services/lotesService/lotes.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoteFormComponent } from '../lotes-form/lote-form.component';
-import { SharedModule } from "src/app/shared/shared.module";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lotes',
@@ -14,16 +17,26 @@ export class LotesComponent implements OnInit {
 
   allLotes: Lote[] = [];
   columns: string[] = [
-    'id', 'codigo', 'produtoId', 'produtoNome', 'quantidade', 'dataValidade', 'fornecedor',
-    'custoPorUnidade', 'localArmazenamento', 'statusLote', 'dataRecebimento',
-    'valorVendaSugerido', 'notaFiscalEntrada', 'contatoVendedor'
+    'id',
+    'codigo',
+    'produtoId',
+    'produtoNome',
+    'dataValidade',
+    'fornecedor',
+    'custoPorUnidade',
+    'localArmazenamento',
+    'statusLote',
+    'dataRecebimento',
+    'valorVendaSugerido',
+    'notaFiscalEntrada',
+    'contatoVendedor',
   ];
+
   columnLabels: { [key: string]: string } = {
     id: 'ID',
     codigo: 'Código',
     produtoId: 'Produto ID',
-      produtoNome: 'Produto',
-      quantidade: 'Quantidade',
+    produtoNome: 'Produto',
     dataValidade: 'Validade',
     fornecedor: 'Fornecedor',
     custoPorUnidade: 'Custo/Unid',
@@ -32,13 +45,17 @@ export class LotesComponent implements OnInit {
     dataRecebimento: 'Recebimento',
     valorVendaSugerido: 'Venda Sug.',
     notaFiscalEntrada: 'Nota Fiscal',
-    contatoVendedor: 'Contato'
+    contatoVendedor: 'Contato',
   };
 
   loteSelecionado?: Lote;
   modalAberto: boolean = false;
 
-  constructor(private loteService: LotesService, private toast: ToastrService) {}
+  constructor(
+    private loteService: LotesService,
+    private toast: ToastrService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.carregarLotes();
@@ -47,7 +64,7 @@ export class LotesComponent implements OnInit {
   carregarLotes(): void {
     this.loteService.listar().subscribe({
       next: (data) => (this.allLotes = data),
-      error: (err) => console.error('Erro ao carregar lotes', err)
+      error: (err) => console.error('Erro ao carregar lotes', err),
     });
   }
 
@@ -70,14 +87,16 @@ export class LotesComponent implements OnInit {
 
     request.subscribe({
       next: () => {
-        this.toast.success(`Lote ${lote.id ? 'atualizado' : 'cadastrado'} com sucesso!`);
+        this.toast.success(
+          `Lote ${lote.id ? 'atualizado' : 'cadastrado'} com sucesso!`
+        );
         this.modalAberto = false;
         this.carregarLotes();
       },
       error: (err) => {
         this.toast.error('Erro ao salvar lote.');
         console.error(err);
-      }
+      },
     });
   }
 
@@ -91,7 +110,7 @@ export class LotesComponent implements OnInit {
         error: (err) => {
           this.toast.error('Erro ao excluir lote.');
           console.error(err);
-        }
+        },
       });
     }
   }
@@ -99,6 +118,7 @@ export class LotesComponent implements OnInit {
   onEditLote(lote: Lote): void {
     this.loteSelecionado = lote;
     this.modalAberto = true;
+    this.router.navigate(['/lotes', lote.id, 'editar']);
   }
 
   save(): void {

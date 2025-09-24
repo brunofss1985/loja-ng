@@ -6,8 +6,6 @@ import {
 } from 'src/app/core/services/lotesService/lotes.service';
 import { ToastrService } from 'ngx-toastr';
 import { LoteFormComponent } from '../lotes-form/lote-form.component';
-import { Produto } from 'src/app/core/models/product.model';
-import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
 import { ProdutoReal } from 'src/app/core/models/produto-real.model';
 import { ProdutoRealService } from 'src/app/core/services/produto-real/produto-real.service';
 
@@ -24,11 +22,21 @@ export class EditLoteEProdutoLoteComponent implements OnInit {
   loading: boolean = true;
   formularioProdutoAberto = false;
 
+  // 🔹 Configurações da tabela reutilizável
+  columnsProdutos: string[] = ['id', 'codigoBarras', 'quantidade'];
+  columnLabelsProdutos: { [key: string]: string } = {
+    id: 'ID',
+    codigoBarras: 'Código de Barras',
+    quantidade: 'Quantidade',
+  };
+
+  currentPage = 0;
+  pageSize = 10;
+
   constructor(
     private route: ActivatedRoute,
     public router: Router,
     private loteService: LotesService,
-    private produtoService: ProdutosService,
     private toast: ToastrService,
     private produtoRealService: ProdutoRealService
   ) {}
@@ -94,7 +102,7 @@ export class EditLoteEProdutoLoteComponent implements OnInit {
       next: () => {
         this.toast.success('Produto real salvo com sucesso!');
         this.formularioProdutoAberto = false;
-        this.carregarProdutosReais(); // Atualiza lista
+        this.carregarProdutosReais();
       },
       error: () => {
         this.toast.error('Erro ao salvar produto real.');
@@ -102,7 +110,12 @@ export class EditLoteEProdutoLoteComponent implements OnInit {
     });
   }
 
-  irParaCadastroProduto(): void {
-    this.router.navigate(['/lotes']);
+  onPageChange(page: number): void {
+    this.currentPage = page;
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.currentPage = 0;
   }
 }

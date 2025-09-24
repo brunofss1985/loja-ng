@@ -16,9 +16,16 @@ export interface Lote {
   localArmazenamento: string;
   statusLote: 'ativo' | 'inativo' | 'em_transito';
   dataRecebimento: string;
-
-  // 👇 Novo campo opcional
   quantidadeTotal?: number;
+
+  // 🔽 Novos campos
+  custoTotal?: number;
+  lucroTotalEstimado?: number;
+  lucroEstimadoPorUnidade?: number;
+  codigoBarras?: string;
+  cnpjFornecedor?: string;
+  dataCadastro?: string;
+  dataAtualizacao?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -58,7 +65,7 @@ export class LotesService {
 
   remover(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, {
-      headers: this.getAuthHeaders(), // ✅ Deve incluir o Authorization
+      headers: this.getAuthHeaders(),
     });
   }
 }

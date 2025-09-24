@@ -1,7 +1,8 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
   <div class="container-fluid">
     <div class="row">
-      <!-- Campos do formulário -->
+
+      <!-- Campos existentes -->
 
       <div class="col-md-4">
         <label class="mt-2">Código</label>
@@ -62,10 +63,47 @@
         <input class="form-control" formControlName="dataRecebimento" type="date" />
       </div>
 
-      <!-- 🔹 Campo novo, somente leitura -->
+      <!-- Campo somente leitura -->
       <div class="col-md-4">
         <label class="mt-2">Total de Produtos Reais</label>
         <input class="form-control" [value]="quantidadeTotal" disabled />
+      </div>
+
+      <!-- Novos campos -->
+
+      <div class="col-md-4">
+        <label class="mt-2">Código de Barras</label>
+        <input class="form-control" formControlName="codigoBarras" />
+      </div>
+
+      <div class="col-md-4">
+        <label class="mt-2">CNPJ Fornecedor</label>
+        <input class="form-control" formControlName="cnpjFornecedor" />
+      </div>
+
+      <div class="col-md-4">
+        <label class="mt-2">Custo Total do Lote</label>
+        <input class="form-control" formControlName="custoTotal" type="number" />
+      </div>
+
+      <div class="col-md-4">
+        <label class="mt-2">Lucro Total Estimado</label>
+        <input class="form-control" formControlName="lucroTotalEstimado" type="number" />
+      </div>
+
+      <div class="col-md-4">
+        <label class="mt-2">Lucro por Unidade</label>
+        <input class="form-control" formControlName="lucroEstimadoPorUnidade" type="number" />
+      </div>
+
+      <div class="col-md-4">
+        <label class="mt-2">Data de Cadastro</label>
+        <input class="form-control" formControlName="dataCadastro" type="date" />
+      </div>
+
+      <div class="col-md-4">
+        <label class="mt-2">Data de Atualização</label>
+        <input class="form-control" formControlName="dataAtualizacao" type="date" />
       </div>
     </div>
   </div>

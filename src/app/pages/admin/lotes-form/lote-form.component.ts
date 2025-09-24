@@ -17,7 +17,7 @@ import { Lote } from 'src/app/core/services/lotesService/lotes.service';
 })
 export class LoteFormComponent implements OnInit, OnChanges {
   @Input() loteToEdit?: Lote;
-  @Input() quantidadeTotal: number = 0; // ✅ Novo input
+  @Input() quantidadeTotal: number = 0;
 
   @Output() loteSalvo = new EventEmitter<Lote>();
 
@@ -54,6 +54,15 @@ export class LoteFormComponent implements OnInit, OnChanges {
       localArmazenamento: ['', Validators.required],
       statusLote: ['ativo', Validators.required],
       dataRecebimento: ['', Validators.required],
+
+      // Novos campos
+      custoTotal: [0],
+      lucroTotalEstimado: [0],
+      lucroEstimadoPorUnidade: [0],
+      codigoBarras: [''],
+      cnpjFornecedor: [''],
+      dataCadastro: [''],
+      dataAtualizacao: ['']
     });
   }
 

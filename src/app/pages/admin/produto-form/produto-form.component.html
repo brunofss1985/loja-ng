@@ -108,18 +108,6 @@
         />
       </div>
       <div class="col-md-4">
-        <label class="mt-2">Custo</label>
-        <input class="form-control" formControlName="custo" type="number" />
-      </div>
-      <div class="col-md-4">
-        <label class="mt-2">Lucro Estimado</label>
-        <input
-          class="form-control"
-          formControlName="lucroEstimado"
-          type="number"
-        />
-      </div>
-      <div class="col-md-4">
         <label class="mt-2">Status Aprovação</label>
         <select class="form-control" formControlName="statusAprovacao">
           <option value="aprovado">Aprovado</option>
@@ -181,14 +169,6 @@
           type="number"
         />
       </div>
-      <div class="col-md-4">
-        <label class="mt-2">Localização Física</label>
-        <input class="form-control" formControlName="localizacaoFisica" />
-      </div>
-      <div class="col-md-4">
-        <label class="mt-2">Código de Barras</label>
-        <input class="form-control" formControlName="codigoBarras" />
-      </div>
     </div>
 
     <div [formGroup]="dimensoesGroup">
@@ -211,50 +191,7 @@
         </div>
       </div>
     </div>
-    <div class="row mt-4">
-      <div class="col-md-4">
-        <label class="mt-2">Fornecedor</label>
-        <input class="form-control" formControlName="fornecedor" />
-      </div>
-      <div class="col-md-4">
-        <label class="mt-2">Fornecedor ID</label>
-        <input class="form-control" formControlName="fornecedorId" />
-      </div>
-      <div class="col-md-4">
-        <label class="mt-2">CNPJ do Fornecedor</label>
-        <input class="form-control" formControlName="cnpjFornecedor" />
-      </div>
-      <div class="col-md-4">
-        <label class="mt-2">Contato do Fornecedor</label>
-        <input class="form-control" formControlName="contatoFornecedor" />
-      </div>
-      <div class="col-md-4">
-        <label class="mt-2">Prazo de Entrega</label>
-        <input class="form-control" formControlName="prazoEntregaFornecedor" />
-      </div>
-    </div>
-    <div class="row mt-4">
-      <div class="col-md-4">
-        <label class="mt-2">Data de Cadastro</label>
-        <input class="form-control" type="date" formControlName="dataCadastro" />
-      </div>
-      <div class="col-md-4">
-        <label class="mt-2">Última Atualização</label>
-        <input
-          class="form-control"
-          type="date"
-          formControlName="dataUltimaAtualizacao"
-        />
-      </div>
-      <div class="col-md-4">
-        <label class="mt-2">Data de Validade</label>
-        <input
-          class="form-control"
-          type="date"
-          formControlName="dataValidade"
-        />
-      </div>
-    </div>
+
     <div class="row mt-4">
       <div class="col-12">
         <label class="mt-2">Tabela Nutricional (JSON ou livre)</label>
@@ -284,6 +221,7 @@
         />
       </div>
     </div>
+
     <div class="row mt-4">
       <div class="col-md-4">
         <label class="mt-2">Quantidade Vendida</label>
@@ -302,6 +240,7 @@
         />
       </div>
     </div>
+
     <div class="row mt-4">
       <div class="col-12">
         <label class="mt-2">Galeria de Imagens</label>
@@ -332,6 +271,7 @@
         </div>
       </div>
     </div>
+
     <div class="row mt-4">
       <div class="col-md-4">
         <label class="mt-2">Média de Avaliações</label>

@@ -38,7 +38,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
     private toastService: ToastrService,
     private cdr: ChangeDetectorRef,
     private http: HttpClient,
-  private produtoRealService: ProdutoRealService // ✅ usado para buscar o estoque total
+    private produtoRealService: ProdutoRealService
   ) {}
 
   ngOnInit(): void {
@@ -82,27 +82,22 @@ export class ProductFormComponent implements OnInit, OnChanges {
       preco: [0, [Validators.required, Validators.min(0)]],
       precoDesconto: [0],
       porcentagemDesconto: [{ value: '0%', disabled: true }],
-      custo: [0],
-      fornecedor: [''],
-      lucroEstimado: [0],
-      statusAprovacao: ['pendente'],
       tamanhoPorcao: [''],
       galeria: [[]],
       ativo: [true],
       destaque: [false],
       disponibilidade: ['em_estoque'],
 
-      estoqueTotal: [{ value: 0, disabled: true }], // ✅ readonly
+      estoqueTotal: [{ value: 0, disabled: true }],
       estoqueMinimo: [null],
       estoqueMaximo: [null],
 
-      localizacaoFisica: [''],
-      codigoBarras: [''],
       dimensoes: this.fb.group({
         altura: [null],
         largura: [null],
         profundidade: [null],
       }),
+
       restricoes: [[]],
       tabelaNutricional: [null],
       modoDeUso: [''],
@@ -111,13 +106,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
         media: [null],
         comentarios: [[]],
       }),
-      dataCadastro: [null],
-      dataUltimaAtualizacao: [null],
-      dataValidade: [null],
-      fornecedorId: [null],
-      cnpjFornecedor: [''],
-      contatoFornecedor: [''],
-      prazoEntregaFornecedor: [''],
+
       quantidadeVendida: [null],
       vendasMensais: [[]],
     });
@@ -154,17 +143,14 @@ export class ProductFormComponent implements OnInit, OnChanges {
         : '0%',
     });
 
-    // ✅ Buscar estoque total do backend
     if (edit.id) {
       this.buscarEstoqueTotal(edit.id);
     }
 
-    // Imagem principal
     if (imagemBase64 && imagemMimeType && !this.imagemSelecionada) {
       this.imagemPreview = `data:${imagemMimeType};base64,${imagemBase64}`;
     }
 
-    // Galeria de imagens
     this.galeriaPreviewUrls = [];
     if (Array.isArray(galeriaBase64) && galeriaBase64.length > 0) {
       this.galeriaPreviewUrls = galeriaBase64.map(
@@ -177,17 +163,16 @@ export class ProductFormComponent implements OnInit, OnChanges {
     setTimeout(() => this.cdr.detectChanges(), 100);
   }
 
-private buscarEstoqueTotal(produtoId: number): void {
-  this.produtoRealService.obterEstoqueTotalPorProdutoId(produtoId).subscribe({
-    next: (res) => {
-      this.form.get('estoqueTotal')?.patchValue(res.estoqueTotal);
-    },
-    error: (err) => {
-      console.error('Erro ao buscar estoque total', err);
-    },
-  });
-}
-
+  private buscarEstoqueTotal(produtoId: number): void {
+    this.produtoRealService.obterEstoqueTotalPorProdutoId(produtoId).subscribe({
+      next: (res) => {
+        this.form.get('estoqueTotal')?.patchValue(res.estoqueTotal);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar estoque total', err);
+      },
+    });
+  }
 
   resetFormToDefaults(): void {
     this.form.reset({
@@ -205,10 +190,6 @@ private buscarEstoqueTotal(produtoId: number): void {
       preco: 0,
       precoDesconto: 0,
       porcentagemDesconto: '0%',
-      custo: 0,
-      fornecedor: '',
-      lucroEstimado: 0,
-      statusAprovacao: 'pendente',
       galeria: [],
       ativo: true,
       destaque: false,
@@ -216,21 +197,12 @@ private buscarEstoqueTotal(produtoId: number): void {
       estoqueTotal: 0,
       estoqueMinimo: null,
       estoqueMaximo: null,
-      localizacaoFisica: '',
-      codigoBarras: '',
       dimensoes: { altura: null, largura: null, profundidade: null },
       restricoes: [],
       tabelaNutricional: null,
       modoDeUso: '',
       palavrasChave: [],
       avaliacoes: { media: null, comentarios: [] },
-      dataCadastro: null,
-      dataUltimaAtualizacao: null,
-      dataValidade: null,
-      fornecedorId: null,
-      cnpjFornecedor: '',
-      contatoFornecedor: '',
-      prazoEntregaFornecedor: '',
       quantidadeVendida: null,
       vendasMensais: [],
     });
@@ -245,7 +217,6 @@ private buscarEstoqueTotal(produtoId: number): void {
     const input = event.target as HTMLInputElement;
     if (input?.files?.length) {
       this.imagemSelecionada = input.files[0];
-
       const reader = new FileReader();
       reader.onload = () => {
         this.imagemPreview = reader.result as string;
@@ -258,11 +229,9 @@ private buscarEstoqueTotal(produtoId: number): void {
     const input = event.target as HTMLInputElement;
     if (input?.files?.length) {
       const files = Array.from(input.files);
-
       files.forEach((file) => {
         if (!this.galeriaSelecionada.find((f) => f.name === file.name)) {
           this.galeriaSelecionada.push(file);
-
           const reader = new FileReader();
           reader.onload = () => {
             this.galeriaPreviewUrls.push(reader.result as string);
@@ -270,7 +239,6 @@ private buscarEstoqueTotal(produtoId: number): void {
           reader.readAsDataURL(file);
         }
       });
-
       const nomes = this.galeriaSelecionada.map((f) => f.name);
       this.form.get('galeria')?.setValue(nomes);
     }
@@ -341,9 +309,6 @@ private buscarEstoqueTotal(produtoId: number): void {
       preco: Number(formValue.preco),
       precoDesconto: Number(formValue.precoDesconto || 0),
       porcentagemDesconto: formValue.porcentagemDesconto,
-      custo: Number(formValue.custo || 0),
-      lucroEstimado: Number(formValue.lucroEstimado || 0),
-      statusAprovacao: formValue.statusAprovacao || 'pendente',
       restricoes: formValue.restricoes,
       palavrasChave: formValue.palavrasChave,
       vendasMensais: formValue.vendasMensais,

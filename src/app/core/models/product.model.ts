@@ -12,10 +12,6 @@ export interface Produto {
   preco: number;
   precoDesconto?: number;
   porcentagemDesconto?: string;
-  custo?: number;
-  fornecedor?: string;
-  lucroEstimado?: number;
-  statusAprovacao?: string;
   tamanhoPorcao?: string;
 
   imagemMimeType?: string;
@@ -29,13 +25,9 @@ export interface Produto {
   destaque?: boolean;
   disponibilidade?: 'em_estoque' | 'por_encomenda' | 'nao_disponivel';
 
-  // ✅ Alterado: estoque agora vem do backend como estoqueTotal
   estoqueTotal?: number;
   estoqueMinimo?: number;
   estoqueMaximo?: number;
-
-  localizacaoFisica?: string;
-  codigoBarras?: string;
 
   dimensoes?: {
     altura: number | null;
@@ -52,15 +44,6 @@ export interface Produto {
     media: number | null;
     comentarios: string[];
   };
-
-  dataCadastro?: string | Date;
-  dataUltimaAtualizacao?: string | Date;
-  dataValidade?: string | Date;
-
-  fornecedorId?: number;
-  cnpjFornecedor?: string;
-  contatoFornecedor?: string;
-  prazoEntregaFornecedor?: string;
 
   quantidadeVendida?: number;
   vendasMensais?: number[];

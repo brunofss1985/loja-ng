@@ -16,37 +16,40 @@ export class LotesComponent implements OnInit {
   @ViewChild(LoteFormComponent) loteFormComponent!: LoteFormComponent;
 
   allLotes: Lote[] = [];
-  columns: string[] = [
-    'id',
-    'codigo',
-    'produtoId',
-    'produtoNome',
-    'dataValidade',
-    'fornecedor',
-    'custoPorUnidade',
-    'localArmazenamento',
-    'statusLote',
-    'dataRecebimento',
-    'valorVendaSugerido',
-    'notaFiscalEntrada',
-    'contatoVendedor',
-  ];
+ columns: string[] = [
+  'id',
+  'codigo',
+  'produtoId',
+  'produtoNome',
+  'dataValidade',
+  'fornecedor',
+  'custoPorUnidade',
+  'localArmazenamento',
+  'statusLote',
+  'dataRecebimento',
+  'valorVendaSugerido',
+  'notaFiscalEntrada',
+  'contatoVendedor',
+  'quantidadeTotal' // 👈 adicionado
+];
 
-  columnLabels: { [key: string]: string } = {
-    id: 'ID',
-    codigo: 'Código',
-    produtoId: 'Produto ID',
-    produtoNome: 'Produto',
-    dataValidade: 'Validade',
-    fornecedor: 'Fornecedor',
-    custoPorUnidade: 'Custo/Unid',
-    localArmazenamento: 'Local',
-    statusLote: 'Status',
-    dataRecebimento: 'Recebimento',
-    valorVendaSugerido: 'Venda Sug.',
-    notaFiscalEntrada: 'Nota Fiscal',
-    contatoVendedor: 'Contato',
-  };
+columnLabels: { [key: string]: string } = {
+  id: 'ID',
+  codigo: 'Código',
+  produtoId: 'Produto ID',
+  produtoNome: 'Produto',
+  dataValidade: 'Validade',
+  fornecedor: 'Fornecedor',
+  custoPorUnidade: 'Custo/Unid',
+  localArmazenamento: 'Local',
+  statusLote: 'Status',
+  dataRecebimento: 'Recebimento',
+  valorVendaSugerido: 'Venda Sug.',
+  notaFiscalEntrada: 'Nota Fiscal',
+  contatoVendedor: 'Contato',
+  quantidadeTotal: 'Qtd. Produtos' // 👈 novo rótulo
+};
+
 
   loteSelecionado?: Lote;
   modalAberto: boolean = false;

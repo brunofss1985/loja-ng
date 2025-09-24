@@ -233,4 +233,9 @@ export class ProdutosService {
       headers: this.getAuthHeaders(),
     });
   }
+
+//   getProdutosPorLote(loteId: number): Observable<Produto[]> {
+//   return this.http.get<Produto[]>(`${this.apiUrl}/lotes/${loteId}/produtos`);
+// }
+
 }

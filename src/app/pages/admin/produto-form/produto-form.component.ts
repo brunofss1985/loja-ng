@@ -12,6 +12,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Produto } from 'src/app/core/models/product.model';
 import { ProdutosService } from 'src/app/core/services/produtosService/produtos.service';
+import { HttpClient } from '@angular/common/http';
+import { ProdutoRealService } from 'src/app/core/services/produto-real/produto-real.service';
 
 @Component({
   selector: 'app-produto-form',
@@ -34,8 +36,38 @@ export class ProductFormComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private produtosService: ProdutosService,
     private toastService: ToastrService,
-    private cdr: ChangeDetectorRef
-  ) {
+    private cdr: ChangeDetectorRef,
+    private http: HttpClient,
+  private produtoRealService: ProdutoRealService // ✅ usado para buscar o estoque total
+  ) {}
+
+  ngOnInit(): void {
+    this.createForm();
+
+    if (this.productToEdit) {
+      this.patchFormFromProduct(this.productToEdit);
+    }
+
+    this.form.get('preco')?.valueChanges.subscribe(() => {
+      this.calcularPorcentagemDesconto();
+    });
+
+    this.form.get('precoDesconto')?.valueChanges.subscribe(() => {
+      this.calcularPorcentagemDesconto();
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['productToEdit']) {
+      if (this.productToEdit) {
+        this.patchFormFromProduct(this.productToEdit);
+      } else {
+        this.resetFormToDefaults();
+      }
+    }
+  }
+
+  createForm(): void {
     this.form = this.fb.group({
       id: [null],
       nome: ['', Validators.required],
@@ -60,8 +92,7 @@ export class ProductFormComponent implements OnInit, OnChanges {
       destaque: [false],
       disponibilidade: ['em_estoque'],
 
-      // ✅ estoqueTotal agora é readonly
-      estoqueTotal: [{ value: 0, disabled: true }],
+      estoqueTotal: [{ value: 0, disabled: true }], // ✅ readonly
       estoqueMinimo: [null],
       estoqueMaximo: [null],
 
@@ -90,25 +121,6 @@ export class ProductFormComponent implements OnInit, OnChanges {
       quantidadeVendida: [null],
       vendasMensais: [[]],
     });
-  }
-
-  ngOnInit(): void {
-    if (this.productToEdit) this.patchFormFromProduct(this.productToEdit);
-
-    this.form.get('preco')?.valueChanges.subscribe(() => {
-      this.calcularPorcentagemDesconto();
-    });
-
-    this.form.get('precoDesconto')?.valueChanges.subscribe(() => {
-      this.calcularPorcentagemDesconto();
-    });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['productToEdit']) {
-      if (this.productToEdit) this.patchFormFromProduct(this.productToEdit);
-      else this.resetFormToDefaults();
-    }
   }
 
   patchFormFromProduct(edit: Produto): void {
@@ -142,12 +154,17 @@ export class ProductFormComponent implements OnInit, OnChanges {
         : '0%',
     });
 
-    // ✅ imagem principal
+    // ✅ Buscar estoque total do backend
+    if (edit.id) {
+      this.buscarEstoqueTotal(edit.id);
+    }
+
+    // Imagem principal
     if (imagemBase64 && imagemMimeType && !this.imagemSelecionada) {
       this.imagemPreview = `data:${imagemMimeType};base64,${imagemBase64}`;
     }
 
-    // ✅ galeria de imagens
+    // Galeria de imagens
     this.galeriaPreviewUrls = [];
     if (Array.isArray(galeriaBase64) && galeriaBase64.length > 0) {
       this.galeriaPreviewUrls = galeriaBase64.map(
@@ -159,6 +176,18 @@ export class ProductFormComponent implements OnInit, OnChanges {
     this.calcularPorcentagemDesconto();
     setTimeout(() => this.cdr.detectChanges(), 100);
   }
+
+private buscarEstoqueTotal(produtoId: number): void {
+  this.produtoRealService.obterEstoqueTotalPorProdutoId(produtoId).subscribe({
+    next: (res) => {
+      this.form.get('estoqueTotal')?.patchValue(res.estoqueTotal);
+    },
+    error: (err) => {
+      console.error('Erro ao buscar estoque total', err);
+    },
+  });
+}
+
 
   resetFormToDefaults(): void {
     this.form.reset({

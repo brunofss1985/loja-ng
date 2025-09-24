@@ -29,6 +29,7 @@ const routes: Routes = [
       { path: 'validade-alerta', component: ValidadeAlertaComponent },
       { path: 'lotes', component: LotesComponent },
       { path: 'lotes/:id/editar', component: EditLoteEProdutoLoteComponent },
+
       // 👨‍💼 Novas rotas de pedidos admin:
       { path: 'pedidos', component: AdminPedidosComponent },
       { path: 'pedidos/:id', component: AdminPedidoDetalhesComponent },

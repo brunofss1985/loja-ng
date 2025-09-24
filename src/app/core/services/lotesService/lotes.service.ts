@@ -7,18 +7,19 @@ export interface Lote {
   id?: number;
   codigo: string;
   produtoId: number;
-  dataValidade: string | Date;
-
+  dataValidade: string;
   fornecedor: string;
+  contatoVendedor: string;
   custoPorUnidade: number;
-  localArmazenamento: string;
-  statusLote: string;
-  dataRecebimento: string | Date;
   valorVendaSugerido: number;
   notaFiscalEntrada: string;
-  contatoVendedor: string;
-}
+  localArmazenamento: string;
+  statusLote: 'ativo' | 'inativo' | 'em_transito';
+  dataRecebimento: string;
 
+  // 👇 Novo campo opcional
+  quantidadeTotal?: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class LotesService {
@@ -57,8 +58,7 @@ export class LotesService {
 
   remover(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, {
-      headers: this.getAuthHeaders(),
+      headers: this.getAuthHeaders(), // ✅ Deve incluir o Authorization
     });
   }
-  
 }

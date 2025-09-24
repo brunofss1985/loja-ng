@@ -1,42 +1,53 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
   <div class="container-fluid">
     <div class="row">
+      <!-- Campos do formulário -->
+
       <div class="col-md-4">
         <label class="mt-2">Código</label>
         <input class="form-control" formControlName="codigo" />
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Produto ID</label>
         <input class="form-control" formControlName="produtoId" type="number" />
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Data de Validade</label>
         <input class="form-control" formControlName="dataValidade" type="date" />
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Fornecedor</label>
         <input class="form-control" formControlName="fornecedor" />
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Contato Vendedor</label>
         <input class="form-control" formControlName="contatoVendedor" />
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Custo por Unidade</label>
         <input class="form-control" formControlName="custoPorUnidade" type="number" />
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Valor de Venda Sugerido</label>
         <input class="form-control" formControlName="valorVendaSugerido" type="number" />
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Nota Fiscal de Entrada</label>
         <input class="form-control" formControlName="notaFiscalEntrada" />
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Local Armazenamento</label>
         <input class="form-control" formControlName="localArmazenamento" />
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Status do Lote</label>
         <select class="form-control" formControlName="statusLote">
@@ -45,9 +56,16 @@
           <option value="em_transito">Em Trânsito</option>
         </select>
       </div>
+
       <div class="col-md-4">
         <label class="mt-2">Data de Recebimento</label>
         <input class="form-control" formControlName="dataRecebimento" type="date" />
+      </div>
+
+      <!-- 🔹 Campo novo, somente leitura -->
+      <div class="col-md-4">
+        <label class="mt-2">Total de Produtos Reais</label>
+        <input class="form-control" [value]="quantidadeTotal" disabled />
       </div>
     </div>
   </div>

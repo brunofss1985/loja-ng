@@ -5,7 +5,7 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Lote } from 'src/app/core/services/lotesService/lotes.service';
@@ -13,10 +13,12 @@ import { Lote } from 'src/app/core/services/lotesService/lotes.service';
 @Component({
   selector: 'app-lote-form',
   templateUrl: './lote-form.component.html',
-  styleUrls: ['./lote-form.component.scss']
+  styleUrls: ['./lote-form.component.scss'],
 })
 export class LoteFormComponent implements OnInit, OnChanges {
   @Input() loteToEdit?: Lote;
+  @Input() quantidadeTotal: number = 0; // ✅ Novo input
+
   @Output() loteSalvo = new EventEmitter<Lote>();
 
   form!: FormGroup;
@@ -51,7 +53,7 @@ export class LoteFormComponent implements OnInit, OnChanges {
       notaFiscalEntrada: ['', Validators.required],
       localArmazenamento: ['', Validators.required],
       statusLote: ['ativo', Validators.required],
-      dataRecebimento: ['', Validators.required]
+      dataRecebimento: ['', Validators.required],
     });
   }
 
@@ -64,7 +66,7 @@ export class LoteFormComponent implements OnInit, OnChanges {
       produtoId: 0,
       custoPorUnidade: 0,
       valorVendaSugerido: 0,
-      statusLote: 'ativo'
+      statusLote: 'ativo',
     });
   }
 

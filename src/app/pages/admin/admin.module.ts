@@ -18,6 +18,7 @@ import { LoteFormComponent } from './lotes-form/lote-form.component';
 import { AdminPedidosComponent } from './admin-pedidos/admin-pedidos.component';
 import { AdminPedidoDetalhesComponent } from './admin-pedido-detalhes/admin-pedido-detalhes.component';
 import { EditLoteEProdutoLoteComponent } from './edit-lote-eproduto-lote/edit-lote-eproduto-lote.component';
+import { ProdutoRealFormComponent } from './produto-real-form/produto-real-form.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { EditLoteEProdutoLoteComponent } from './edit-lote-eproduto-lote/edit-lo
     LoteFormComponent,
     AdminPedidosComponent,
     AdminPedidoDetalhesComponent,
-    EditLoteEProdutoLoteComponent
+    EditLoteEProdutoLoteComponent,
+    ProdutoRealFormComponent
     
   ],
   imports: [

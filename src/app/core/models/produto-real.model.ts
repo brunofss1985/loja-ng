@@ -7,4 +7,3 @@ export interface ProdutoReal {
   validade?: string;
   localizacao?: string;
 }
- 

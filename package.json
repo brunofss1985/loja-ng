@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "prebuild": "./switch-env.sh",
-  "postinstall": "bash ./set-env.sh"
+    "prebuild": "bash ./switch-env.sh",
+    "postinstall": "chmod +x switch-env.sh set-env.sh && bash ./set-env.sh"
   },
   "private": true,
   "dependencies": {

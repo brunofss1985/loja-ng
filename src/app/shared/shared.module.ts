@@ -47,3 +47,4 @@ import { FiltroComponent } from '../pages/public/filtro/filtro.component';
   ]
 })
 export class SharedModule { }
+ 

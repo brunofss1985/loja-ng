@@ -1,6 +1,26 @@
-# Loja
+# Loja - Sistema de E-commerce Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.11.
+Sistema de e-commerce desenvolvido com Angular 13, com configuração automática de ambientes por branch.
+
+## 🚀 Instalação Rápida
+
+```bash
+git clone <repo-url>
+cd loja-ng
+npm install
+```
+
+**Pronto!** O sistema de troca automática de ambiente já está configurado. ✨
+
+## 🔄 Ambientes Automáticos
+
+O sistema automaticamente configura o ambiente baseado na branch:
+
+- **`dev`** → Desenvolvimento (localhost:8080)
+- **`teste`** → Testes (API remota) 
+- **`prod`** → Produção (API remota)
+
+Basta fazer `git checkout <branch>` e o environment será trocado automaticamente!
 
 ## Development server
 

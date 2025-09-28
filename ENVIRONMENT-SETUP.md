@@ -2,6 +2,17 @@
 
 Este projeto está configurado para trocar automaticamente os arquivos de configuração do Angular baseado na branch do Git.
 
+## 🚀 Instalação Automática
+
+**O sistema é configurado automaticamente após o `npm install`!**
+
+Quando você clonar o projeto e executar:
+```bash
+npm install
+```
+
+O sistema será automaticamente configurado e estará pronto para uso. Não precisa fazer nada mais!
+
 ## Como Funciona
 
 Quando você faz `git checkout` para uma branch diferente, o sistema automaticamente:
@@ -9,7 +20,13 @@ Quando você faz `git checkout` para uma branch diferente, o sistema automaticam
 - `teste` → Copia `environment.teste.ts` para `environment.ts` (API de testes)
 - `prod` → Copia `environment.prod.ts` para `environment.ts` (API de produção)
 
-## Configuração Necessária
+## Configuração Manual (se necessário)
+
+Se por algum motivo a configuração automática não funcionou, você pode executar manualmente:
+
+```bash
+bash setup-env-hooks.sh
+```
 
 ### 1. Hook do Git
 Certifique-se de que o arquivo `.git/hooks/post-checkout` existe e é executável:

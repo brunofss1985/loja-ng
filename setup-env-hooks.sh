@@ -1,10 +1,34 @@
 #!/bin/bash
 
 # Script para configurar a troca automática de environment por branch
-echo "🔧 Configurando troca automática de environment..."
+# Executado automaticamente após npm install
+echo ""
+echo "🔧 Configurando troca automática de environment por branch..."
+
+# Verificar se estamos em um repositório Git
+if [ ! -d ".git" ]; then
+    echo "❌ Não é um repositório Git. Pulando configuração de hooks."
+    exit 0
+fi
+
+# Verificar se o hook já existe e está atualizado
+HOOK_FILE=".git/hooks/post-checkout"
+if [ -f "$HOOK_FILE" ]; then
+    if grep -q "Ambiente de Desenvolvimento ativado (localhost:8080)" "$HOOK_FILE" 2>/dev/null; then
+        echo "✅ Hook post-checkout já está configurado e atualizado."
+        # Executar para a branch atual mesmo se já existe
+        bash "$HOOK_FILE" "" "" "1" 2>/dev/null || true
+        echo "✅ Configuração de environment automática está ativa!"
+        echo ""
+        exit 0
+    fi
+fi
+
+# Criar o diretório de hooks se não existir
+mkdir -p .git/hooks
 
 # Criar o hook post-checkout
-cat > .git/hooks/post-checkout << 'EOF'
+cat > "$HOOK_FILE" << 'EOF'
 #!/usr/bin/env bash
 
 # Hook post-checkout para trocar automaticamente o environment do Angular
@@ -39,13 +63,18 @@ exit 0
 EOF
 
 # Tornar o hook executável
-chmod +x .git/hooks/post-checkout
+chmod +x "$HOOK_FILE"
 
 # Remover configuração do Husky se existir
 git config --unset core.hooksPath 2>/dev/null || true
 
 # Executar para a branch atual
-bash .git/hooks/post-checkout "" "" "1"
+echo "🔄 Configurando ambiente para a branch atual..."
+bash "$HOOK_FILE" "" "" "1" 2>/dev/null || true
 
 echo "✅ Configuração concluída!"
-echo "Agora a troca de ambiente será automática ao fazer checkout de branches."
+echo "✅ A troca de ambiente será automática ao fazer checkout de branches:"
+echo "   • dev → Desenvolvimento (localhost:8080)"
+echo "   • teste → Testes (API remota)"  
+echo "   • prod → Produção (API remota)"
+echo ""

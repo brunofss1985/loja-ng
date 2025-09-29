@@ -38,7 +38,14 @@
     <tbody>
       <tr *ngFor="let row of paginatedRows">
         <td *ngFor="let header of columns">
-          {{ cellFormatter ? cellFormatter(header, row[header]) : row[header] }}
+          <ng-container *ngIf="header === 'status'; else normalCell">
+            <span class="status-tag" [ngClass]="getStatusClass(row[header])">
+              {{ getStatusLabel(row[header]) }}
+            </span>
+          </ng-container>
+          <ng-template #normalCell>
+            {{ cellFormatter ? cellFormatter(header, row[header]) : row[header] }}
+          </ng-template>
         </td>
         <td *ngIf="showActionButtons">
           <!-- Botão de visualizar -->

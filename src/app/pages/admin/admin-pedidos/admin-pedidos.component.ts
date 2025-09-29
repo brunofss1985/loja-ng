@@ -58,7 +58,7 @@ export class AdminPedidosComponent implements OnInit {
     }
 
     if (header === 'status') {
-      return value;
+      return value; // Agora o componente de tabelas lida com a formatação
     }
 
     return value;

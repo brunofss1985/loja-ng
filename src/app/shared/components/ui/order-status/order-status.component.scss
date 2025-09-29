@@ -1,26 +1,37 @@
-.tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-radius: 9999px;
-      font-weight: 600;
-      padding: 0.375rem 0.75rem;
-      line-height: 1;
-      border-width: 1px;
-      border-style: solid;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.3s ease;
-      box-shadow: 0 0 0 0 rgba(0,0,0,0);
-      user-select: none;
-    }
-    .tag:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
-    .tag:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.status-tag {
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  display: inline-block;
+  text-transform: capitalize;
+}
 
-    /* Cores solicitadas (aplicadas apenas quando for um .tag) */
-    .tag.text-neutral  { color: #6B7280; background-color: #F3F4F6; border-color: #E5E7EB; }
-    .tag.text-warning  { color: #D97706; background-color: #FFF7ED; border-color: #FDE68A; }
-    .tag.text-success  { color: #059669; background-color: #ECFDF5; border-color: #A7F3D0; }
-    .tag.text-danger   { color: #DC2626; background-color: #FEF2F2; border-color: #FCA5A5; }
-    .tag.text-info     { color: #2563EB; background-color: #EEF2FF; border-color: #93C5FD; }
+.status-created {
+  background-color: #0288d1; /* Azul para "Criado" */
+}
 
-    /* Ícones simples com SVG embutido */
-    .tag svg { width: 16px; height: 16px; }
+.status-paid {
+  background-color: #388e3c; /* Verde para "Pago" */
+}
+
+.status-canceled {
+  background-color: #d32f2f; /* Vermelho para "Cancelado" */
+}
+
+.status-processing {
+  background-color: #f57c00; /* Laranja para "Processando" */
+}
+
+.status-shipped {
+  background-color: #7b1fa2; /* Roxo para "Enviado" */
+}
+
+.status-delivered {
+  background-color: #388e3c; /* Verde escuro para "Entregue" */
+}
+
+.status-pending {
+  background-color: #616161; /* Cinza para "Pendente" */
+}

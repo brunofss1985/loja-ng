@@ -109,15 +109,31 @@
 }
 
 .status-created {
-  background-color: #0288d1;
+  background-color: #0288d1; /* Azul para "Criado" */
 }
 
 .status-paid {
-  background-color: #388e3c;
+  background-color: #388e3c; /* Verde para "Pago" */
 }
 
 .status-canceled {
-  background-color: #d32f2f;
+  background-color: #d32f2f; /* Vermelho para "Cancelado" */
+}
+
+.status-processing {
+  background-color: #f57c00; /* Laranja para "Processando" */
+}
+
+.status-shipped {
+  background-color: #7b1fa2; /* Roxo para "Enviado" */
+}
+
+.status-delivered {
+  background-color: #388e3c; /* Verde escuro para "Entregue" */
+}
+
+.status-pending {
+  background-color: #616161; /* Cinza para "Pendente" */
 }
 
 .validade-container .btn-outline-danger,

@@ -8,22 +8,23 @@ import { Component, Input, OnInit } from '@angular/core';
 export class OrderStatusComponent implements OnInit {
   @Input() status!: string;
   statusLabel = '';
-  statusColor = '';
+  statusClass = '';
 
   ngOnInit() {
-    const map: Record<string, { label: string; color: string }> = {
-      CREATED: { label: 'Criado', color: 'text-neutral' },
-      PENDING: { label: 'Aguardando pagamento', color: 'text-warning' },
-      PAID: { label: 'Pagamento confirmado', color: 'text-success' },
-      CANCELED: { label: 'Pedido cancelado', color: 'text-danger' },
-      SENT: { label: 'Enviado', color: 'text-info' },
-      DELIVERED: { label: 'Entregue', color: 'text-success' },
+    const map: Record<string, { label: string; class: string }> = {
+      CREATED: { label: 'Criado', class: 'status-created' },
+      PENDING: { label: 'Pendente', class: 'status-pending' },
+      PAID: { label: 'Pago', class: 'status-paid' },
+      CANCELED: { label: 'Cancelado', class: 'status-canceled' },
+      PROCESSING: { label: 'Processando', class: 'status-processing' },
+      SHIPPED: { label: 'Enviado', class: 'status-shipped' },
+      DELIVERED: { label: 'Entregue', class: 'status-delivered' },
     };
 
-    const fallback = { label: 'Desconhecido', color: 'text-neutral' };
-    const statusInfo = map[this.status] || fallback;
+    const fallback = { label: 'Desconhecido', class: 'status-created' };
+    const statusInfo = map[this.status?.toUpperCase()] || fallback;
 
     this.statusLabel = statusInfo.label;
-    this.statusColor = statusInfo.color;
+    this.statusClass = statusInfo.class;
   }
 }

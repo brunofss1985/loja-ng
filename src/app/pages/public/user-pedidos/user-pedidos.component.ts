@@ -33,4 +33,46 @@ export class UserPedidosComponent implements OnInit {
   verDetalhes(orderId: number): void {
     // Ex: router.navigate(['/pedido', orderId]);
   }
+
+  getStatusClass(status: string): string {
+    switch (status?.toUpperCase()) {
+      case 'CREATED':
+        return 'status-created';
+      case 'PAID':
+        return 'status-paid';
+      case 'CANCELED':
+        return 'status-canceled';
+      case 'PROCESSING':
+        return 'status-processing';
+      case 'SHIPPED':
+        return 'status-shipped';
+      case 'DELIVERED':
+        return 'status-delivered';
+      case 'PENDING':
+        return 'status-pending';
+      default:
+        return 'status-created';
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status?.toUpperCase()) {
+      case 'CREATED':
+        return 'Criado';
+      case 'PAID':
+        return 'Pago';
+      case 'CANCELED':
+        return 'Cancelado';
+      case 'PROCESSING':
+        return 'Processando';
+      case 'SHIPPED':
+        return 'Enviado';
+      case 'DELIVERED':
+        return 'Entregue';
+      case 'PENDING':
+        return 'Pendente';
+      default:
+        return status;
+    }
+  }
 }

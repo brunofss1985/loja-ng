@@ -13,7 +13,11 @@
   <tbody>
     <tr *ngFor="let pedido of pedidos">
       <td>#{{ pedido.id }}</td>
-      <td>{{ pedido.status }}</td>
+      <td>
+        <span class="status-tag" [ngClass]="getStatusClass(pedido.status)">
+          {{ getStatusLabel(pedido.status) }}
+        </span>
+      </td>
       <td>R$ {{ pedido.total | number:'1.2-2' }}</td>
       <td>{{ pedido.createdAt | date:'short' }}</td>
       <td><a [routerLink]="['/pedido', pedido.id]">Detalhes</a></td>

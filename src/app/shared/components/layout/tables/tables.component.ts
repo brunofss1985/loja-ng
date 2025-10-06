@@ -32,6 +32,10 @@ export class TablesComponent implements OnInit, OnChanges {
 
   @Input() clientSidePagination: boolean = true;
   @Input() sortableColumns: string[] = [];
+  // Exibe contador de itens no título
+  @Input() showCount: boolean = false;
+  // Exibe contador na linha da paginação (à esquerda)
+  @Input() showFooterCount: boolean = true;
 
   @Input() currentPage: number = 0;
   @Input() pageSize: number = 10;
@@ -154,6 +158,22 @@ export class TablesComponent implements OnInit, OnChanges {
     }
 
     return pages;
+  }
+
+  // Índices de exibição atuais (para a barra de status)
+  get pageStartIndex(): number {
+    if (!this.clientSidePagination) {
+      return this.currentPage * this.pageSize;
+    }
+    return this.currentPage * this.pageSize;
+  }
+
+  get pageEndIndex(): number {
+    if (!this.clientSidePagination) {
+      // Melhor esforço: quantidade disponível na página atual
+      return this.pageStartIndex + this.paginatedRows.length;
+    }
+    return Math.min(this.rows.length, this.pageStartIndex + this.paginatedRows.length);
   }
 
   getStatusClass(status: string): string {

@@ -1,5 +1,8 @@
 <div class="validade-container">
-  <h2>{{ title }}</h2>
+  <h2>
+    {{ title }}
+    <small *ngIf="showCount" class="count-badge">({{ rows.length }})</small>
+  </h2>
 
   <div *ngIf="showCreateButton" class="d-flex justify-content-end mb-2">
     <button class="btn-top btn btn-primary" (click)="onCreateButtonClick()">
@@ -67,11 +70,12 @@
     </tbody>
   </table>
 
-  <div *ngIf="getTotalPages() > 1" class="pagination d-flex justify-content-center my-3">
-    <button class="btn btn-sm btn-outline-secondary me-2" (click)="onChangePage(currentPage - 1)"
-            [disabled]="currentPage === 0">
-      Anterior
-    </button>
+  <div class="table-footer my-3" *ngIf="rows.length > 0 && (getTotalPages() > 1 || showFooterCount)">
+    <div class="pagination d-flex justify-content-center mb-2" *ngIf="getTotalPages() > 1">
+      <button class="btn btn-sm btn-outline-secondary me-2" (click)="onChangePage(currentPage - 1)"
+              [disabled]="currentPage === 0">
+        Anterior
+      </button>
 
     <ng-container *ngFor="let pageIndex of getDisplayedPages()">
       <button class="btn btn-sm mx-1"
@@ -85,10 +89,14 @@
       </button>
     </ng-container>
 
-    <button class="btn btn-sm btn-outline-secondary ms-2" (click)="onChangePage(currentPage + 1)"
-            [disabled]="currentPage >= getTotalPages() - 1">
-      Próxima
-    </button>
+      <button class="btn btn-sm btn-outline-secondary ms-2" (click)="onChangePage(currentPage + 1)"
+              [disabled]="currentPage >= getTotalPages() - 1">
+        Próxima
+      </button>
+    </div>
+    <div class="table-meta" *ngIf="showFooterCount">
+      Mostrando {{ pageStartIndex + 1 }}–{{ pageEndIndex }} de {{ rows.length }} itens
+    </div>
   </div>
 
   <ng-template #tabelaVazia>

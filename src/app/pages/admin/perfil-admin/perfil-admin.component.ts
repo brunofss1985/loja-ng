@@ -24,7 +24,13 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 export class PerfilAdminComponent implements OnInit {
   perfilForm!: FormGroup;
   passwordForm!: FormGroup;
-  currentUser!: User;
+  currentUser: User = {
+    name: '',
+    email: '',
+    userType: 'ADMIN',
+    phone: '',
+    address: ''
+  };
 
   constructor(
     private fb: FormBuilder,

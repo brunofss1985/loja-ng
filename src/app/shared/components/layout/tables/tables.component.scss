@@ -65,6 +65,38 @@
   margin-bottom: 1rem;
 }
 
+/* Toolbar de filtros e paginação */
+/* Inputs de filtro no cabeçalho */
+thead input.form-control.form-control-sm {
+  width: 100%;
+}
+
+/* Toolbar superior com filtros em linha */
+.table-toolbar {
+  gap: 0.75rem;
+}
+
+.filters-bar {
+  gap: 0.5rem;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.filters-bar .filter-input {
+  display: inline-block;
+  width: 160px;
+}
+
+.filters-bar .btn {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .filters-bar .filter-input {
+    width: 140px;
+  }
+}
+
 .validade-container button.btn {
   font-size: 0.8rem;
   padding: 0.25rem 0.6rem;

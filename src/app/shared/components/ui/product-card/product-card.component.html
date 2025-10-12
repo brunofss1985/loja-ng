@@ -1,5 +1,5 @@
 <!-- <div class="content"> -->
-  <div class="product-card">
+  <div class="product-card" [class.out-of-stock]="isOutOfStock">
     <div class="discount-badge" *ngIf="getPorcentagemNumerica() > 0">
       -{{ getPorcentagemNumerica() }}%
     </div>
@@ -10,6 +10,9 @@
 
 
         </a>
+      </div>
+      <div class="soldout-overlay" *ngIf="isOutOfStock">
+        <span>Produto esgotado</span>
       </div>
     </div>
 
@@ -36,32 +39,32 @@
 
     <div class="stock-row">
       <span class="dot" [ngClass]="{
-        'em_estoque': productDisponibilidade === 'em_estoque',
-        'por_encomenda': productDisponibilidade === 'por_encomenda',
-        'nao_disponivel': productDisponibilidade === 'nao_disponivel'
+        'em_estoque': !isOutOfStock && productDisponibilidade === 'em_estoque',
+        'por_encomenda': !isOutOfStock && productDisponibilidade === 'por_encomenda',
+        'nao_disponivel': isOutOfStock || productDisponibilidade === 'nao_disponivel'
       }"></span>
-      <ng-container [ngSwitch]="productDisponibilidade">
+      <ng-container [ngSwitch]="isOutOfStock ? 'nao_disponivel' : productDisponibilidade">
         <span [ngClass]="{
-          'em_estoque': productDisponibilidade === 'em_estoque',
-          'por_encomenda': productDisponibilidade === 'por_encomenda',
-          'nao_disponivel': productDisponibilidade === 'nao_disponivel'
+          'em_estoque': !isOutOfStock && productDisponibilidade === 'em_estoque',
+          'por_encomenda': !isOutOfStock && productDisponibilidade === 'por_encomenda',
+          'nao_disponivel': isOutOfStock || productDisponibilidade === 'nao_disponivel'
         }" *ngSwitchCase="'em_estoque'">Em estoque e envio imediato</span>
         <span [ngClass]="{
-          'em_estoque': productDisponibilidade === 'em_estoque',
-          'por_encomenda': productDisponibilidade === 'por_encomenda',
-          'nao_disponivel': productDisponibilidade === 'nao_disponivel'
+          'em_estoque': !isOutOfStock && productDisponibilidade === 'em_estoque',
+          'por_encomenda': !isOutOfStock && productDisponibilidade === 'por_encomenda',
+          'nao_disponivel': isOutOfStock || productDisponibilidade === 'nao_disponivel'
         }" *ngSwitchCase="'por_encomenda'">Produto por encomenda</span>
         <span [ngClass]="{
-          'em_estoque': productDisponibilidade === 'em_estoque',
-          'por_encomenda': productDisponibilidade === 'por_encomenda',
-          'nao_disponivel': productDisponibilidade === 'nao_disponivel'
+          'em_estoque': !isOutOfStock && productDisponibilidade === 'em_estoque',
+          'por_encomenda': !isOutOfStock && productDisponibilidade === 'por_encomenda',
+          'nao_disponivel': isOutOfStock || productDisponibilidade === 'nao_disponivel'
         }" *ngSwitchCase="'nao_disponivel'">Não disponível</span>
       </ng-container>
     </div>
 
     <div class="footerCard">
       <a [routerLink]="['/produto', productId]">
-        <button type="button" class="buttonComprar btn btn-warning">Compre Agora</button>
+        <button type="button" class="buttonComprar btn btn-warning" [disabled]="isOutOfStock">{{ isOutOfStock ? 'Esgotado' : 'Compre Agora' }}</button>
       </a>
     </div>
   </div>

@@ -23,6 +23,7 @@ export class ProductCardComponent {
   @Input() productImageMimeType?: string;
   @Input() productImagemBase64: string = '';
   @Input() productImageBase64?: string;
+  @Input() productEstoqueTotal?: number;
 
 
 
@@ -51,4 +52,8 @@ export class ProductCardComponent {
   }
   return 'assets/img/no-image.png';
 }
+
+  get isOutOfStock(): boolean {
+    return this.productEstoqueTotal !== undefined && this.productEstoqueTotal <= 0;
+  }
 }

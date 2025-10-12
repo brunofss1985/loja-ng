@@ -88,7 +88,8 @@
     : 'assets/img/no-image.png'
 " [productPreco]="produto.preco" [productMarca]="produto.marca" [productPrecoDesconto]="produto.precoDesconto ?? 0"
               [productPorcentagemDesconto]="produto.porcentagemDesconto ?? '0%'"
-              [productDisponibilidade]="produto.disponibilidade ?? 'indisponível'"></app-product-card>
+              [productDisponibilidade]="produto.disponibilidade ?? 'indisponível'"
+              [productEstoqueTotal]="produto.estoqueTotal ?? 0"></app-product-card>
           </div>
         </div>
       </div>

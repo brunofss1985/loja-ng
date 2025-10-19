@@ -20,7 +20,8 @@ export class AdminPedidoDetalhesComponent implements OnInit, OnDestroy {
   mapaStatus: { [key: string]: string } = {
     'CREATED': 'status-created',
     'PAID': 'status-paid',
-    'CANCELED': 'status-canceled'
+    'CANCELED': 'status-canceled',
+    'DESPACHADO': 'status-despachado'
   };
 
   constructor(
@@ -74,10 +75,10 @@ export class AdminPedidoDetalhesComponent implements OnInit, OnDestroy {
     this.router.navigate(['/admin/pedidos']);
   }
 
-  // Exibe botão de finalizar para status pago/paid (case insensitive / PT-BR)
-  isPaid(): boolean {
-    const s = this.order?.status?.toString()?.trim()?.toLowerCase();
-    return s === 'paid' || s === 'pago';
+  // Exibe botão de finalizar quando pedido está pago ou já despachado (para finalizar itens restantes)
+  isFinalizable(): boolean {
+    const s = this.order?.status?.toString()?.trim()?.toUpperCase();
+    return s === 'PAID' || s === 'DESPACHADO';
   }
 
   // Abre modal para ler código de barras e lote

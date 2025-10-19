@@ -61,7 +61,7 @@
 
   <div class="bloco flex-voltar">
     <div class="botoes-acoes">
-      <button *ngIf="isPaid()" class="btn-primario" [disabled]="finalizando" (click)="finalizeVenda()">
+      <button *ngIf="isFinalizable()" class="btn-primario" [disabled]="finalizando" (click)="finalizeVenda()">
         {{ finalizando ? 'Finalizando...' : 'Finalizar venda' }}
       </button>
 

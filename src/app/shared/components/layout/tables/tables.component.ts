@@ -216,6 +216,8 @@ export class TablesComponent implements OnInit, OnChanges {
         return 'status-paid';
       case 'CANCELED':
         return 'status-canceled';
+      case 'DESPACHADO':
+        return 'status-despachado';
       case 'PROCESSING':
         return 'status-processing';
       case 'SHIPPED':
@@ -237,6 +239,8 @@ export class TablesComponent implements OnInit, OnChanges {
         return 'Pago';
       case 'CANCELED':
         return 'Cancelado';
+      case 'DESPACHADO':
+        return 'Despachado';
       case 'PROCESSING':
         return 'Processando';
       case 'SHIPPED':

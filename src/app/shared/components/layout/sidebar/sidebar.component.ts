@@ -23,6 +23,7 @@ export class SidebarComponent implements OnInit {
     { icon: 'fas fa-home', label: 'movimentações', route: '/admin/movimentacoes' },
     { icon: 'fas fa-home', label: 'validades', route: '/admin/validade-alerta' },
     { icon: 'fas fa-home', label: 'pedidos', route: '/admin/pedidos' },
+    { icon: 'fas fa-cash-register', label: 'Produtos Vendidos', route: '/admin/vendas' },
   ];
 
   userMenu = [

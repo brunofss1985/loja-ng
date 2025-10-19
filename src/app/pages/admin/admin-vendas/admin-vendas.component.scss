@@ -1,0 +1,8 @@
+.container { padding: 1rem; }
+.erro { color: #d32f2f; font-weight: 600; }
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { border: 1px solid var(--borda); padding: 6px 10px; }
+.btn-acao { background: var(--cor-secundaria); color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; }
+.modal-content { background: var(--cor-base); padding: 1rem; border-radius: var(--radius); width: 90%; max-width: 520px; }
+.acoes { display: flex; justify-content: flex-end; gap: .5rem; margin-top: .75rem; }

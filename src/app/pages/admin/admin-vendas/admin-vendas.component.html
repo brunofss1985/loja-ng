@@ -1,0 +1,52 @@
+<div class="container">
+  <h2>Produtos Vendidos</h2>
+
+  <p *ngIf="errorMessage" class="erro">{{ errorMessage }}</p>
+
+  <table class="table" *ngIf="vendas.length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Pedido</th>
+        <th>Produto</th>
+        <th>Código de Barras</th>
+        <th>Lote</th>
+        <th>Cliente</th>
+        <th>Data</th>
+        <th>Valor</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let v of vendas">
+        <td>{{ v.id }}</td>
+        <td>#{{ v.orderId }}</td>
+        <td>{{ v.produtoNome }}</td>
+        <td>{{ v.codigoBarras }}</td>
+        <td>{{ v.loteCodigo }}</td>
+        <td>{{ v.customerNome }}</td>
+        <td>{{ v.dataVenda | date:'short' }}</td>
+        <td>R$ {{ v.valorVenda | number:'1.2-2' }}</td>
+        <td>
+          <button class="btn-acao" (click)="visualizar(v)">Visualizar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="selecionada" class="modal">
+    <div class="modal-content">
+      <h3>Detalhes da Venda #{{ selecionada.id }}</h3>
+      <p><strong>Pedido:</strong> #{{ selecionada.orderId }}</p>
+      <p><strong>Produto:</strong> {{ selecionada.produtoNome }} (ID: {{ selecionada.produtoId }})</p>
+      <p><strong>Código de Barras:</strong> {{ selecionada.codigoBarras }}</p>
+      <p><strong>Lote:</strong> {{ selecionada.loteCodigo }}</p>
+      <p><strong>Cliente:</strong> {{ selecionada.customerNome }} - {{ selecionada.customerEmail }}</p>
+      <p><strong>Data Venda:</strong> {{ selecionada.dataVenda | date:'medium' }}</p>
+      <p><strong>Valor:</strong> R$ {{ selecionada.valorVenda | number:'1.2-2' }}</p>
+      <div class="acoes">
+        <button class="btn-acao" (click)="fechar()">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>

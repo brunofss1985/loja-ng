@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService, OrderStatusHistory } from 'src/app/core/services/orderService/order-service';
 import { Order } from 'src/app/core/models/order.model ';
 import { interval, Subscription } from 'rxjs';
+import { VendasService } from 'src/app/core/services/vendasService/vendas.service';
 
 @Component({
   selector: 'app-admin-pedido-detalhes',
@@ -14,6 +15,7 @@ export class AdminPedidoDetalhesComponent implements OnInit, OnDestroy {
   statusHistory: OrderStatusHistory[] = [];
   errorMessage: string = '';
   pollingSub: Subscription | null = null;
+  finalizando: boolean = false;
 
   mapaStatus: { [key: string]: string } = {
     'CREATED': 'status-created',
@@ -24,7 +26,8 @@ export class AdminPedidoDetalhesComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
-    private router: Router
+    private router: Router,
+    private vendasService: VendasService
   ) {}
 
   ngOnInit(): void {
@@ -69,5 +72,33 @@ export class AdminPedidoDetalhesComponent implements OnInit, OnDestroy {
 
   voltar(): void {
     this.router.navigate(['/admin/pedidos']);
+  }
+
+  // Exibe botão de finalizar para status pago/paid (case insensitive / PT-BR)
+  isPaid(): boolean {
+    const s = this.order?.status?.toString()?.trim()?.toLowerCase();
+    return s === 'paid' || s === 'pago';
+  }
+
+  // Abre modal para ler código de barras e lote
+  finalizeVenda(): void {
+    if (!this.order || this.finalizando) return;
+    const codigoBarras = window.prompt('Informe o código de barras do produto:');
+    if (!codigoBarras) return;
+    const loteCodigo = window.prompt('Informe o código do lote:');
+    if (!loteCodigo) return;
+
+    this.finalizando = true;
+    this.vendasService.finalizar(this.order.id, codigoBarras.trim(), loteCodigo.trim()).subscribe({
+      next: () => {
+        this.loadOrder(this.order!.id);
+        window.alert('Venda finalizada e produto removido do lote/estoque.');
+      },
+      error: (err: any) => {
+        console.error('Erro ao finalizar venda:', err);
+        window.alert((err?.error?.message) || 'Não foi possível finalizar a venda. Verifique o código e o lote.');
+      },
+      complete: () => this.finalizando = false
+    });
   }
 }

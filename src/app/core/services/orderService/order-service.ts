@@ -41,4 +41,9 @@ export class OrderService {
   getOrderStatusHistory(orderId: number): Observable<OrderStatusHistory[]> {
     return this.http.get<OrderStatusHistory[]>(`${this.apiUrl}/${orderId}/status-history`);
   }
+
+  // ✅ Finaliza venda (endpoint esperado no backend)
+  finalizeOrder(orderId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${orderId}/finalize`, {});
+  }
 }

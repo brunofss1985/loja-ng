@@ -60,8 +60,14 @@
   <p *ngIf="errorMessage" class="erro">{{ errorMessage }}</p>
 
   <div class="bloco flex-voltar">
-    <button class="btn-voltar" (click)="voltar()">
-      ← Voltar para lista de pedidos
-    </button>
+    <div class="botoes-acoes">
+      <button *ngIf="isPaid()" class="btn-primario" [disabled]="finalizando" (click)="finalizeVenda()">
+        {{ finalizando ? 'Finalizando...' : 'Finalizar venda' }}
+      </button>
+
+      <button class="btn-voltar" (click)="voltar()">
+        ← Voltar para lista de pedidos
+      </button>
+    </div>
   </div>
 </div>

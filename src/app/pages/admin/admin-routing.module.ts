@@ -13,6 +13,7 @@ import { LotesComponent } from './lotes/lotes.component';
 import { AdminPedidosComponent } from './admin-pedidos/admin-pedidos.component';
 import { AdminPedidoDetalhesComponent } from './admin-pedido-detalhes/admin-pedido-detalhes.component';
 import { EditLoteEProdutoLoteComponent } from './edit-lote-eproduto-lote/edit-lote-eproduto-lote.component';
+import { AdminVendasComponent } from './admin-vendas/admin-vendas.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,9 @@ const routes: Routes = [
       // 👨‍💼 Novas rotas de pedidos admin:
       { path: 'pedidos', component: AdminPedidosComponent },
       { path: 'pedidos/:id', component: AdminPedidoDetalhesComponent },
+
+      // 📄 Vendas
+      { path: 'vendas', component: AdminVendasComponent },
     ],
   },
 ];

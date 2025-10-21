@@ -16,6 +16,7 @@ export class LotesComponent implements OnInit {
   @ViewChild(LoteFormComponent) loteFormComponent!: LoteFormComponent;
 
   allLotes: Lote[] = [];
+  salvando = false;
  columns: string[] = [
   'id',
   'codigo',
@@ -84,6 +85,9 @@ columnLabels: { [key: string]: string } = {
   }
 
   onLoteSalvo(lote: Lote): void {
+    if (this.salvando) { return; }
+    this.salvando = true;
+
     const request = lote.id
       ? this.loteService.atualizar(lote.id, lote)
       : this.loteService.criar(lote);
@@ -95,10 +99,13 @@ columnLabels: { [key: string]: string } = {
         );
         this.modalAberto = false;
         this.carregarLotes();
+        this.salvando = false;
       },
       error: (err) => {
-        this.toast.error('Erro ao salvar lote.');
-        console.error(err);
+        this.salvando = false;
+        const msg = err?.error?.message || err?.message || 'Erro ao salvar lote.';
+        this.toast.error(msg);
+        console.error('Falha ao salvar lote:', err);
       },
     });
   }

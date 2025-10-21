@@ -9,9 +9,46 @@
         <input class="form-control" formControlName="codigo" />
       </div>
 
-      <div class="col-md-4">
-        <label class="mt-2">Produto ID</label>
-        <input class="form-control" formControlName="produtoId" type="number" />
+      <!-- Produto selecionado (card) -->
+      <div class="col-12" *ngIf="selectedProduto" >
+        <div class="produto-card">
+          <div class="thumb">
+            <img [src]="getProdutoImgSrc(selectedProduto)" alt="{{selectedProduto.nome}}" />
+          </div>
+          <div class="info">
+            <div class="title">{{ selectedProduto.nome }}</div>
+            <div class="meta">
+              <span class="badge">{{ selectedProduto.marca }}</span>
+              <span class="badge" *ngIf="selectedProduto.peso">{{ selectedProduto.peso }}</span>
+              <span class="badge" *ngIf="selectedProduto.tamanhoPorcao">Porção: {{ selectedProduto.tamanhoPorcao }}</span>
+            </div>
+          </div>
+          <button type="button" class="btn-remover" (click)="limparProduto()">Trocar</button>
+        </div>
+      </div>
+
+      <!-- Autocomplete de Produto -->
+      <div class="col-md-6">
+        <label class="mt-2">Produto</label>
+        <div class="autocomplete">
+     <input class="form-control"
+       [value]="selectedProduto?.nome || ''"
+       (input)="onProdutoInput($any($event.target).value)"
+       (focus)="showSugestoes = true"
+                 (blur)="onBlurAutocomplete()"
+       placeholder="Busque pelo nome do produto" />
+          <ul class="sugestoes" *ngIf="showSugestoes">
+            <li *ngIf="buscandoProdutos" class="loading">Buscando...</li>
+            <li *ngFor="let p of produtoSugestoes" (click)="selecionarProduto(p)">
+              <img class="mini" [src]="getProdutoImgSrc(p)" alt="{{p.nome}}" />
+              <span class="nome">{{ p.nome }}</span>
+              <span class="aux">• {{ p.marca }}</span>
+            </li>
+            <li *ngIf="!buscandoProdutos && produtoSugestoes.length === 0" class="empty">Sem resultados</li>
+          </ul>
+        </div>
+        <!-- Campo oculto que mantém o produtoId no form -->
+        <input type="hidden" formControlName="produtoId" />
       </div>
 
       <div class="col-md-4">

@@ -25,6 +25,7 @@ export class ModalComponent implements OnInit {
   @Input() tittleModal = '';
   @Input() showRegisterForm = false;
   @Input() size!: 'small' | 'medium' | 'large' | 'xlarge';
+  @Input() isSaving: boolean = false;
 
   ngOnInit(): void {
     this.modalService.openModal$.subscribe(() => {

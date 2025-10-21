@@ -18,6 +18,7 @@
   [tittleModal]="!loteSelecionado ? 'Cadastrar Lote' : 'Editar Lote'"
   [size]="'large'"
   [isOpen]="modalAberto"
+  [isSaving]="salvando"
   (isOpenChange)="onModalAbertoChange($event)"
   (saveClick)="save()"
 >
